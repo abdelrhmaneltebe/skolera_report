@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
+    <description>Report Service to fill, render and display Jasper report
+        This service is expecting the report name in a request parameter named "$P_REPORT_NAME", also you may send any extra parameters to the report by adding this parameter in the format "$P_JASPER_PARAMETER_NAME" the service will send only "JASPER_PARAMETER_NAME" and its passed value to Jasper report
+        Note: For wrong input parameters are passed the service will display a message to clarify the source of error or the required missing parameter, etc
+    </description>
+    <display-name>Reporting Service</display-name>
+    <servlet>
+        <init-param>
+            <param-name>EMAIL_HOST</param-name>
+            <param-value>mail.skolera.com</param-value>
+        </init-param>
+        <init-param>
+            <param-name>EMAIL_PORT</param-name>
+            <param-value>587</param-value>
+        </init-param>
+        <init-param>
+            <param-name>EMAIL_USER</param-name>
+            <param-value>info@skolera.com</param-value>
+        </init-param>
+        <init-param>
+            <param-name>EMAIL_PASSWORD</param-name>
+            <param-value>Innfo#100</param-value>
+        </init-param>
+        <servlet-name>report</servlet-name>
+        <servlet-class>skolera.report</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>report</servlet-name>
+        <url-pattern/>
+    </servlet-mapping>
+    <session-config>
+        <session-timeout>
+            30
+        </session-timeout>
+    </session-config>
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
+    <error-page>
+        <error-code>404</error-code>
+        <location>/index.jsp</location>
+    </error-page>
+</web-app>

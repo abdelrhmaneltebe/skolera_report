@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.10.0.final using JasperReports Library version 6.10.0-unknown  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="GPA" pageWidth="595" pageHeight="842" whenNoDataType="BlankPage" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" whenResourceMissingType="Key" uuid="83203c3d-5cef-4c3d-9101-120dde481038">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Glory_fulls.xml"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="STUDENT_SCORE" class="java.lang.Double"/>
+	<parameter name="SCALE_ID" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT grade as SECTION
+  FROM scale_grades
+  WHERE  SCALE_ID = $P{SCALE_ID}
+and IF($P{STUDENT_SCORE} IS NULL,0,$P{STUDENT_SCORE})
+ between low +   IF($P{STUDENT_SCORE} <= 0, 0, 0.00000000001) and 
+  case when high >= 100 THEN 1000000 else high end]]>
+	</queryString>
+	<field name="SECTION" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="SECTION"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="scale_grades"/>
+	</field>
+	<variable name="LOCAL_GRADE" class="java.lang.String">
+		<variableExpression><![CDATA[$F{SECTION} == null || $F{SECTION} == "" ? "N/A" : $F{SECTION}]]></variableExpression>
+	</variable>
+	<title>
+		<band height="21" splitType="Stretch">
+			<textField>
+				<reportElement x="-5" y="0" width="20" height="20" uuid="e04439cd-7f28-4e0d-b487-4fad847d030b"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[""]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+</jasperReport>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.5.1.final using JasperReports Library version 6.5.1  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="SCORES" pageWidth="20" pageHeight="20" whenNoDataType="BlankPage" columnWidth="20" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" whenResourceMissingType="Key" uuid="83203c3d-5cef-4c3d-9101-120dde481038">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Glory_fulls.xml"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="SCALE_ID" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT CONCAT('[', SCORES, ']') AS SCORES FROM
+(
+SELECT GROUP_CONCAT('{', my_json, '}' SEPARATOR ',') AS SCORES FROM
+(
+  SELECT 
+    CONCAT
+    (
+      '"high":'   ,  high  , ',' 
+      '"low":', low , ','
+      '"grade":'  , '"', grade, '"'
+    ) AS my_json
+  FROM scale_grades
+  where scale_id = $P{SCALE_ID}
+) AS more_json
+) AS yet_more_json]]>
+	</queryString>
+	<field name="SCORES" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="SCORES"/>
+	</field>
+	<variable name="SCORES" class="java.lang.String">
+		<variableExpression><![CDATA[$F{SCORES}]]></variableExpression>
+	</variable>
+	<title>
+		<band height="19" splitType="Stretch"/>
+	</title>
+</jasperReport>

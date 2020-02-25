@@ -1,0 +1,914 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.10.0.final using JasperReports Library version 6.10.0-unknown  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="TERM_GRADE" pageWidth="163" pageHeight="150" orientation="Landscape" columnWidth="163" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="91e7ef5b-7f57-4ce3-92a4-d7dc3c418ff0">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="SmartVision"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<style name="Crosstab_CH" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Crosstab_CG" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Crosstab_CT" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Crosstab_CD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<parameter name="STUDENT_ID" class="java.lang.String">
+		<defaultValueExpression><![CDATA["-1"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="GRADING_PERIOD_ID" class="java.lang.String">
+		<defaultValueExpression><![CDATA["-1"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select
+  /*+ NO_BNL() */
+  z.student_id, z.student_name, z.course_id, z.quar_name, z.order_num
+, z.name, z.class_name, z.level_code, z.hide_num, z.user_name,z.Home_address,z.secion_name
+, z.west_weight,z.main_period_wight,z.main_pirod_name, z.cal_in_total, z.qur_id,z.sub_period_weight
+, sum(IF ((select  /*+ NO_BNL() */ id from categories where parent_id = z.parent_id  and deleted_at is null limit 1) is null,z.full_grade1 , IF(z.full_grade1 is null,0,z.full_grade1) * z.PARENT_CATEGORY_WEIGHT/100)) AS full_grade
+, (select  /*+ NO_BNL() */ total_grade from courses where id = z.course_id) AS total_grade
+
+
+from -- (Z)
+(select 
+    /*+ NO_BNL() */
+	x.student_id, x.student_name, x.course_id, x.quar_name, x.order_num, x.parent_id,
+	x.name, x.class_name, x.level_code, x.hide_num
+     , (SELECT  /*+ NO_BNL() */ distinct username FROM users where actable_id = x.student_id and deleted_at is null LIMIT 1) AS user_name
+     , (SELECT  /*+ NO_BNL() */ distinct home_address FROM users where actable_id = x.student_id and deleted_at is null LIMIT 1) AS Home_address
+	 , (select /*+ NO_BNL() */ name from categories where id = x.parent_id) AS category_name
+	 ,(SELECT /*+ NO_BNL() */ name FROM sections where id = (select section_id from stages where id = (select stage_id from levels where level_code = x.level_code and deleted_at is null) and deleted_at is null) and deleted_at is null ) as secion_name
+	 , (select /*+ NO_BNL() */ weight from course_grading_periods_categories where category_id = x.parent_id and courses_grading_period_id = x.cgp_id LIMIT 1) PARENT_CATEGORY_WEIGHT
+	 , SUM(x.category_grade) AS full_grade1
+     , x.qur_id
+	 , IF((SELECT  /*+ NO_BNL() */ distinct weight FROM courses_grading_periods where grading_period_id = (select  /*+ NO_BNL() */ distinct parent_id from grading_periods where id = x.qur_id ) and course_id = x.course_id limit 1) is null,100,(SELECT /*+ NO_BNL() */ distinct weight FROM courses_grading_periods where grading_period_id = (select  /*+ NO_BNL() */distinct parent_id from grading_periods where id = x.qur_id ) and course_id = x.course_id limit 1)) AS main_period_wight
+     , (SELECT  /*+ NO_BNL() */ distinct weight FROM courses_grading_periods where grading_period_id = x.qur_id and course_id = x.course_id limit 1) AS sub_period_weight
+	 , if((SELECT  /*+ NO_BNL() */ distinct name FROM grading_periods where id = (select  /*+ NO_BNL() */ parent_id from grading_periods where id =x.qur_id)) is null ,x.quar_name, (SELECT  /*+ NO_BNL() */ distinct name FROM grading_periods where id = (select  /*+ NO_BNL() */ parent_id from grading_periods where id =x.qur_id)) ) AS main_pirod_name
+     , x.cgp_id
+     ,(select  /*+ NO_BNL() */ calculated_in_total from courses where id = x.course_id) AS cal_in_total
+     ,(
+		select
+	 /*+ NO_BNL() */ 
+	 IF(sum(z.PARENT_CATEGORY_WEIGHT) is null,0,sum(z.PARENT_CATEGORY_WEIGHT)) AS weight from (
+select 
+    /*+ NO_BNL() */
+	x.student_id, x.student_name, x.course_id, x.quar_name, x.order_num, x.parent_id,
+	x.name, x.class_name, x.level_code, x.hide_num
+     , (SELECT  /*+ NO_BNL() */ distinct username FROM users where actable_id = x.student_id and deleted_at is null LIMIT 1) AS user_name
+     , (SELECT  /*+ NO_BNL() */ distinct home_address FROM users where actable_id = x.student_id and deleted_at is null LIMIT 1) AS Home_address
+	 , (select /*+ NO_BNL() */ name from categories where id = x.parent_id) AS category_name
+	 , (select /*+ NO_BNL() */ weight from course_grading_periods_categories where category_id = x.parent_id and courses_grading_period_id = x.cgp_id LIMIT 1) PARENT_CATEGORY_WEIGHT
+	 , SUM(x.category_grade) AS full_grade1
+     , x.qur_id
+	 , IF((SELECT  /*+ NO_BNL() */ distinct weight FROM courses_grading_periods where grading_period_id = (select  /*+ NO_BNL() */ distinct parent_id from grading_periods where id = x.qur_id ) and course_id = x.course_id limit 1) is null,100,(SELECT /*+ NO_BNL() */ distinct weight FROM courses_grading_periods where grading_period_id = (select  /*+ NO_BNL() */distinct parent_id from grading_periods where id = x.qur_id ) and course_id = x.course_id limit 1)) AS main_period_wight
+     , (SELECT  /*+ NO_BNL() */ distinct weight FROM courses_grading_periods where grading_period_id = x.qur_id and course_id = x.course_id limit 1) AS sub_period_weight
+	 , if((SELECT  /*+ NO_BNL() */ distinct name FROM grading_periods where id = (select  /*+ NO_BNL() */ parent_id from grading_periods where id =x.qur_id)) is null ,x.quar_name, (SELECT  /*+ NO_BNL() */ distinct name FROM grading_periods where id = (select  /*+ NO_BNL() */ parent_id from grading_periods where id =x.qur_id)) ) AS main_pirod_name
+     , x.cgp_id
+     , IF(x.status is null ,0,x.status) AS status
+
+from  -- (X)
+
+	(select /*+ NO_BNL() */ z.*, courses.name, d.class_name, d.level_code, d.hide_num 
+	
+	  from -- (Z)
+	  
+		(select /*+ NO_BNL() */ f.student_id, f.student_name, f.course_id, f.quar_name, f.qur_id, f.order_num,f.category_name,f.category_weight, f.max_grade,
+				if(f.parent_id IS NULL,f.category_id,f.parent_id) AS parent_id,IF(f.full_grade IS NULL,0,f.full_grade) AS full_grade, f.cgp_id
+                ,(IF(f.full_grade IS NULL,0,f.full_grade)*(f.category_weight *(select /*+ NO_BNL() */ weight from  course_grading_periods_categories where category_id = if(f.parent_id IS NULL,f.category_id,f.parent_id) and courses_grading_period_id = f.cgp_id limit 1))
+                /(select  /*+ NO_BNL() */ sum(weight) from course_grading_periods_categories where category_id IN (select /*+ NO_BNL() */ id from categories where id = f.new_cat)
+					and deleted_at is null and courses_grading_period_id= f.cgp_id ))/IF (f.category_weight is null , 0 ,f.category_weight) AS category_grade
+                    , f.status
+                
+				
+		  from  -- (F)
+		 
+				(select  /*+ NO_BNL() */ e.*,(e.grade*e.category_weight)/e.max_grade AS full_grade , if(e.parent_id IS NULL,e.category_id,e.parent_id) as new_cat
+				
+				 from  -- (E)
+
+
+					(select /*+ NO_BNL() */ d.student_id, d.student_name, d.category_id, d.category_name, d.parent_id, d.course_id, d.quar_name, d.qur_id
+							,sum(d.grade) AS grade, sum(d.max_grade) AS max_grade, d.category_weight AS category_weight, d.order_num, d.cgp_id , d.status
+							
+					 from  -- (D)
+						
+							(select /*+ NO_BNL() */ d.student_id, d.student_name, d.category_id, d.category_name, d.parent_id, d.course_id, d.quar_name, d.qur_id
+							,sum(d.grade) AS grade, sum(d.max_grade) AS max_grade, d.category_weight AS category_weight, d.order_num, d.cgp_id, d.status
+							
+					 from  -- (D)
+						
+							(select /*+ NO_BNL() */ * 
+							
+							  from -- (B)
+								
+								(SELECT  /*+ NO_BNL() */ DISTINCT students.id AS student_id,
+										users.name AS student_name,
+										assignments.id AS item_id,
+									   'assignment' AS item_type,
+										assignments.name AS item_name,
+										IF(st_sub_assi.student_status = 1,0,assignments.points) AS max_grade,
+										st_sub_assi.id AS submission_id,
+										if(st_sub_assi.student_status = 2, 0, st_sub_assi.student_status) AS status,
+										IF(st_sub_assi.student_status = 1,0,IF(st_sub_assi.grade IS NULL, 0, st_sub_assi.grade)) AS grade,
+										assignments.category_id AS category_id,
+										categories.name AS category_name, 
+										cg.course_id, 
+										c_gp_cat.weight AS category_weight,
+										assi_cg.hide_grade AS hide_grade, 
+										c_gp.grading_period_id AS qur_id,
+										categories.parent_id AS parent_id,
+										c_gp_cat.courses_grading_period_id as cgp_id
+										FROM course_groups cg
+										LEFT OUTER JOIN student_course_groups st_cg on st_cg.course_group_id = cg.id AND st_cg.deleted_at IS NULL
+										LEFT OUTER JOIN students on students.id = st_cg.student_id AND students.deleted_at IS NULL and (students.id in ($P!{STUDENT_ID}) OR $P{STUDENT_ID}  = "-1") 
+										LEFT OUTER JOIN users on users.actable_type = 'Student' AND users.actable_id = students.id AND users.deleted_at IS NULL
+										LEFT OUTER JOIN assignments_course_groups assi_cg on assi_cg.course_group_id = cg.id AND assi_cg.deleted_at IS NULL
+										LEFT OUTER JOIN assignments on assignments.id = assi_cg.assignment_id AND assignments.deleted_at IS NULL
+										LEFT OUTER JOIN student_submitted_assignments st_sub_assi on st_sub_assi.student_id = students.id AND st_sub_assi.assignment_id = assignments.id 
+										AND st_sub_assi.deleted_at IS NULL
+										LEFT OUTER JOIN categories on categories.id = assignments.category_id AND categories.deleted_at IS NULL
+										LEFT OUTER JOIN course_grading_periods_categories c_gp_cat on c_gp_cat.category_id = categories.id AND c_gp_cat.deleted_at IS NULL
+										INNER JOIN courses_grading_periods c_gp on c_gp.id = c_gp_cat.courses_grading_period_id AND (c_gp.grading_period_id in ($P!{GRADING_PERIOD_ID}) OR $P{GRADING_PERIOD_ID}  = "-1")
+										AND c_gp.course_id = cg.course_id AND c_gp.deleted_at IS NULL
+										where   assignments.grading_period_id = c_gp.grading_period_id 
+										AND cg.deleted_at IS NULL
+
+										UNION ALL
+												SELECT /*+ NO_BNL() */ DISTINCT students.id AS student_id, 
+												users.name AS student_name, 
+												quizzes.id AS item_id, 
+												'quiz' AS item_type, 
+												quizzes.name AS item_name,
+												IF(quiz_sub.student_status = 1,0,quizzes.total_score) AS max_grade, 
+												quiz_sub.id AS submission_id, 
+												if(quiz_sub.student_status=2, 0, quiz_sub.student_status) AS status,
+												IF(quiz_sub.student_status = 1,0,IF(quiz_sub.score IS NULL, 0, quiz_sub.score)) AS grade, 
+												quizzes.category_id AS category_id, 
+												categories.name AS category_name,
+												cg.course_id,
+												c_gp_cat.weight AS category_weight, 		         		         
+												quiz_cg.hide_grade AS hide_grade, 
+												c_gp.grading_period_id AS qur_id,
+												categories.parent_id AS parent_id,
+												c_gp_cat.courses_grading_period_id as cgp_id
+										FROM course_groups cg
+										LEFT OUTER JOIN student_course_groups st_cg on st_cg.course_group_id = cg.id AND st_cg.deleted_at IS NULL
+										LEFT OUTER JOIN students on students.id = st_cg.student_id AND students.deleted_at IS NULL and (students.id in ($P!{STUDENT_ID}) OR $P{STUDENT_ID}  = "-1") and (students.id in ($P!{STUDENT_ID}) OR $P{STUDENT_ID}  = "-1")
+										LEFT OUTER JOIN users on users.actable_type = 'Student' AND users.actable_id = students.id AND users.deleted_at IS NULL
+										LEFT OUTER JOIN course_groups_quizzes quiz_cg on quiz_cg.course_group_id = cg.id AND quiz_cg.deleted_at IS NULL
+										LEFT OUTER JOIN quizzes on quizzes.id = quiz_cg.quiz_id AND quizzes.deleted_at IS NULL
+										LEFT OUTER JOIN quiz_submissions quiz_sub on quiz_sub.student_id = students.id AND quiz_sub.quiz_id = quizzes.id
+										  AND quiz_sub.deleted_at IS NULL
+										LEFT OUTER JOIN categories on categories.id = quizzes.category_id AND categories.deleted_at IS NULL
+										LEFT OUTER JOIN course_grading_periods_categories c_gp_cat on c_gp_cat.category_id = categories.id 
+														AND c_gp_cat.deleted_at IS NULL
+										INNER JOIN courses_grading_periods c_gp on c_gp.id = c_gp_cat.courses_grading_period_id AND (c_gp.grading_period_id in ($P!{GRADING_PERIOD_ID}) OR $P{GRADING_PERIOD_ID}  = "-1")
+													AND c_gp.course_id = cg.course_id AND c_gp.deleted_at IS NULL
+													
+										WHERE quizzes.grading_period_id = c_gp.grading_period_id
+												AND  cg.deleted_at IS NULL
+
+										UNION ALL
+												SELECT /*+ NO_BNL() */ DISTINCT students.id AS student_id, 
+												users.name AS student_name, 
+												grade_items.id AS item_id, 
+												'grade_item' AS item_type,
+												grade_items.name as item_name, 
+												IF(g_sub.student_status = 1,0,grade_items.max_grade) AS max_grade, 
+												g_sub.id AS submission_id,
+												if(g_sub.student_status = 2,0,g_sub.student_status) AS status, 
+												IF(g_sub.student_status = 1,0,IF(g_sub.grade IS NULL, 0 , g_sub.grade)) AS grade,
+												grade_items.category_id AS category_id,		              
+												categories.name AS category_name , 
+												cg.course_id, 		  
+												c_gp_cat.weight AS category_weight, 
+												grade_items.hide_grade AS hide_grade, 
+												c_gp.grading_period_id AS qur_id,
+												categories.parent_id AS parent_id,
+												c_gp_cat.courses_grading_period_id as cgp_id
+										FROM course_groups cg
+										LEFT OUTER JOIN student_course_groups st_cg on st_cg.course_group_id = cg.id AND st_cg.deleted_at IS NULL
+										LEFT OUTER JOIN students on students.id = st_cg.student_id AND students.deleted_at IS NULL and (students.id in ($P!{STUDENT_ID}) OR $P{STUDENT_ID}  = "-1")
+										LEFT OUTER JOIN users on users.actable_type = 'Student' AND users.actable_id = students.id AND users.deleted_at IS NULL
+										LEFT OUTER JOIN grade_items on grade_items.course_group_id = cg.id AND grade_items.deleted_at IS NULL
+										LEFT OUTER JOIN grade_submissions g_sub on g_sub.student_id = students.id AND g_sub.grade_item_id = grade_items.id
+										  AND g_sub.deleted_at IS NULL
+										LEFT OUTER JOIN categories on categories.id = grade_items.category_id AND categories.deleted_at IS NULL
+										LEFT OUTER JOIN course_grading_periods_categories c_gp_cat on c_gp_cat.category_id = categories.id AND c_gp_cat.deleted_at IS NULL
+										INNER JOIN courses_grading_periods c_gp on c_gp.id = c_gp_cat.courses_grading_period_id AND (c_gp.grading_period_id in ($P!{GRADING_PERIOD_ID}) OR $P{GRADING_PERIOD_ID}  = "-1")
+										  AND c_gp.course_id = cg.course_id AND c_gp.deleted_at IS NULL
+										where  grade_items.grading_period_id = c_gp.grading_period_id 
+										AND   cg.deleted_at IS NULL
+										)b
+									left join -- (C)
+									(
+										SELECT /*+ NO_BNL() */ distinct cat.id, cat.name, cgp.course_id AS crs_id, cgpc.weight, cgpc.courses_grading_period_id, cgp.grading_period_id, gp.name AS quar_name, 
+										courses.order AS order_num FROM categories cat
+										inner join course_grading_periods_categories cgpc on cat.id = cgpc.category_id and cgpc.deleted_at is null
+										inner join courses_grading_periods cgp on cgp.id =  cgpc.courses_grading_period_id and cgp.deleted_at is null
+										inner join grading_periods gp on gp.id = cgp.grading_period_id
+										inner join courses on courses.id = cgp.course_id and courses.deleted_at is null
+										where cat.deleted_at is null
+									)c
+									on b.qur_id=c.grading_period_id and c.crs_id=b.course_id and c.id = b.category_id
+							)d
+						group by  d.student_id, d.student_name, d.category_id, d.quar_name, d.course_id
+								 , d.category_name, d.category_weight, d.order_num, d.cgp_id, d.parent_id,d.qur_id,d.status
+                                    
+							)d
+						group by  d.student_id, d.student_name, d.category_id, d.quar_name, d.course_id
+								 , d.category_name, d.category_weight, d.order_num, d.cgp_id, d.parent_id,d.qur_id, d.status
+					)e
+				)f
+		)z  
+		
+	INNER JOIN courses on z.course_id = courses.id
+	inner join
+	(SELECT /*+ NO_BNL() */ csg.student_id as student_id, cg.name as class_name, levels.level_code AS level_code, courses.hide as hide_num, courses.calculated_in_total
+		FROM student_course_groups csg
+		inner join course_groups cg on csg.course_group_id=cg.id and cg.deleted_at is null
+		inner join courses on cg.course_id= courses.id and courses.deleted_at is null
+		inner join levels on courses.level_id=levels.id and levels.deleted_at is null
+		where csg.deleted_at is null
+		and courses.hide = "false"
+		and (csg.student_id in ($P!{STUDENT_ID}) OR $P{STUDENT_ID}  = "-1")
+		 
+		group by student_id, class_name, level_code
+		) d on d.student_id = z.student_id
+		
+	
+)
+x
+
+where x.status =1
+
+group by  x.student_id, x.student_name, x.course_id, x.quar_name, x.order_num
+		, x.parent_id, x.name, x.class_name, x.level_code, x.hide_num
+		, PARENT_CATEGORY_WEIGHT
+		,x.cgp_id, x.qur_id, x.status
+order by  x.level_code,x.quar_name, x.student_id,x.course_id,x.order_num
+)z
+
+left outer join 
+
+(
+
+select 
+    /*+ NO_BNL() */
+	x.student_id, x.student_name, x.course_id, x.quar_name, x.order_num, x.parent_id,
+	x.name, x.class_name, x.level_code, x.hide_num
+     , (SELECT  /*+ NO_BNL() */ distinct username FROM users where actable_id = x.student_id and deleted_at is null LIMIT 1) AS user_name
+     , (SELECT  /*+ NO_BNL() */ distinct home_address FROM users where actable_id = x.student_id and deleted_at is null LIMIT 1) AS Home_address
+	 , (select /*+ NO_BNL() */ name from categories where id = x.parent_id) AS category_name
+	 , (select /*+ NO_BNL() */ weight from course_grading_periods_categories where category_id = x.parent_id and courses_grading_period_id = x.cgp_id LIMIT 1) PARENT_CATEGORY_WEIGHT
+	 ,(SELECT name FROM sections where id = (select section_id from stages where id = (select stage_id from levels where level_code =x.level_code  and deleted_at is null) and deleted_at is null) and deleted_at is null) AS section_name
+	 , SUM(x.category_grade) AS full_grade1
+     , x.qur_id
+	 , IF((SELECT  /*+ NO_BNL() */ distinct weight FROM courses_grading_periods where grading_period_id = (select  /*+ NO_BNL() */ distinct parent_id from grading_periods where id = x.qur_id ) and course_id = x.course_id limit 1) is null,100,(SELECT /*+ NO_BNL() */ distinct weight FROM courses_grading_periods where grading_period_id = (select  /*+ NO_BNL() */distinct parent_id from grading_periods where id = x.qur_id ) and course_id = x.course_id limit 1)) AS main_period_wight
+     , (SELECT  /*+ NO_BNL() */ distinct weight FROM courses_grading_periods where grading_period_id = x.qur_id and course_id = x.course_id limit 1) AS sub_period_weight
+	 , if((SELECT  /*+ NO_BNL() */ distinct name FROM grading_periods where id = (select  /*+ NO_BNL() */ parent_id from grading_periods where id =x.qur_id)) is null ,x.quar_name, (SELECT  /*+ NO_BNL() */ distinct name FROM grading_periods where id = (select  /*+ NO_BNL() */ parent_id from grading_periods where id =x.qur_id)) ) AS main_pirod_name
+     , x.cgp_id
+     , IF(x.status is null ,0,x.status) AS status
+
+from  -- (X)
+
+	(select /*+ NO_BNL() */ z.*, courses.name, d.class_name, d.level_code, d.hide_num 
+	
+	  from -- (Z)
+	  
+		(select /*+ NO_BNL() */ f.student_id, f.student_name, f.course_id, f.quar_name, f.qur_id, f.order_num,f.category_name,f.category_weight, f.max_grade,
+				if(f.parent_id IS NULL,f.category_id,f.parent_id) AS parent_id,IF(f.full_grade IS NULL,0,f.full_grade) AS full_grade, f.cgp_id
+                ,(IF(f.full_grade IS NULL,0,f.full_grade)*(f.category_weight *(select /*+ NO_BNL() */ weight from  course_grading_periods_categories where category_id = if(f.parent_id IS NULL,f.category_id,f.parent_id) and courses_grading_period_id = f.cgp_id limit 1))
+                /(select  /*+ NO_BNL() */ sum(weight) from course_grading_periods_categories where category_id IN (select /*+ NO_BNL() */ id from categories where id = f.new_cat)
+					and deleted_at is null and courses_grading_period_id= f.cgp_id ))/IF (f.category_weight is null , 0 ,f.category_weight) AS category_grade
+                    , f.status
+                
+				
+		  from  -- (F)
+		 
+				(select  /*+ NO_BNL() */ e.*,(e.grade*e.category_weight)/e.max_grade AS full_grade , if(e.parent_id IS NULL,e.category_id,e.parent_id) as new_cat
+				
+				 from  -- (E)
+
+
+					(select /*+ NO_BNL() */ d.student_id, d.student_name, d.category_id, d.category_name, d.parent_id, d.course_id, d.quar_name, d.qur_id
+							,sum(d.grade) AS grade, sum(d.max_grade) AS max_grade, d.category_weight AS category_weight, d.order_num, d.cgp_id , d.status
+							
+					 from  -- (D)
+						
+							(select /*+ NO_BNL() */ d.student_id, d.student_name, d.category_id, d.category_name, d.parent_id, d.course_id, d.quar_name, d.qur_id
+							,sum(d.grade) AS grade, sum(d.max_grade) AS max_grade, d.category_weight AS category_weight, d.order_num, d.cgp_id, d.status
+							
+					 from  -- (D)
+						
+							(select /*+ NO_BNL() */ * 
+							
+							  from -- (B)
+								
+								(SELECT  /*+ NO_BNL() */ DISTINCT students.id AS student_id,
+										users.name AS student_name,
+										assignments.id AS item_id,
+									   'assignment' AS item_type,
+										assignments.name AS item_name,
+										IF(st_sub_assi.student_status = 1,0,assignments.points) AS max_grade,
+										st_sub_assi.id AS submission_id,
+										if(st_sub_assi.student_status = 2  , 0, st_sub_assi.student_status) AS status,
+										IF(st_sub_assi.student_status = 1,0,IF(st_sub_assi.grade IS NULL, 0, st_sub_assi.grade)) AS grade,
+										assignments.category_id AS category_id,
+										categories.name AS category_name, 
+										cg.course_id, 
+										c_gp_cat.weight AS category_weight,
+										assi_cg.hide_grade AS hide_grade, 
+										c_gp.grading_period_id AS qur_id,
+										categories.parent_id AS parent_id,
+										c_gp_cat.courses_grading_period_id as cgp_id
+										FROM course_groups cg
+										LEFT OUTER JOIN student_course_groups st_cg on st_cg.course_group_id = cg.id AND st_cg.deleted_at IS NULL
+										LEFT OUTER JOIN students on students.id = st_cg.student_id AND students.deleted_at IS NULL and (students.id in ($P!{STUDENT_ID}) OR $P{STUDENT_ID}  = "-1")
+										LEFT OUTER JOIN users on users.actable_type = 'Student' AND users.actable_id = students.id AND users.deleted_at IS NULL
+										LEFT OUTER JOIN assignments_course_groups assi_cg on assi_cg.course_group_id = cg.id AND assi_cg.deleted_at IS NULL
+										LEFT OUTER JOIN assignments on assignments.id = assi_cg.assignment_id AND assignments.deleted_at IS NULL
+										LEFT OUTER JOIN student_submitted_assignments st_sub_assi on st_sub_assi.student_id = students.id AND st_sub_assi.assignment_id = assignments.id 
+										AND st_sub_assi.deleted_at IS NULL
+										LEFT OUTER JOIN categories on categories.id = assignments.category_id AND categories.deleted_at IS NULL
+										LEFT OUTER JOIN course_grading_periods_categories c_gp_cat on c_gp_cat.category_id = categories.id AND c_gp_cat.deleted_at IS NULL
+										INNER JOIN courses_grading_periods c_gp on c_gp.id = c_gp_cat.courses_grading_period_id AND (c_gp.grading_period_id in ($P!{GRADING_PERIOD_ID}) OR $P{GRADING_PERIOD_ID}  = "-1")
+										AND c_gp.course_id = cg.course_id AND c_gp.deleted_at IS NULL
+										where   assignments.grading_period_id = c_gp.grading_period_id 
+										AND cg.deleted_at IS NULL
+
+										UNION ALL
+												SELECT /*+ NO_BNL() */ DISTINCT students.id AS student_id, 
+												users.name AS student_name, 
+												quizzes.id AS item_id, 
+												'quiz' AS item_type, 
+												quizzes.name AS item_name,
+												IF(quiz_sub.student_status = 1,0,quizzes.total_score) AS max_grade, 
+												quiz_sub.id AS submission_id, 
+												if(quiz_sub.student_status=2, 0, quiz_sub.student_status) AS status,
+												IF(quiz_sub.student_status = 1,0,IF(quiz_sub.score IS NULL, 0, quiz_sub.score)) AS grade, 
+												quizzes.category_id AS category_id, 
+												categories.name AS category_name,
+												cg.course_id,
+												c_gp_cat.weight AS category_weight, 		         		         
+												quiz_cg.hide_grade AS hide_grade, 
+												c_gp.grading_period_id AS qur_id,
+												categories.parent_id AS parent_id,
+												c_gp_cat.courses_grading_period_id as cgp_id
+										FROM course_groups cg
+										LEFT OUTER JOIN student_course_groups st_cg on st_cg.course_group_id = cg.id AND st_cg.deleted_at IS NULL
+										LEFT OUTER JOIN students on students.id = st_cg.student_id AND students.deleted_at IS NULL and (students.id in ($P!{STUDENT_ID}) OR $P{STUDENT_ID}  = "-1")
+										LEFT OUTER JOIN users on users.actable_type = 'Student' AND users.actable_id = students.id AND users.deleted_at IS NULL
+										LEFT OUTER JOIN course_groups_quizzes quiz_cg on quiz_cg.course_group_id = cg.id AND quiz_cg.deleted_at IS NULL
+										LEFT OUTER JOIN quizzes on quizzes.id = quiz_cg.quiz_id AND quizzes.deleted_at IS NULL
+										LEFT OUTER JOIN quiz_submissions quiz_sub on quiz_sub.student_id = students.id AND quiz_sub.quiz_id = quizzes.id
+										  AND quiz_sub.deleted_at IS NULL
+										LEFT OUTER JOIN categories on categories.id = quizzes.category_id AND categories.deleted_at IS NULL
+										LEFT OUTER JOIN course_grading_periods_categories c_gp_cat on c_gp_cat.category_id = categories.id 
+														AND c_gp_cat.deleted_at IS NULL
+										INNER JOIN courses_grading_periods c_gp on c_gp.id = c_gp_cat.courses_grading_period_id AND (c_gp.grading_period_id in ($P!{GRADING_PERIOD_ID}) OR $P{GRADING_PERIOD_ID}  = "-1")
+													AND c_gp.course_id = cg.course_id AND c_gp.deleted_at IS NULL
+													
+										WHERE quizzes.grading_period_id = c_gp.grading_period_id
+												AND  cg.deleted_at IS NULL
+
+										UNION ALL
+												SELECT /*+ NO_BNL() */ DISTINCT students.id AS student_id, 
+												users.name AS student_name, 
+												grade_items.id AS item_id, 
+												'grade_item' AS item_type,
+												grade_items.name as item_name, 
+												IF(g_sub.student_status = 1,0,grade_items.max_grade) AS max_grade, 
+												g_sub.id AS submission_id,
+												if(g_sub.student_status = 2,0,g_sub.student_status) AS status, 
+												IF(g_sub.student_status = 1,0,IF(g_sub.grade IS NULL, 0 , g_sub.grade)) AS grade,
+												grade_items.category_id AS category_id,		              
+												categories.name AS category_name , 
+												cg.course_id, 		  
+												c_gp_cat.weight AS category_weight, 
+												grade_items.hide_grade AS hide_grade, 
+												c_gp.grading_period_id AS qur_id,
+												categories.parent_id AS parent_id,
+												c_gp_cat.courses_grading_period_id as cgp_id
+										FROM course_groups cg
+										LEFT OUTER JOIN student_course_groups st_cg on st_cg.course_group_id = cg.id AND st_cg.deleted_at IS NULL
+										LEFT OUTER JOIN students on students.id = st_cg.student_id AND students.deleted_at IS NULL and (students.id in ($P!{STUDENT_ID}) OR $P{STUDENT_ID}  = "-1")
+										LEFT OUTER JOIN users on users.actable_type = 'Student' AND users.actable_id = students.id AND users.deleted_at IS NULL
+										LEFT OUTER JOIN grade_items on grade_items.course_group_id = cg.id AND grade_items.deleted_at IS NULL
+										LEFT OUTER JOIN grade_submissions g_sub on g_sub.student_id = students.id AND g_sub.grade_item_id = grade_items.id
+										  AND g_sub.deleted_at IS NULL
+										LEFT OUTER JOIN categories on categories.id = grade_items.category_id AND categories.deleted_at IS NULL
+										LEFT OUTER JOIN course_grading_periods_categories c_gp_cat on c_gp_cat.category_id = categories.id AND c_gp_cat.deleted_at IS NULL
+										INNER JOIN courses_grading_periods c_gp on c_gp.id = c_gp_cat.courses_grading_period_id AND (c_gp.grading_period_id in ($P!{GRADING_PERIOD_ID}) OR $P{GRADING_PERIOD_ID}  = "-1")
+										  AND c_gp.course_id = cg.course_id AND c_gp.deleted_at IS NULL
+										where  grade_items.grading_period_id = c_gp.grading_period_id 
+										AND   cg.deleted_at IS NULL
+										)b
+									left join -- (C)
+									(
+										SELECT /*+ NO_BNL() */ distinct cat.id, cat.name, cgp.course_id AS crs_id, cgpc.weight, cgpc.courses_grading_period_id, cgp.grading_period_id, gp.name AS quar_name, 
+										courses.order AS order_num FROM categories cat
+										inner join course_grading_periods_categories cgpc on cat.id = cgpc.category_id and cgpc.deleted_at is null
+										inner join courses_grading_periods cgp on cgp.id =  cgpc.courses_grading_period_id and cgp.deleted_at is null
+										inner join grading_periods gp on gp.id = cgp.grading_period_id
+										inner join courses on courses.id = cgp.course_id and courses.deleted_at is null
+										where cat.deleted_at is null
+									)c
+									on b.qur_id=c.grading_period_id and c.crs_id=b.course_id and c.id = b.category_id
+							)d
+						group by  d.student_id, d.student_name, d.category_id, d.quar_name, d.course_id
+								 , d.category_name, d.category_weight, d.order_num, d.cgp_id, d.parent_id,d.qur_id,d.status
+                                    
+							)d
+						group by  d.student_id, d.student_name, d.category_id, d.quar_name, d.course_id
+								 , d.category_name, d.category_weight, d.order_num, d.cgp_id, d.parent_id,d.qur_id, d.status
+					)e
+				)f
+		)z  
+		
+	INNER JOIN courses on z.course_id = courses.id
+	inner join
+	(SELECT /*+ NO_BNL() */ csg.student_id as student_id, cg.name as class_name, levels.level_code AS level_code, courses.hide as hide_num, courses.calculated_in_total
+		FROM student_course_groups csg
+		inner join course_groups cg on csg.course_group_id=cg.id and cg.deleted_at is null
+		inner join courses on cg.course_id= courses.id and courses.deleted_at is null
+		inner join levels on courses.level_id=levels.id and levels.deleted_at is null
+		where csg.deleted_at is null
+		and courses.hide = "false"
+		 
+		group by student_id, class_name, level_code
+		) d on d.student_id = z.student_id
+		
+	
+)
+x
+where x.status =0
+
+group by  x.student_id, x.student_name, x.course_id, x.quar_name, x.order_num
+		, x.parent_id, x.name, x.class_name, x.level_code, x.hide_num
+		, PARENT_CATEGORY_WEIGHT
+		,x.cgp_id, x.qur_id, x.status
+order by  x.level_code,x.quar_name, x.student_id,x.course_id,x.order_num
+)y 
+on z.student_id=y.student_id 
+and z.course_id =y.course_id
+and z.parent_id =y.parent_id
+and z.qur_id =y.qur_id
+and z.cgp_id =y.cgp_id
+
+where y.status is null
+and z.student_id=x.student_id 
+and z.course_id =x.course_id
+and z.qur_id =x.qur_id
+and z.cgp_id =x.cgp_id
+
+group by 
+  z.student_id
+, z.course_id
+, z.qur_id 
+, z.cgp_id 
+
+
+	 ) AS west_weight
+
+from  -- (X)
+
+	(select /*+ NO_BNL() */ z.*, courses.name, d.class_name, d.level_code, d.hide_num 
+	
+	  from -- (Z)
+	  
+		(select /*+ NO_BNL() */ f.student_id, f.student_name, f.course_id, f.quar_name, f.qur_id, f.order_num,f.category_name,f.category_weight, f.max_grade,
+				if(f.parent_id IS NULL,f.category_id,f.parent_id) AS parent_id,IF(f.full_grade IS NULL,0,f.full_grade) AS full_grade, f.cgp_id
+                ,(IF(f.full_grade IS NULL,0,f.full_grade)*(f.category_weight *(select /*+ NO_BNL() */ weight from  course_grading_periods_categories where category_id = if(f.parent_id IS NULL,f.category_id,f.parent_id) and courses_grading_period_id = f.cgp_id limit 1))
+                /(select  /*+ NO_BNL() */ sum(weight) from course_grading_periods_categories where category_id IN (select /*+ NO_BNL() */ id from categories where id = f.new_cat)
+					and deleted_at is null and courses_grading_period_id= f.cgp_id ))/IF (f.category_weight is null , 0 ,f.category_weight) AS category_grade
+                
+				
+		  from  -- (F)
+		 
+				(select  /*+ NO_BNL() */ e.*,(e.grade*e.category_weight)/e.max_grade AS full_grade , if(e.parent_id IS NULL,e.category_id,e.parent_id) as new_cat
+				
+				 from  -- (E)
+
+
+					(select /*+ NO_BNL() */ d.student_id, d.student_name, d.category_id, d.category_name, d.parent_id, d.course_id, d.quar_name, d.qur_id
+							,sum(d.grade) AS grade, sum(d.max_grade) AS max_grade, d.category_weight AS category_weight, d.order_num, d.cgp_id
+							
+					 from  -- (D)
+						
+							(select /*+ NO_BNL() */ * 
+							
+							  from -- (B)
+								
+								(SELECT  /*+ NO_BNL() */ DISTINCT students.id AS student_id,
+										users.name AS student_name,
+										assignments.id AS item_id,
+									   'assignment' AS item_type,
+										assignments.name AS item_name,
+										IF(st_sub_assi.student_status = 1,0,assignments.points) AS max_grade,
+										st_sub_assi.id AS submission_id,
+										st_sub_assi.student_status AS status,
+										IF(st_sub_assi.student_status = 1,0,IF(st_sub_assi.grade IS NULL, 0, st_sub_assi.grade)) AS grade,
+										assignments.category_id AS category_id,
+										categories.name AS category_name, 
+										cg.course_id, 
+										c_gp_cat.weight AS category_weight,
+										assi_cg.hide_grade AS hide_grade, 
+										c_gp.grading_period_id AS qur_id,
+										categories.parent_id AS parent_id,
+										c_gp_cat.courses_grading_period_id as cgp_id
+										FROM course_groups cg
+										LEFT OUTER JOIN student_course_groups st_cg on st_cg.course_group_id = cg.id AND st_cg.deleted_at IS NULL
+										LEFT OUTER JOIN students on students.id = st_cg.student_id AND students.deleted_at IS NULL and (students.id in ($P!{STUDENT_ID}) OR $P{STUDENT_ID}  = "-1")
+										LEFT OUTER JOIN users on users.actable_type = 'Student' AND users.actable_id = students.id AND users.deleted_at IS NULL
+										LEFT OUTER JOIN assignments_course_groups assi_cg on assi_cg.course_group_id = cg.id AND assi_cg.deleted_at IS NULL
+										LEFT OUTER JOIN assignments on assignments.id = assi_cg.assignment_id AND assignments.deleted_at IS NULL
+										LEFT OUTER JOIN student_submitted_assignments st_sub_assi on st_sub_assi.student_id = students.id AND st_sub_assi.assignment_id = assignments.id 
+										AND st_sub_assi.deleted_at IS NULL
+										LEFT OUTER JOIN categories on categories.id = assignments.category_id AND categories.deleted_at IS NULL
+										LEFT OUTER JOIN course_grading_periods_categories c_gp_cat on c_gp_cat.category_id = categories.id AND c_gp_cat.deleted_at IS NULL
+										INNER JOIN courses_grading_periods c_gp on c_gp.id = c_gp_cat.courses_grading_period_id AND (c_gp.grading_period_id in ($P!{GRADING_PERIOD_ID}) OR $P{GRADING_PERIOD_ID}  = "-1")
+										AND c_gp.course_id = cg.course_id AND c_gp.deleted_at IS NULL
+										where   assignments.grading_period_id = c_gp.grading_period_id 
+										AND cg.deleted_at IS NULL
+
+										UNION ALL
+												SELECT /*+ NO_BNL() */ DISTINCT students.id AS student_id, 
+												users.name AS student_name, 
+												quizzes.id AS item_id, 
+												'quiz' AS item_type, 
+												quizzes.name AS item_name,
+												IF(quiz_sub.student_status = 1,0,quizzes.total_score) AS max_grade, 
+												quiz_sub.id AS submission_id, 
+												quiz_sub.student_status AS status,
+												IF(quiz_sub.student_status = 1,0,IF(quiz_sub.score IS NULL, 0, quiz_sub.score)) AS grade, 
+												quizzes.category_id AS category_id, 
+												categories.name AS category_name,
+												cg.course_id,
+												c_gp_cat.weight AS category_weight, 		         		         
+												quiz_cg.hide_grade AS hide_grade, 
+												c_gp.grading_period_id AS qur_id,
+												categories.parent_id AS parent_id,
+												c_gp_cat.courses_grading_period_id as cgp_id
+										FROM course_groups cg
+										LEFT OUTER JOIN student_course_groups st_cg on st_cg.course_group_id = cg.id AND st_cg.deleted_at IS NULL
+										LEFT OUTER JOIN students on students.id = st_cg.student_id AND students.deleted_at IS NULL and (students.id in ($P!{STUDENT_ID}) OR $P{STUDENT_ID}  = "-1")
+										LEFT OUTER JOIN users on users.actable_type = 'Student' AND users.actable_id = students.id AND users.deleted_at IS NULL
+										LEFT OUTER JOIN course_groups_quizzes quiz_cg on quiz_cg.course_group_id = cg.id AND quiz_cg.deleted_at IS NULL
+										LEFT OUTER JOIN quizzes on quizzes.id = quiz_cg.quiz_id AND quizzes.deleted_at IS NULL
+										LEFT OUTER JOIN quiz_submissions quiz_sub on quiz_sub.student_id = students.id AND quiz_sub.quiz_id = quizzes.id
+										  AND quiz_sub.deleted_at IS NULL
+										LEFT OUTER JOIN categories on categories.id = quizzes.category_id AND categories.deleted_at IS NULL
+										LEFT OUTER JOIN course_grading_periods_categories c_gp_cat on c_gp_cat.category_id = categories.id 
+														AND c_gp_cat.deleted_at IS NULL
+										INNER JOIN courses_grading_periods c_gp on c_gp.id = c_gp_cat.courses_grading_period_id AND (c_gp.grading_period_id in ($P!{GRADING_PERIOD_ID}) OR $P{GRADING_PERIOD_ID}  = "-1")
+													AND c_gp.course_id = cg.course_id AND c_gp.deleted_at IS NULL
+													
+										WHERE quizzes.grading_period_id = c_gp.grading_period_id
+												AND  cg.deleted_at IS NULL
+
+										UNION ALL
+												SELECT /*+ NO_BNL() */ DISTINCT students.id AS student_id, 
+												users.name AS student_name, 
+												grade_items.id AS item_id, 
+												'grade_item' AS item_type,
+												grade_items.name as item_name, 
+												IF(g_sub.student_status = 1,0,grade_items.max_grade) AS max_grade, 
+												g_sub.id AS submission_id,
+												g_sub.student_status AS status, 
+												IF(g_sub.student_status = 1,0,IF(g_sub.grade IS NULL, 0 , g_sub.grade)) AS grade,
+												grade_items.category_id AS category_id,		              
+												categories.name AS category_name , 
+												cg.course_id, 		  
+												c_gp_cat.weight AS category_weight, 
+												grade_items.hide_grade AS hide_grade, 
+												c_gp.grading_period_id AS qur_id,
+												categories.parent_id AS parent_id,
+												c_gp_cat.courses_grading_period_id as cgp_id
+										FROM course_groups cg
+										LEFT OUTER JOIN student_course_groups st_cg on st_cg.course_group_id = cg.id AND st_cg.deleted_at IS NULL
+										LEFT OUTER JOIN students on students.id = st_cg.student_id AND students.deleted_at IS NULL and (students.id in ($P!{STUDENT_ID}) OR $P{STUDENT_ID}  = "-1")
+										LEFT OUTER JOIN users on users.actable_type = 'Student' AND users.actable_id = students.id AND users.deleted_at IS NULL
+										LEFT OUTER JOIN grade_items on grade_items.course_group_id = cg.id AND grade_items.deleted_at IS NULL
+										LEFT OUTER JOIN grade_submissions g_sub on g_sub.student_id = students.id AND g_sub.grade_item_id = grade_items.id
+										  AND g_sub.deleted_at IS NULL
+										LEFT OUTER JOIN categories on categories.id = grade_items.category_id AND categories.deleted_at IS NULL
+										LEFT OUTER JOIN course_grading_periods_categories c_gp_cat on c_gp_cat.category_id = categories.id AND c_gp_cat.deleted_at IS NULL
+										INNER JOIN courses_grading_periods c_gp on c_gp.id = c_gp_cat.courses_grading_period_id AND (c_gp.grading_period_id in ($P!{GRADING_PERIOD_ID}) OR $P{GRADING_PERIOD_ID}  = "-1")
+										  AND c_gp.course_id = cg.course_id AND c_gp.deleted_at IS NULL
+										where  grade_items.grading_period_id = c_gp.grading_period_id 
+										AND   cg.deleted_at IS NULL
+										)b
+									left join -- (C)
+									(
+										SELECT /*+ NO_BNL() */ distinct cat.id, cat.name, cgp.course_id AS crs_id, cgpc.weight, cgpc.courses_grading_period_id, cgp.grading_period_id, gp.name AS quar_name, 
+										courses.order AS order_num FROM categories cat
+										inner join course_grading_periods_categories cgpc on cat.id = cgpc.category_id and cgpc.deleted_at is null
+										inner join courses_grading_periods cgp on cgp.id =  cgpc.courses_grading_period_id and cgp.deleted_at is null
+										inner join grading_periods gp on gp.id = cgp.grading_period_id
+										inner join courses on courses.id = cgp.course_id and courses.deleted_at is null
+										where cat.deleted_at is null
+									)c
+									on b.qur_id=c.grading_period_id and c.crs_id=b.course_id and c.id = b.category_id
+							)d
+						group by  d.student_id, d.student_name, d.category_id, d.quar_name, d.course_id
+								 , d.category_name, d.category_weight, d.order_num, d.cgp_id, d.parent_id,d.qur_id
+					)e
+				)f
+		)z  
+		
+	INNER JOIN courses on z.course_id = courses.id and courses.hide = "false" and courses.calculated_in_total=0
+		 
+	inner join
+	(SELECT /*+ NO_BNL() */ csg.student_id as student_id, cg.name as class_name, levels.level_code AS level_code, courses.hide as hide_num, courses.calculated_in_total
+		FROM student_course_groups csg
+		inner join course_groups cg on csg.course_group_id=cg.id and cg.deleted_at is null
+		inner join courses on cg.course_id= courses.id and courses.deleted_at is null
+		inner join levels on courses.level_id=levels.id and levels.deleted_at is null
+		where csg.deleted_at is null		
+		and (csg.student_id in ($P!{STUDENT_ID}) OR $P{STUDENT_ID}  = "-1")
+		and courses.hide = "false"
+		and courses.calculated_in_total=0
+		group by student_id, class_name, level_code
+		) d on d.student_id = z.student_id
+		
+	
+)
+x
+
+
+group by  x.student_id, x.student_name, x.course_id, x.quar_name, x.order_num
+		, x.parent_id, x.name, x.class_name, x.level_code, x.hide_num
+		, PARENT_CATEGORY_WEIGHT
+		,x.cgp_id, x.qur_id 
+		
+)z
+group by
+z.student_id, z.student_name, z.course_id, z.quar_name, z.order_num
+, z.name, z.class_name, z.level_code, z.hide_num, z.user_name,z.Home_address,z.secion_name
+, z.west_weight,z.main_period_wight,z.main_pirod_name, z.cal_in_total, z.qur_id,z.sub_period_weight,total_grade
+
+order by z.level_code, z.student_name , z.cal_in_total DESC , z.quar_name , z.order_num]]>
+	</queryString>
+	<field name="student_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="student_id"/>
+	</field>
+	<field name="student_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="student_name"/>
+	</field>
+	<field name="course_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="course_id"/>
+	</field>
+	<field name="quar_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="quar_name"/>
+	</field>
+	<field name="order_num" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="order_num"/>
+	</field>
+	<field name="name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="name"/>
+	</field>
+	<field name="class_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="class_name"/>
+	</field>
+	<field name="level_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="level_code"/>
+	</field>
+	<field name="hide_num" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.label" value="hide_num"/>
+	</field>
+	<field name="user_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="user_name"/>
+	</field>
+	<field name="Home_address" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="Home_address"/>
+	</field>
+	<field name="secion_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="secion_name"/>
+	</field>
+	<field name="west_weight" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="west_weight"/>
+	</field>
+	<field name="main_period_wight" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="main_period_wight"/>
+	</field>
+	<field name="main_pirod_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="main_pirod_name"/>
+	</field>
+	<field name="cal_in_total" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="cal_in_total"/>
+	</field>
+	<field name="qur_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="qur_id"/>
+	</field>
+	<field name="sub_period_weight" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="sub_period_weight"/>
+	</field>
+	<field name="full_grade" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="full_grade"/>
+	</field>
+	<field name="total_grade" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.label" value="total_grade"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band height="150" splitType="Stretch">
+			<crosstab>
+				<reportElement x="0" y="0" width="120" height="150" uuid="eef0c190-732a-4ea9-a733-866aa62b8cd1">
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+					<property name="com.jaspersoft.studio.crosstab.style.header" value="Crosstab_CH"/>
+					<property name="com.jaspersoft.studio.crosstab.style.group" value="Crosstab_CG"/>
+					<property name="com.jaspersoft.studio.crosstab.style.total" value="Crosstab_CT"/>
+					<property name="com.jaspersoft.studio.crosstab.style.detail" value="Crosstab_CD"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="2.0"/>
+				</box>
+				<crosstabHeaderCell>
+					<cellContents>
+						<staticText>
+							<reportElement x="0" y="0" width="60" height="20" uuid="663a88a2-f745-424c-8dce-7a06f792bd4d"/>
+							<box>
+								<pen lineWidth="2.0"/>
+							</box>
+							<textElement textAlignment="Center" verticalAlignment="Middle">
+								<font size="12" isBold="true"/>
+							</textElement>
+							<text><![CDATA[Subject]]></text>
+						</staticText>
+					</cellContents>
+				</crosstabHeaderCell>
+				<rowGroup name="name" width="60" totalPosition="End">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{name}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents mode="Opaque" style="Crosstab_CH">
+							<textField>
+								<reportElement x="0" y="0" width="60" height="20" uuid="4020d93e-a2eb-4380-ad4c-e39713305471"/>
+								<box>
+									<bottomPen lineWidth="1.5"/>
+									<rightPen lineWidth="2.0"/>
+								</box>
+								<textFieldExpression><![CDATA[$V{name}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents mode="Opaque" style="Crosstab_CT">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<staticText>
+								<reportElement x="0" y="0" width="60" height="0" uuid="e95802bc-85db-4afd-bddf-e4cc82c3c027"/>
+								<box>
+									<bottomPen lineWidth="1.0"/>
+								</box>
+								<text><![CDATA[Total name]]></text>
+							</staticText>
+						</cellContents>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<columnGroup name="quar_name" height="20" totalPosition="End">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{quar_name}]]></bucketExpression>
+					</bucket>
+					<crosstabColumnHeader>
+						<cellContents mode="Opaque" style="Crosstab_CH">
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<textField>
+								<reportElement x="0" y="0" width="0" height="20" uuid="5d77b8c4-4bf2-40ef-822f-0124665df019"/>
+								<box>
+									<pen lineWidth="2.0"/>
+								</box>
+								<textFieldExpression><![CDATA[$V{quar_name}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabColumnHeader>
+					<crosstabTotalColumnHeader>
+						<cellContents mode="Opaque" style="Crosstab_CT">
+							<staticText>
+								<reportElement x="0" y="0" width="60" height="20" uuid="61fd8f44-a42c-4dc2-9e02-68ca1a8ad0de"/>
+								<box>
+									<pen lineWidth="2.0"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="12" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Mark]]></text>
+							</staticText>
+						</cellContents>
+					</crosstabTotalColumnHeader>
+				</columnGroup>
+				<measure name="full_grade_MEASURE" class="java.lang.Integer" calculation="Sum">
+					<measureExpression><![CDATA[$F{full_grade}]]></measureExpression>
+				</measure>
+				<measure name="quar_name_measure" class="java.lang.Integer" calculation="DistinctCount">
+					<measureExpression><![CDATA[$F{quar_name}]]></measureExpression>
+				</measure>
+				<measure name="total_grade_measure" class="java.lang.Long">
+					<measureExpression><![CDATA[$F{total_grade}]]></measureExpression>
+				</measure>
+				<crosstabCell width="0" height="20">
+					<cellContents mode="Opaque" style="Crosstab_CD">
+						<textField>
+							<reportElement x="0" y="0" width="0" height="20" uuid="49d8fbe6-4168-4d7c-bae3-be23efe63ebd"/>
+							<box>
+								<bottomPen lineWidth="1.0"/>
+							</box>
+							<textFieldExpression><![CDATA[$V{full_grade_MEASURE}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="60" height="20" columnTotalGroup="quar_name">
+					<cellContents mode="Opaque" style="Crosstab_CT">
+						<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.HorizontalRowLayout"/>
+						<textField>
+							<reportElement x="0" y="0" width="30" height="20" uuid="66a3612f-b669-4025-a274-726ca6c351d6"/>
+							<box>
+								<leftPen lineWidth="2.0"/>
+								<bottomPen lineWidth="1.5"/>
+							</box>
+							<textElement textAlignment="Right" verticalAlignment="Middle"/>
+							<textFieldExpression><![CDATA[(($V{full_grade_MEASURE_quar_name_ALL}*$V{total_grade_measure})/100)/$V{quar_name_measure_name_quar_name_ALL}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement x="30" y="0" width="30" height="20" uuid="17263ecf-4c4a-4744-a16d-33b0175fd5eb"/>
+							<box>
+								<bottomPen lineWidth="1.5"/>
+							</box>
+							<textElement textAlignment="Left" verticalAlignment="Middle"/>
+							<textFieldExpression><![CDATA["/"+$V{total_grade_measure}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="0" height="0" rowTotalGroup="name">
+					<cellContents mode="Opaque" style="Crosstab_CT">
+						<textField>
+							<reportElement x="0" y="0" width="0" height="0" uuid="b86669f1-ed91-4fd2-a1e9-ca136878d80f"/>
+							<box>
+								<bottomPen lineWidth="1.0"/>
+							</box>
+							<textFieldExpression><![CDATA[$V{full_grade_MEASURE}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="60" height="0" rowTotalGroup="name" columnTotalGroup="quar_name">
+					<cellContents mode="Opaque" style="Crosstab_CT">
+						<textField>
+							<reportElement x="0" y="0" width="60" height="0" uuid="91cdfd77-d116-4ef3-8f47-0b0747703393"/>
+							<box>
+								<bottomPen lineWidth="1.0"/>
+							</box>
+							<textFieldExpression><![CDATA[$V{full_grade_MEASURE}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+			</crosstab>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

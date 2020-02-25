@@ -1,0 +1,616 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.10.0.final using JasperReports Library version 6.10.0-unknown  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Blank_A4" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="0" bottomMargin="20" uuid="b32e866e-0a81-4f0c-9e1b-4cc13f05d176">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Elite international"/>
+	<property name="net.sf.jasperreports.print.create.bookmarks" value="true"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<style name="Crosstab_CH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Crosstab_CG" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Crosstab_CT" mode="Opaque" backcolor="#005FB3">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Crosstab_CD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<parameter name="quarter_num" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[select x.student_id, x.student_name, x.course_id, x.quar_name, x.order_num, x.parent_id,
+ x.name, x.class_name, x.level_code, x.hide_num, (SUM(x.full_grade)*(select weight from course_grading_periods_categories where category_id = x.parent_id and courses_grading_period_id = x.cgp_id limit 1)) /sum(x.category_weight) AS full_grade, (select name from categories where id = x.parent_id) AS category_name
+from
+(select z.*, courses.name, d.class_name, d.level_code, d.hide_num from
+(select f.student_id, f.student_name, f.course_id, f.quar_name, f.order_num,f.category_name,f.category_weight, 
+if(f.parent_id IS NULL,f.category_id,f.parent_id) AS parent_id,
+IF(f.full_grade IS NULL,0,f.full_grade) AS full_grade, f.cgp_id
+	 from
+
+(select e.*,(e.grade*e.category_weight)/e.max_grade AS full_grade from
+
+(select d.student_id, d.student_name, d.category_id, d.category_name, d.parent_id, d.course_id, d.quar_name, sum(d.grade) AS grade, sum(d.max_grade) AS max_grade, d.category_weight AS category_weight,  
+d.order_num, d.cgp_id  from
+
+(select * from
+
+(SELECT DISTINCT students.id AS student_id,
+	    users.name AS student_name,
+	    assignments.id AS item_id,
+	   'assignment' AS item_type,
+        assignments.name AS item_name,
+        assignments.points AS max_grade,
+        st_sub_assi.id AS submission_id,
+        st_sub_assi.student_status AS status,
+        IF(st_sub_assi.grade IS NULL, 0, st_sub_assi.grade) AS grade,
+        assignments.category_id AS category_id,
+        categories.name AS category_name, 
+        cg.course_id, 
+        c_gp_cat.weight AS category_weight,
+        assi_cg.hide_grade AS hide_grade, 
+        c_gp.grading_period_id AS qur_id,
+		categories.parent_id AS parent_id,
+        c_gp_cat.courses_grading_period_id as cgp_id
+        FROM course_groups cg
+        LEFT OUTER JOIN student_course_groups st_cg on st_cg.course_group_id = cg.id AND st_cg.deleted_at IS NULL
+        LEFT OUTER JOIN students on students.id = st_cg.student_id AND students.deleted_at IS NULL
+        LEFT OUTER JOIN users on users.actable_type = 'Student' AND users.actable_id = students.id AND users.deleted_at IS NULL
+        LEFT OUTER JOIN assignments_course_groups assi_cg on assi_cg.course_group_id = cg.id AND assi_cg.deleted_at IS NULL
+        LEFT OUTER JOIN assignments on assignments.id = assi_cg.assignment_id AND assignments.deleted_at IS NULL
+        LEFT OUTER JOIN student_submitted_assignments st_sub_assi on st_sub_assi.student_id = students.id
+          AND st_sub_assi.assignment_id = assignments.id AND st_sub_assi.deleted_at IS NULL
+        LEFT OUTER JOIN categories on categories.id = assignments.category_id AND categories.deleted_at IS NULL
+        LEFT OUTER JOIN course_grading_periods_categories c_gp_cat on c_gp_cat.category_id = categories.id AND c_gp_cat.deleted_at IS NULL
+        INNER JOIN courses_grading_periods c_gp on c_gp.id = c_gp_cat.courses_grading_period_id AND c_gp.grading_period_id = $P{quarter_num}
+          AND c_gp.course_id = cg.course_id AND c_gp.deleted_at IS NULL
+        where  assignments.grading_period_id = $P{quarter_num} AND cg.deleted_at IS NULL
+
+        UNION ALL
+                SELECT DISTINCT students.id AS student_id, 
+                users.name AS student_name, 
+                quizzes.id AS item_id, 
+                'quiz' AS item_type, 
+                quizzes.name AS item_name,
+        		quizzes.total_score AS max_grade, 
+        		quiz_sub.id AS submission_id, 
+        		quiz_sub.student_status AS status,
+        	    IF(quiz_sub.score IS NULL, 0, quiz_sub.score) AS grade, 
+        	    quizzes.category_id AS category_id, 
+        	    categories.name AS category_name,
+        	    cg.course_id,
+		        c_gp_cat.weight AS category_weight, 		         		         
+		        quiz_cg.hide_grade AS hide_grade, 
+		        c_gp.grading_period_id AS qur_id,
+				categories.parent_id AS parent_id,
+                c_gp_cat.courses_grading_period_id as cgp_id
+        FROM course_groups cg
+        LEFT OUTER JOIN student_course_groups st_cg on st_cg.course_group_id = cg.id AND st_cg.deleted_at IS NULL
+        LEFT OUTER JOIN students on students.id = st_cg.student_id AND students.deleted_at IS NULL
+        LEFT OUTER JOIN users on users.actable_type = 'Student' AND users.actable_id = students.id AND users.deleted_at IS NULL
+        LEFT OUTER JOIN course_groups_quizzes quiz_cg on quiz_cg.course_group_id = cg.id AND quiz_cg.deleted_at IS NULL
+        LEFT OUTER JOIN quizzes on quizzes.id = quiz_cg.quiz_id AND quizzes.deleted_at IS NULL
+        LEFT OUTER JOIN quiz_submissions quiz_sub on quiz_sub.student_id = students.id AND quiz_sub.quiz_id = quizzes.id
+          AND quiz_sub.deleted_at IS NULL
+        LEFT OUTER JOIN categories on categories.id = quizzes.category_id AND categories.deleted_at IS NULL
+        LEFT OUTER JOIN course_grading_periods_categories c_gp_cat on c_gp_cat.category_id = categories.id AND c_gp_cat.deleted_at IS NULL
+        INNER JOIN courses_grading_periods c_gp on c_gp.id = c_gp_cat.courses_grading_period_id AND c_gp.grading_period_id = $P{quarter_num}
+          AND c_gp.course_id = cg.course_id AND c_gp.deleted_at IS NULL
+        where quizzes.grading_period_id = $P{quarter_num} AND cg.deleted_at IS NULL
+
+        UNION ALL
+                SELECT DISTINCT students.id AS student_id, 
+                users.name AS student_name, 
+                grade_items.id AS item_id, 
+                'grade_item' AS item_type,
+		        grade_items.name as item_name, 
+		        grade_items.max_grade AS max_grade, 
+		        g_sub.id AS submission_id,
+		        g_sub.student_status AS status, 
+		        IF(g_sub.grade IS NULL, 0 , g_sub.grade) AS grade,
+		        grade_items.category_id AS category_id,		              
+		        categories.name AS category_name , 
+		        cg.course_id, 		  
+		        c_gp_cat.weight AS category_weight, 
+		        grade_items.hide_grade AS hide_grade, 
+		        c_gp.grading_period_id AS qur_id,
+				categories.parent_id AS parent_id,
+                c_gp_cat.courses_grading_period_id as cgp_id
+        FROM course_groups cg
+        LEFT OUTER JOIN student_course_groups st_cg on st_cg.course_group_id = cg.id AND st_cg.deleted_at IS NULL
+        LEFT OUTER JOIN students on students.id = st_cg.student_id AND students.deleted_at IS NULL
+        LEFT OUTER JOIN users on users.actable_type = 'Student' AND users.actable_id = students.id AND users.deleted_at IS NULL
+        LEFT OUTER JOIN grade_items on grade_items.course_group_id = cg.id AND grade_items.deleted_at IS NULL
+        LEFT OUTER JOIN grade_submissions g_sub on g_sub.student_id = students.id AND g_sub.grade_item_id = grade_items.id
+          AND g_sub.deleted_at IS NULL
+        LEFT OUTER JOIN categories on categories.id = grade_items.category_id AND categories.deleted_at IS NULL
+        LEFT OUTER JOIN course_grading_periods_categories c_gp_cat on c_gp_cat.category_id = categories.id AND c_gp_cat.deleted_at IS NULL
+        INNER JOIN courses_grading_periods c_gp on c_gp.id = c_gp_cat.courses_grading_period_id AND c_gp.grading_period_id = $P{quarter_num}
+          AND c_gp.course_id = cg.course_id AND c_gp.deleted_at IS NULL
+        where grade_items.grading_period_id = $P{quarter_num} AND cg.deleted_at IS NULL
+		)b
+		left join 
+		(
+			SELECT distinct cat.id, cat.name, cgp.course_id AS crs_id, cgpc.weight, cgpc.courses_grading_period_id, cgp.grading_period_id, gp.name AS quar_name, 
+            courses.order AS order_num FROM categories cat
+			inner join course_grading_periods_categories cgpc on cat.id = cgpc.category_id and cgpc.deleted_at is null
+			inner join courses_grading_periods cgp on cgp.id =  cgpc.courses_grading_period_id and cgp.deleted_at is null
+			inner join grading_periods gp on gp.id = cgp.grading_period_id
+			inner join courses on courses.id = cgp.course_id and courses.deleted_at is null
+			where cat.deleted_at is null
+)c
+on b.qur_id=c.grading_period_id and c.crs_id=b.course_id and c.id = b.category_id
+)d
+group by d.student_id, d.student_name, d.category_id, d.quar_name, d.course_id, d.category_name, d.category_weight, d.order_num
+)e
+)f
+)z 
+INNER JOIN courses on z.course_id = courses.id
+inner join
+(SELECT csg.student_id as student_id, cg.name as class_name, levels.level_code AS level_code, courses.hide as hide_num
+	FROM student_course_groups csg
+	inner join course_groups cg on csg.course_group_id=cg.id and cg.deleted_at is null
+	inner join courses on cg.course_id= courses.id and courses.deleted_at is null
+	inner join levels on courses.level_id=levels.id and levels.deleted_at is null
+	where csg.deleted_at is null and courses.hide="false"
+	group by student_id, class_name, level_code
+	)d on d.student_id = z.student_id
+)
+x
+group by x.student_id, x.student_name, x.course_id, x.quar_name, x.order_num, x.parent_id, x.name, x.class_name, x.level_code, x.hide_num]]>
+	</queryString>
+	<field name="student_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="student_id"/>
+	</field>
+	<field name="student_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="student_name"/>
+	</field>
+	<field name="course_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="course_id"/>
+	</field>
+	<field name="quar_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="quar_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="grading_periods"/>
+	</field>
+	<field name="order_num" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="order_num"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="courses"/>
+	</field>
+	<field name="parent_id" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.label" value="parent_id"/>
+	</field>
+	<field name="name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="courses"/>
+	</field>
+	<field name="class_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="class_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="course_groups"/>
+	</field>
+	<field name="level_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="level_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="levels"/>
+	</field>
+	<field name="hide_num" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.label" value="hide_num"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="courses"/>
+	</field>
+	<field name="full_grade" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="full_grade"/>
+	</field>
+	<field name="category_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="category_name"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="202" splitType="Stretch">
+			<image>
+				<reportElement x="4" y="2" width="560" height="200" uuid="034be993-b515-4574-8bdd-c32effc7c510"/>
+				<imageExpression><![CDATA["Capture.PNG"]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="6" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="110" splitType="Stretch">
+			<staticText>
+				<reportElement x="30" y="10" width="265" height="30" forecolor="#3376B8" uuid="f9757c54-b463-41c3-bc7e-5105cc629cea"/>
+				<box padding="0">
+					<pen lineWidth="1.0" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[student Name:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="30" y="50" width="264" height="30" forecolor="#3376B8" uuid="919426ca-3255-4bec-8310-0bb0c14fd696"/>
+				<box padding="0">
+					<pen lineWidth="1.0" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Year:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="320" y="50" width="180" height="30" forecolor="#3376B8" uuid="ca6ea2f3-58ef-4e92-8567-42995330f9f0"/>
+				<box padding="0">
+					<pen lineWidth="1.0" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[First Trimester Grade:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="320" y="10" width="180" height="30" forecolor="#3376B8" uuid="f9ad9d27-9abf-4eed-a5ee-2ee4e119dd2a"/>
+				<box padding="0">
+					<pen lineWidth="1.0" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[School Year: 2019-2020]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="116" y="10" width="179" height="30" forecolor="#3376B8" uuid="6cc97f54-eb2b-4c98-9a69-4d880d762907"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{student_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="70" y="50" width="110" height="30" forecolor="#3376B8" uuid="d1501343-b863-45b8-ac85-137641792f09"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{level_code}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="268" splitType="Stretch">
+			<crosstab>
+				<reportElement x="0" y="0" width="560" height="40" forecolor="#3376B8" uuid="912dd2c8-fbc5-4bb5-adf3-47738faf4db8">
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+					<property name="com.jaspersoft.studio.crosstab.style.header" value="Crosstab_CH"/>
+					<property name="com.jaspersoft.studio.crosstab.style.group" value="Crosstab_CG"/>
+					<property name="com.jaspersoft.studio.crosstab.style.total" value="Crosstab_CT"/>
+					<property name="com.jaspersoft.studio.crosstab.style.detail" value="Crosstab_CD"/>
+				</reportElement>
+				<crosstabHeaderCell>
+					<cellContents>
+						<staticText>
+							<reportElement mode="Opaque" x="0" y="0" width="440" height="20" forecolor="#FFFFFF" backcolor="#1AB3D9" uuid="3607080b-2f7f-443a-abef-4afa53f061ec"/>
+							<box>
+								<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textElement textAlignment="Center" verticalAlignment="Middle"/>
+							<text><![CDATA[Subject]]></text>
+						</staticText>
+					</cellContents>
+				</crosstabHeaderCell>
+				<rowGroup name="name" width="440" totalPosition="End">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{name}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents mode="Opaque" style="Crosstab_CH">
+							<textField>
+								<reportElement mode="Opaque" x="0" y="0" width="440" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="b56d472e-7adb-4478-a5fc-3033d4c00828"/>
+								<box>
+									<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+									<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$V{name}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents mode="Opaque" style="Crosstab_CT"/>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<columnGroup name="category_name" height="20" totalPosition="End">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{category_name}]]></bucketExpression>
+					</bucket>
+					<crosstabColumnHeader>
+						<cellContents mode="Opaque" style="Crosstab_CH">
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						</cellContents>
+					</crosstabColumnHeader>
+					<crosstabTotalColumnHeader>
+						<cellContents mode="Opaque" style="Crosstab_CT">
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<staticText>
+								<reportElement mode="Opaque" x="0" y="0" width="120" height="20" forecolor="#FFFFFF" backcolor="#1AB3D9" uuid="a6c73d01-75d2-4b51-aaf3-47f10d22d2c2"/>
+								<box>
+									<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+									<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text><![CDATA[Score]]></text>
+							</staticText>
+						</cellContents>
+					</crosstabTotalColumnHeader>
+				</columnGroup>
+				<measure name="full_grade_MEASURE" class="java.lang.Integer" calculation="Count">
+					<measureExpression><![CDATA[$F{full_grade}]]></measureExpression>
+				</measure>
+				<crosstabCell width="0" height="20">
+					<cellContents mode="Opaque" style="Crosstab_CD"/>
+				</crosstabCell>
+				<crosstabCell width="120" height="20" columnTotalGroup="category_name">
+					<cellContents mode="Opaque" style="Crosstab_CT">
+						<textField>
+							<reportElement mode="Opaque" x="0" y="0" width="120" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="7cca903e-626a-4b71-a1e8-fe756dd6a6e9"/>
+							<box>
+								<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textElement textAlignment="Center" verticalAlignment="Middle"/>
+							<textFieldExpression><![CDATA[IF($V{full_grade_MEASURE}>=90,"A*",
+IF($V{full_grade_MEASURE}>=80,"A",
+IF($V{full_grade_MEASURE}>=70,"B",
+IF($V{full_grade_MEASURE}>=60,"C",
+IF($V{full_grade_MEASURE}>=50,"D","E"
+)))))]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="0" height="0" rowTotalGroup="name">
+					<cellContents mode="Opaque" style="Crosstab_CT">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="120" height="0" rowTotalGroup="name" columnTotalGroup="category_name">
+					<cellContents mode="Opaque" style="Crosstab_CT">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</cellContents>
+				</crosstabCell>
+			</crosstab>
+			<frame>
+				<reportElement x="0" y="95" width="560" height="110" uuid="f0c82eeb-7efb-431b-8079-6f2bdc7a042b"/>
+				<staticText>
+					<reportElement x="32" y="40" width="84" height="30" forecolor="#3376B8" uuid="0339197c-e9cb-4092-998f-433c427174bc"/>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[A*]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="32" y="10" width="504" height="30" forecolor="#FFFFFF" backcolor="#1AB3D9" uuid="6c2663e3-ddfa-47ee-9f2b-483c89570958"/>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Grading Scale]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="116" y="40" width="84" height="30" forecolor="#3376B8" uuid="8ecd94a8-e234-4c26-8f70-a3fc0d489f2b"/>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[A]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="284" y="40" width="84" height="30" forecolor="#3376B8" uuid="76bc4e71-8ecf-4aa4-baab-44427a309610"/>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[C]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="200" y="40" width="84" height="30" forecolor="#3376B8" uuid="c6f9b3b3-c203-49f7-9fe6-78508450c940"/>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[B]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="452" y="40" width="84" height="30" forecolor="#3376B8" uuid="c8ed5b86-24db-4bca-8dac-dc6c3136c17b"/>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[E]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="368" y="40" width="84" height="30" forecolor="#3376B8" uuid="45b86e37-d4b0-4bcc-ae63-4d8add2f6949"/>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[D]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="116" y="70" width="84" height="30" forecolor="#3376B8" uuid="ebe214ee-3673-4cf4-ba79-b296d7ca54ea"/>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[89 - 80]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="368" y="70" width="84" height="30" forecolor="#3376B8" uuid="9a813be0-cb16-4b11-8460-791a65c4bb90"/>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[59 - 50]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="200" y="70" width="84" height="30" forecolor="#3376B8" uuid="29d8cd8b-198d-427f-9045-597b8c00eb81"/>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[79 - 70]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="32" y="70" width="84" height="30" forecolor="#3376B8" uuid="13164f81-3be4-4e81-a9b1-2cfedc1417dc"/>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[100 - 90]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="284" y="70" width="84" height="30" forecolor="#3376B8" uuid="d1ee5447-2259-4bd1-8194-da8c2b2f8d77"/>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[69 - 60]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="452" y="70" width="84" height="30" forecolor="#3376B8" uuid="13d95714-2c1c-499a-90d5-c27b6c0d5047"/>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[50 - Below]]></text>
+				</staticText>
+			</frame>
+			<staticText>
+				<reportElement x="50" y="233" width="203" height="30" uuid="33b2ba3b-263a-4459-a3a8-cd0ef9af5744"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Marking and Grading Board]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="430" y="233" width="79" height="30" uuid="b97f258f-54fc-4353-baec-a297739b54f9"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Principal]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>

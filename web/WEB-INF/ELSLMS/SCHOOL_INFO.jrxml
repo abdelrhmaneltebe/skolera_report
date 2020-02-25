@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.10.0.final using JasperReports Library version 6.10.0-unknown  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Blank_A4" pageWidth="588" pageHeight="842" columnWidth="588" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="704042ed-13a8-4934-8270-b40926f6918e">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Glory_full.xml"/>
+	<queryString language="SQL">
+		<![CDATA[select 
+school_description school_name,
+ academic_year,
+ code
+ from schools
+ LIMIT 1]]>
+	</queryString>
+	<field name="school_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="school_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="schools"/>
+	</field>
+	<field name="academic_year" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="academic_year"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="schools"/>
+	</field>
+	<field name="code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="schools"/>
+	</field>
+	<variable name="LOCAL_VAR" class="java.lang.String">
+		<variableExpression><![CDATA[$F{school_name}+" - "+ ( T( $F{code}) != "" ? UPPER( $F{code}) : "") + (T($F{academic_year}) != "" ? " ("+$F{academic_year} +") " : "")]]></variableExpression>
+	</variable>
+	<pageHeader>
+		<band height="30" splitType="Stretch">
+			<textField>
+				<reportElement x="34" y="0" width="520" height="30" forecolor="#FFFFFF" uuid="b10a9f90-8119-46a9-8917-5ce80d78da62"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{school_name}+" - "+ ( T( $F{code}) != "" ? UPPER( $F{code}) : "") + (T($F{academic_year}) != "" ? " ("+$F{academic_year} +") " : "")]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+</jasperReport>

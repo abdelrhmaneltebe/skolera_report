@@ -1,0 +1,1508 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.10.0.final using JasperReports Library version 6.10.0-unknown  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="SEMESTER" pageWidth="1250" pageHeight="1000" orientation="Landscape" columnWidth="1250" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" whenResourceMissingType="Empty" uuid="df013db5-f76e-44d3-b0df-bcbc46d93160">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="SOG"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="0"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="1000"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="663"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="323"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true"/>
+	<style name="SubTitle" forecolor="#736343" backcolor="#FFFFFF" hTextAlign="Center" vTextAlign="Middle" fontName="Arial" fontSize="18"/>
+	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
+	<style name="Detail" fontName="Arial" fontSize="12"/>
+	<style name="Row">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></conditionExpression>
+			<style backcolor="#E6DAC3"/>
+		</conditionalStyle>
+	</style>
+	<style name="Style1" hTextAlign="Center"/>
+	<style name="NOT_AVAILABLE">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{IS_AVAILABLE} == 0]]></conditionExpression>
+			<style mode="Opaque" forecolor="#000000" backcolor="#B3B3B3"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="LETTER_ID" class="java.lang.String"/>
+	<parameter name="GRADING_PERIOD_ID" class="java.lang.String">
+		<defaultValueExpression><![CDATA["-1"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="CATEGORY_NAME" class="java.lang.String">
+		<defaultValueExpression><![CDATA["-1"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="STUDENT_ID" class="java.lang.String">
+		<defaultValueExpression><![CDATA["-1"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="CLASS_NAME" class="java.lang.String">
+		<defaultValueExpression><![CDATA["-1"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="INCLUDE_ATTENDANCE_RECORD" class="java.lang.String">
+		<defaultValueExpression><![CDATA["-1"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="INCLUDE_COMMENT_SECTION" class="java.lang.String">
+		<defaultValueExpression><![CDATA["-1"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="LEVEL_CODE" class="java.lang.String">
+		<defaultValueExpression><![CDATA["-1"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="PERIOD_NAME" class="java.lang.String">
+		<defaultValueExpression><![CDATA["-1"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="TOKEN" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="MAP" class="java.util.HashMap" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new java.util.HashMap()]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DATA_SOURCE" class="net.sf.jasperreports.engine.JRDataSource"/>
+	<parameter name="DB_NAME" class="java.lang.String"/>
+	<parameter name="SHOW_IN_TOTAL" class="java.lang.String">
+		<defaultValueExpression><![CDATA["-1"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SHOW_TOTAL" class="java.lang.String"/>
+	<parameter name="SHOW_VIR" class="java.lang.String">
+		<defaultValueExpression><![CDATA["-1"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SHOW_HOR" class="java.lang.String">
+		<defaultValueExpression><![CDATA["YES"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="REPORT_PATH" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["C:/Users/USER/JaspersoftWorkspace/MyReports/SKOLERA_REPORTS/"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ABSOLUTE_PATH" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["C:\\Users\\wifi\\Desktop\\skolera project\\SReport\\web\\WEB-INF\\MISLMS\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="HEADER_BG" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["DEFAULT/SKOLERA_HEADER.png"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="FOOTER_BG" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["DEFAULT/SKOLERA_FOOTER.png"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="REPORT_NAME" class="java.lang.String">
+		<defaultValueExpression><![CDATA["SEMESTER"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select
+  /*+ NO_BNL() */
+ z.*
+, IF ((select  /*+ NO_BNL() */ id from categories where parent_id = z.parent_id  and deleted_at is null limit 1) is null,z.full_grade1 , IF(z.full_grade1 is null,0,z.full_grade1) * z.PARENT_CATEGORY_WEIGHT/100) AS full_grade
+, (select  /*+ NO_BNL() */ total_grade from courses where id = z.course_id) AS total_grade
+from -- (Z)
+(select 
+    /*+ NO_BNL() */
+	x.student_id, x.student_name, x.course_id, x.quar_name, x.order_num, x.parent_id,
+	x.name, x.class_name, x.level_code, x.hide_num
+     , (SELECT  /*+ NO_BNL() */ distinct username FROM users where actable_id = x.student_id and deleted_at is null LIMIT 1) AS user_name
+     , (SELECT  /*+ NO_BNL() */ distinct home_address FROM users where actable_id = x.student_id and deleted_at is null LIMIT 1) AS Home_address
+	 , (select /*+ NO_BNL() */ name from categories where id = x.parent_id) AS category_name
+	 ,(SELECT /*+ NO_BNL() */ name FROM sections where id = (select section_id from stages where id = (select stage_id from levels where level_code = x.level_code and deleted_at is null) and deleted_at is null) and deleted_at is null ) as secion_name
+	 , (select /*+ NO_BNL() */ weight from course_grading_periods_categories where category_id = x.parent_id and courses_grading_period_id = x.cgp_id LIMIT 1) PARENT_CATEGORY_WEIGHT
+	 , SUM(x.category_grade) AS full_grade1
+     , x.qur_id
+	 , IF((SELECT  /*+ NO_BNL() */ distinct weight FROM courses_grading_periods where grading_period_id = (select  /*+ NO_BNL() */ distinct parent_id from grading_periods where id = x.qur_id ) and course_id = x.course_id limit 1) is null,100,(SELECT /*+ NO_BNL() */ distinct weight FROM courses_grading_periods where grading_period_id = (select  /*+ NO_BNL() */distinct parent_id from grading_periods where id = x.qur_id ) and course_id = x.course_id limit 1)) AS main_period_wight
+     , (SELECT  /*+ NO_BNL() */ distinct weight FROM courses_grading_periods where grading_period_id = x.qur_id and course_id = x.course_id limit 1) AS sub_period_weight
+	 , if((SELECT  /*+ NO_BNL() */ distinct name FROM grading_periods where id = (select  /*+ NO_BNL() */ parent_id from grading_periods where id =x.qur_id)) is null ,x.quar_name, (SELECT  /*+ NO_BNL() */ distinct name FROM grading_periods where id = (select  /*+ NO_BNL() */ parent_id from grading_periods where id =x.qur_id)) ) AS main_pirod_name
+     , x.cgp_id
+     ,(select  /*+ NO_BNL() */ calculated_in_total from courses where id = x.course_id) AS cal_in_total
+     ,(
+	 
+		select
+	 /*+ NO_BNL() */ 
+	 IF(sum(z.PARENT_CATEGORY_WEIGHT) is null,0,sum(z.PARENT_CATEGORY_WEIGHT)) AS weight from (
+select 
+    /*+ NO_BNL() */
+	x.student_id, x.student_name, x.course_id, x.quar_name, x.order_num, x.parent_id,
+	x.name, x.class_name, x.level_code, x.hide_num
+     , (SELECT  /*+ NO_BNL() */ distinct username FROM users where actable_id = x.student_id and deleted_at is null LIMIT 1) AS user_name
+     , (SELECT  /*+ NO_BNL() */ distinct home_address FROM users where actable_id = x.student_id and deleted_at is null LIMIT 1) AS Home_address
+	 , (select /*+ NO_BNL() */ name from categories where id = x.parent_id) AS category_name
+	 , (select /*+ NO_BNL() */ weight from course_grading_periods_categories where category_id = x.parent_id and courses_grading_period_id = x.cgp_id LIMIT 1) PARENT_CATEGORY_WEIGHT
+	 , SUM(x.category_grade) AS full_grade1
+     , x.qur_id
+	 , IF((SELECT  /*+ NO_BNL() */ distinct weight FROM courses_grading_periods where grading_period_id = (select  /*+ NO_BNL() */ distinct parent_id from grading_periods where id = x.qur_id ) and course_id = x.course_id limit 1) is null,100,(SELECT /*+ NO_BNL() */ distinct weight FROM courses_grading_periods where grading_period_id = (select  /*+ NO_BNL() */distinct parent_id from grading_periods where id = x.qur_id ) and course_id = x.course_id limit 1)) AS main_period_wight
+     , (SELECT  /*+ NO_BNL() */ distinct weight FROM courses_grading_periods where grading_period_id = x.qur_id and course_id = x.course_id limit 1) AS sub_period_weight
+	 , if((SELECT  /*+ NO_BNL() */ distinct name FROM grading_periods where id = (select  /*+ NO_BNL() */ parent_id from grading_periods where id =x.qur_id)) is null ,x.quar_name, (SELECT  /*+ NO_BNL() */ distinct name FROM grading_periods where id = (select  /*+ NO_BNL() */ parent_id from grading_periods where id =x.qur_id)) ) AS main_pirod_name
+     , x.cgp_id
+     , IF(x.status is null ,0,x.status) AS status
+
+from  -- (X)
+
+	(select /*+ NO_BNL() */ z.*, courses.name, d.class_name, d.level_code, d.hide_num 
+	
+	  from -- (Z)
+	  
+		(select /*+ NO_BNL() */ f.student_id, f.student_name, f.course_id, f.quar_name, f.qur_id, f.order_num,f.category_name,f.category_weight, f.max_grade,
+				if(f.parent_id IS NULL,f.category_id,f.parent_id) AS parent_id,IF(f.full_grade IS NULL,0,f.full_grade) AS full_grade, f.cgp_id
+                ,(IF(f.full_grade IS NULL,0,f.full_grade)*(f.category_weight *(select /*+ NO_BNL() */ weight from  course_grading_periods_categories where category_id = if(f.parent_id IS NULL,f.category_id,f.parent_id) and courses_grading_period_id = f.cgp_id limit 1))
+                /(select  /*+ NO_BNL() */ sum(weight) from course_grading_periods_categories where category_id IN (select /*+ NO_BNL() */ id from categories where id = f.new_cat)
+					and deleted_at is null and courses_grading_period_id= f.cgp_id ))/IF (f.category_weight is null , 0 ,f.category_weight) AS category_grade
+                    , f.status
+                
+				
+		  from  -- (F)
+		 
+				(select  /*+ NO_BNL() */ e.*,(e.grade*e.category_weight)/e.max_grade AS full_grade , if(e.parent_id IS NULL,e.category_id,e.parent_id) as new_cat
+				
+				 from  -- (E)
+
+
+					(select /*+ NO_BNL() */ d.student_id, d.student_name, d.category_id, d.category_name, d.parent_id, d.course_id, d.quar_name, d.qur_id
+							,sum(d.grade) AS grade, sum(d.max_grade) AS max_grade, d.category_weight AS category_weight, d.order_num, d.cgp_id , d.status
+							
+					 from  -- (D)
+						
+							(select /*+ NO_BNL() */ d.student_id, d.student_name, d.category_id, d.category_name, d.parent_id, d.course_id, d.quar_name, d.qur_id
+							,sum(d.grade) AS grade, sum(d.max_grade) AS max_grade, d.category_weight AS category_weight, d.order_num, d.cgp_id, d.status
+							
+					 from  -- (D)
+						
+							(select /*+ NO_BNL() */ * 
+							
+							  from -- (B)
+								
+								(SELECT  /*+ NO_BNL() */ DISTINCT students.id AS student_id,
+										users.name AS student_name,
+										assignments.id AS item_id,
+									   'assignment' AS item_type,
+										assignments.name AS item_name,
+										IF(st_sub_assi.student_status = 1,0,assignments.points) AS max_grade,
+										st_sub_assi.id AS submission_id,
+										if(st_sub_assi.student_status = 2, 0, st_sub_assi.student_status) AS status,
+										IF(st_sub_assi.student_status = 1,0,IF(st_sub_assi.grade IS NULL, 0, st_sub_assi.grade)) AS grade,
+										assignments.category_id AS category_id,
+										categories.name AS category_name, 
+										cg.course_id, 
+										c_gp_cat.weight AS category_weight,
+										assi_cg.hide_grade AS hide_grade, 
+										c_gp.grading_period_id AS qur_id,
+										categories.parent_id AS parent_id,
+										c_gp_cat.courses_grading_period_id as cgp_id
+										FROM course_groups cg
+										LEFT OUTER JOIN student_course_groups st_cg on st_cg.course_group_id = cg.id AND st_cg.deleted_at IS NULL
+										LEFT OUTER JOIN students on students.id = st_cg.student_id AND students.deleted_at IS NULL
+										LEFT OUTER JOIN users on users.actable_type = 'Student' AND users.actable_id = students.id AND users.deleted_at IS NULL
+										LEFT OUTER JOIN assignments_course_groups assi_cg on assi_cg.course_group_id = cg.id AND assi_cg.deleted_at IS NULL
+										LEFT OUTER JOIN assignments on assignments.id = assi_cg.assignment_id AND assignments.deleted_at IS NULL
+										LEFT OUTER JOIN student_submitted_assignments st_sub_assi on st_sub_assi.student_id = students.id AND st_sub_assi.assignment_id = assignments.id 
+										AND st_sub_assi.deleted_at IS NULL
+										LEFT OUTER JOIN categories on categories.id = assignments.category_id AND categories.deleted_at IS NULL
+										LEFT OUTER JOIN course_grading_periods_categories c_gp_cat on c_gp_cat.category_id = categories.id AND c_gp_cat.deleted_at IS NULL
+										INNER JOIN courses_grading_periods c_gp on c_gp.id = c_gp_cat.courses_grading_period_id 
+										AND c_gp.course_id = cg.course_id AND c_gp.deleted_at IS NULL
+										where   assignments.grading_period_id = c_gp.grading_period_id 
+										AND cg.deleted_at IS NULL
+
+										UNION ALL
+												SELECT /*+ NO_BNL() */ DISTINCT students.id AS student_id, 
+												users.name AS student_name, 
+												quizzes.id AS item_id, 
+												'quiz' AS item_type, 
+												quizzes.name AS item_name,
+												IF(quiz_sub.student_status = 1,0,quizzes.total_score) AS max_grade, 
+												quiz_sub.id AS submission_id, 
+												if(quiz_sub.student_status=2, 0, quiz_sub.student_status) AS status,
+												IF(quiz_sub.student_status = 1,0,IF(quiz_sub.score IS NULL, 0, quiz_sub.score)) AS grade, 
+												quizzes.category_id AS category_id, 
+												categories.name AS category_name,
+												cg.course_id,
+												c_gp_cat.weight AS category_weight, 		         		         
+												quiz_cg.hide_grade AS hide_grade, 
+												c_gp.grading_period_id AS qur_id,
+												categories.parent_id AS parent_id,
+												c_gp_cat.courses_grading_period_id as cgp_id
+										FROM course_groups cg
+										LEFT OUTER JOIN student_course_groups st_cg on st_cg.course_group_id = cg.id AND st_cg.deleted_at IS NULL
+										LEFT OUTER JOIN students on students.id = st_cg.student_id AND students.deleted_at IS NULL
+										LEFT OUTER JOIN users on users.actable_type = 'Student' AND users.actable_id = students.id AND users.deleted_at IS NULL
+										LEFT OUTER JOIN course_groups_quizzes quiz_cg on quiz_cg.course_group_id = cg.id AND quiz_cg.deleted_at IS NULL
+										LEFT OUTER JOIN quizzes on quizzes.id = quiz_cg.quiz_id AND quizzes.deleted_at IS NULL
+										LEFT OUTER JOIN quiz_submissions quiz_sub on quiz_sub.student_id = students.id AND quiz_sub.quiz_id = quizzes.id
+										  AND quiz_sub.deleted_at IS NULL
+										LEFT OUTER JOIN categories on categories.id = quizzes.category_id AND categories.deleted_at IS NULL
+										LEFT OUTER JOIN course_grading_periods_categories c_gp_cat on c_gp_cat.category_id = categories.id 
+														AND c_gp_cat.deleted_at IS NULL
+										INNER JOIN courses_grading_periods c_gp on c_gp.id = c_gp_cat.courses_grading_period_id 
+													AND c_gp.course_id = cg.course_id AND c_gp.deleted_at IS NULL
+													
+										WHERE quizzes.grading_period_id = c_gp.grading_period_id
+												AND  cg.deleted_at IS NULL
+
+										UNION ALL
+												SELECT /*+ NO_BNL() */ DISTINCT students.id AS student_id, 
+												users.name AS student_name, 
+												grade_items.id AS item_id, 
+												'grade_item' AS item_type,
+												grade_items.name as item_name, 
+												IF(g_sub.student_status = 1,0,grade_items.max_grade) AS max_grade, 
+												g_sub.id AS submission_id,
+												if(g_sub.student_status = 2,0,g_sub.student_status) AS status, 
+												IF(g_sub.student_status = 1,0,IF(g_sub.grade IS NULL, 0 , g_sub.grade)) AS grade,
+												grade_items.category_id AS category_id,		              
+												categories.name AS category_name , 
+												cg.course_id, 		  
+												c_gp_cat.weight AS category_weight, 
+												grade_items.hide_grade AS hide_grade, 
+												c_gp.grading_period_id AS qur_id,
+												categories.parent_id AS parent_id,
+												c_gp_cat.courses_grading_period_id as cgp_id
+										FROM course_groups cg
+										LEFT OUTER JOIN student_course_groups st_cg on st_cg.course_group_id = cg.id AND st_cg.deleted_at IS NULL
+										LEFT OUTER JOIN students on students.id = st_cg.student_id AND students.deleted_at IS NULL
+										LEFT OUTER JOIN users on users.actable_type = 'Student' AND users.actable_id = students.id AND users.deleted_at IS NULL
+										LEFT OUTER JOIN grade_items on grade_items.course_group_id = cg.id AND grade_items.deleted_at IS NULL
+										LEFT OUTER JOIN grade_submissions g_sub on g_sub.student_id = students.id AND g_sub.grade_item_id = grade_items.id
+										  AND g_sub.deleted_at IS NULL
+										LEFT OUTER JOIN categories on categories.id = grade_items.category_id AND categories.deleted_at IS NULL
+										LEFT OUTER JOIN course_grading_periods_categories c_gp_cat on c_gp_cat.category_id = categories.id AND c_gp_cat.deleted_at IS NULL
+										INNER JOIN courses_grading_periods c_gp on c_gp.id = c_gp_cat.courses_grading_period_id 
+										  AND c_gp.course_id = cg.course_id AND c_gp.deleted_at IS NULL
+										where  grade_items.grading_period_id = c_gp.grading_period_id 
+										AND   cg.deleted_at IS NULL
+										)b
+									left join -- (C)
+									(
+										SELECT /*+ NO_BNL() */ distinct cat.id, cat.name, cgp.course_id AS crs_id, cgpc.weight, cgpc.courses_grading_period_id, cgp.grading_period_id, gp.name AS quar_name, 
+										courses.order AS order_num FROM categories cat
+										inner join course_grading_periods_categories cgpc on cat.id = cgpc.category_id and cgpc.deleted_at is null
+										inner join courses_grading_periods cgp on cgp.id =  cgpc.courses_grading_period_id and cgp.deleted_at is null
+										inner join grading_periods gp on gp.id = cgp.grading_period_id
+										inner join courses on courses.id = cgp.course_id and courses.deleted_at is null
+										where cat.deleted_at is null
+									)c
+									on b.qur_id=c.grading_period_id and c.crs_id=b.course_id and c.id = b.category_id
+							)d
+						group by  d.student_id, d.student_name, d.category_id, d.quar_name, d.course_id
+								 , d.category_name, d.category_weight, d.order_num, d.cgp_id, d.parent_id,d.qur_id,d.status
+                                    
+							)d
+						group by  d.student_id, d.student_name, d.category_id, d.quar_name, d.course_id
+								 , d.category_name, d.category_weight, d.order_num, d.cgp_id, d.parent_id,d.qur_id, d.status
+					)e
+				)f
+		)z  
+		
+	INNER JOIN courses on z.course_id = courses.id
+	inner join
+	(SELECT /*+ NO_BNL() */ csg.student_id as student_id, cg.name as class_name, levels.level_code AS level_code, courses.hide as hide_num, courses.calculated_in_total
+		FROM student_course_groups csg
+		inner join course_groups cg on csg.course_group_id=cg.id and cg.deleted_at is null
+		inner join courses on cg.course_id= courses.id and courses.deleted_at is null
+		inner join levels on courses.level_id=levels.id and levels.deleted_at is null
+		where csg.deleted_at is null
+		and courses.hide = "false"
+		 
+		group by student_id, class_name, level_code
+		) d on d.student_id = z.student_id
+		
+	
+)
+x
+
+where x.status =1
+
+group by  x.student_id, x.student_name, x.course_id, x.quar_name, x.order_num
+		, x.parent_id, x.name, x.class_name, x.level_code, x.hide_num
+		, PARENT_CATEGORY_WEIGHT
+		,x.cgp_id, x.qur_id, x.status
+order by  x.level_code,x.quar_name, x.student_id,x.course_id,x.order_num
+)z
+
+left outer join 
+
+(
+
+select 
+    /*+ NO_BNL() */
+	x.student_id, x.student_name, x.course_id, x.quar_name, x.order_num, x.parent_id,
+	x.name, x.class_name, x.level_code, x.hide_num
+     , (SELECT  /*+ NO_BNL() */ distinct username FROM users where actable_id = x.student_id and deleted_at is null LIMIT 1) AS user_name
+     , (SELECT  /*+ NO_BNL() */ distinct home_address FROM users where actable_id = x.student_id and deleted_at is null LIMIT 1) AS Home_address
+	 , (select /*+ NO_BNL() */ name from categories where id = x.parent_id) AS category_name
+	 , (select /*+ NO_BNL() */ weight from course_grading_periods_categories where category_id = x.parent_id and courses_grading_period_id = x.cgp_id LIMIT 1) PARENT_CATEGORY_WEIGHT
+	 ,(SELECT name FROM sections where id = (select section_id from stages where id = (select stage_id from levels where level_code =x.level_code  and deleted_at is null) and deleted_at is null) and deleted_at is null) AS section_name
+	 , SUM(x.category_grade) AS full_grade1
+     , x.qur_id
+	 , IF((SELECT  /*+ NO_BNL() */ distinct weight FROM courses_grading_periods where grading_period_id = (select  /*+ NO_BNL() */ distinct parent_id from grading_periods where id = x.qur_id ) and course_id = x.course_id limit 1) is null,100,(SELECT /*+ NO_BNL() */ distinct weight FROM courses_grading_periods where grading_period_id = (select  /*+ NO_BNL() */distinct parent_id from grading_periods where id = x.qur_id ) and course_id = x.course_id limit 1)) AS main_period_wight
+     , (SELECT  /*+ NO_BNL() */ distinct weight FROM courses_grading_periods where grading_period_id = x.qur_id and course_id = x.course_id limit 1) AS sub_period_weight
+	 , if((SELECT  /*+ NO_BNL() */ distinct name FROM grading_periods where id = (select  /*+ NO_BNL() */ parent_id from grading_periods where id =x.qur_id)) is null ,x.quar_name, (SELECT  /*+ NO_BNL() */ distinct name FROM grading_periods where id = (select  /*+ NO_BNL() */ parent_id from grading_periods where id =x.qur_id)) ) AS main_pirod_name
+     , x.cgp_id
+     , IF(x.status is null ,0,x.status) AS status
+
+from  -- (X)
+
+	(select /*+ NO_BNL() */ z.*, courses.name, d.class_name, d.level_code, d.hide_num 
+	
+	  from -- (Z)
+	  
+		(select /*+ NO_BNL() */ f.student_id, f.student_name, f.course_id, f.quar_name, f.qur_id, f.order_num,f.category_name,f.category_weight, f.max_grade,
+				if(f.parent_id IS NULL,f.category_id,f.parent_id) AS parent_id,IF(f.full_grade IS NULL,0,f.full_grade) AS full_grade, f.cgp_id
+                ,(IF(f.full_grade IS NULL,0,f.full_grade)*(f.category_weight *(select /*+ NO_BNL() */ weight from  course_grading_periods_categories where category_id = if(f.parent_id IS NULL,f.category_id,f.parent_id) and courses_grading_period_id = f.cgp_id limit 1))
+                /(select  /*+ NO_BNL() */ sum(weight) from course_grading_periods_categories where category_id IN (select /*+ NO_BNL() */ id from categories where id = f.new_cat)
+					and deleted_at is null and courses_grading_period_id= f.cgp_id ))/IF (f.category_weight is null , 0 ,f.category_weight) AS category_grade
+                    , f.status
+                
+				
+		  from  -- (F)
+		 
+				(select  /*+ NO_BNL() */ e.*,(e.grade*e.category_weight)/e.max_grade AS full_grade , if(e.parent_id IS NULL,e.category_id,e.parent_id) as new_cat
+				
+				 from  -- (E)
+
+
+					(select /*+ NO_BNL() */ d.student_id, d.student_name, d.category_id, d.category_name, d.parent_id, d.course_id, d.quar_name, d.qur_id
+							,sum(d.grade) AS grade, sum(d.max_grade) AS max_grade, d.category_weight AS category_weight, d.order_num, d.cgp_id , d.status
+							
+					 from  -- (D)
+						
+							(select /*+ NO_BNL() */ d.student_id, d.student_name, d.category_id, d.category_name, d.parent_id, d.course_id, d.quar_name, d.qur_id
+							,sum(d.grade) AS grade, sum(d.max_grade) AS max_grade, d.category_weight AS category_weight, d.order_num, d.cgp_id, d.status
+							
+					 from  -- (D)
+						
+							(select /*+ NO_BNL() */ * 
+							
+							  from -- (B)
+								
+								(SELECT  /*+ NO_BNL() */ DISTINCT students.id AS student_id,
+										users.name AS student_name,
+										assignments.id AS item_id,
+									   'assignment' AS item_type,
+										assignments.name AS item_name,
+										IF(st_sub_assi.student_status = 1,0,assignments.points) AS max_grade,
+										st_sub_assi.id AS submission_id,
+										if(st_sub_assi.student_status = 2  , 0, st_sub_assi.student_status) AS status,
+										IF(st_sub_assi.student_status = 1,0,IF(st_sub_assi.grade IS NULL, 0, st_sub_assi.grade)) AS grade,
+										assignments.category_id AS category_id,
+										categories.name AS category_name, 
+										cg.course_id, 
+										c_gp_cat.weight AS category_weight,
+										assi_cg.hide_grade AS hide_grade, 
+										c_gp.grading_period_id AS qur_id,
+										categories.parent_id AS parent_id,
+										c_gp_cat.courses_grading_period_id as cgp_id
+										FROM course_groups cg
+										LEFT OUTER JOIN student_course_groups st_cg on st_cg.course_group_id = cg.id AND st_cg.deleted_at IS NULL
+										LEFT OUTER JOIN students on students.id = st_cg.student_id AND students.deleted_at IS NULL
+										LEFT OUTER JOIN users on users.actable_type = 'Student' AND users.actable_id = students.id AND users.deleted_at IS NULL
+										LEFT OUTER JOIN assignments_course_groups assi_cg on assi_cg.course_group_id = cg.id AND assi_cg.deleted_at IS NULL
+										LEFT OUTER JOIN assignments on assignments.id = assi_cg.assignment_id AND assignments.deleted_at IS NULL
+										LEFT OUTER JOIN student_submitted_assignments st_sub_assi on st_sub_assi.student_id = students.id AND st_sub_assi.assignment_id = assignments.id 
+										AND st_sub_assi.deleted_at IS NULL
+										LEFT OUTER JOIN categories on categories.id = assignments.category_id AND categories.deleted_at IS NULL
+										LEFT OUTER JOIN course_grading_periods_categories c_gp_cat on c_gp_cat.category_id = categories.id AND c_gp_cat.deleted_at IS NULL
+										INNER JOIN courses_grading_periods c_gp on c_gp.id = c_gp_cat.courses_grading_period_id 
+										AND c_gp.course_id = cg.course_id AND c_gp.deleted_at IS NULL
+										where   assignments.grading_period_id = c_gp.grading_period_id 
+										AND cg.deleted_at IS NULL
+
+										UNION ALL
+												SELECT /*+ NO_BNL() */ DISTINCT students.id AS student_id, 
+												users.name AS student_name, 
+												quizzes.id AS item_id, 
+												'quiz' AS item_type, 
+												quizzes.name AS item_name,
+												IF(quiz_sub.student_status = 1,0,quizzes.total_score) AS max_grade, 
+												quiz_sub.id AS submission_id, 
+												if(quiz_sub.student_status=2, 0, quiz_sub.student_status) AS status,
+												IF(quiz_sub.student_status = 1,0,IF(quiz_sub.score IS NULL, 0, quiz_sub.score)) AS grade, 
+												quizzes.category_id AS category_id, 
+												categories.name AS category_name,
+												cg.course_id,
+												c_gp_cat.weight AS category_weight, 		         		         
+												quiz_cg.hide_grade AS hide_grade, 
+												c_gp.grading_period_id AS qur_id,
+												categories.parent_id AS parent_id,
+												c_gp_cat.courses_grading_period_id as cgp_id
+										FROM course_groups cg
+										LEFT OUTER JOIN student_course_groups st_cg on st_cg.course_group_id = cg.id AND st_cg.deleted_at IS NULL
+										LEFT OUTER JOIN students on students.id = st_cg.student_id AND students.deleted_at IS NULL
+										LEFT OUTER JOIN users on users.actable_type = 'Student' AND users.actable_id = students.id AND users.deleted_at IS NULL
+										LEFT OUTER JOIN course_groups_quizzes quiz_cg on quiz_cg.course_group_id = cg.id AND quiz_cg.deleted_at IS NULL
+										LEFT OUTER JOIN quizzes on quizzes.id = quiz_cg.quiz_id AND quizzes.deleted_at IS NULL
+										LEFT OUTER JOIN quiz_submissions quiz_sub on quiz_sub.student_id = students.id AND quiz_sub.quiz_id = quizzes.id
+										  AND quiz_sub.deleted_at IS NULL
+										LEFT OUTER JOIN categories on categories.id = quizzes.category_id AND categories.deleted_at IS NULL
+										LEFT OUTER JOIN course_grading_periods_categories c_gp_cat on c_gp_cat.category_id = categories.id 
+														AND c_gp_cat.deleted_at IS NULL
+										INNER JOIN courses_grading_periods c_gp on c_gp.id = c_gp_cat.courses_grading_period_id 
+													AND c_gp.course_id = cg.course_id AND c_gp.deleted_at IS NULL
+													
+										WHERE quizzes.grading_period_id = c_gp.grading_period_id
+												AND  cg.deleted_at IS NULL
+
+										UNION ALL
+												SELECT /*+ NO_BNL() */ DISTINCT students.id AS student_id, 
+												users.name AS student_name, 
+												grade_items.id AS item_id, 
+												'grade_item' AS item_type,
+												grade_items.name as item_name, 
+												IF(g_sub.student_status = 1,0,grade_items.max_grade) AS max_grade, 
+												g_sub.id AS submission_id,
+												if(g_sub.student_status = 2,0,g_sub.student_status) AS status, 
+												IF(g_sub.student_status = 1,0,IF(g_sub.grade IS NULL, 0 , g_sub.grade)) AS grade,
+												grade_items.category_id AS category_id,		              
+												categories.name AS category_name , 
+												cg.course_id, 		  
+												c_gp_cat.weight AS category_weight, 
+												grade_items.hide_grade AS hide_grade, 
+												c_gp.grading_period_id AS qur_id,
+												categories.parent_id AS parent_id,
+												c_gp_cat.courses_grading_period_id as cgp_id
+										FROM course_groups cg
+										LEFT OUTER JOIN student_course_groups st_cg on st_cg.course_group_id = cg.id AND st_cg.deleted_at IS NULL
+										LEFT OUTER JOIN students on students.id = st_cg.student_id AND students.deleted_at IS NULL
+										LEFT OUTER JOIN users on users.actable_type = 'Student' AND users.actable_id = students.id AND users.deleted_at IS NULL
+										LEFT OUTER JOIN grade_items on grade_items.course_group_id = cg.id AND grade_items.deleted_at IS NULL
+										LEFT OUTER JOIN grade_submissions g_sub on g_sub.student_id = students.id AND g_sub.grade_item_id = grade_items.id
+										  AND g_sub.deleted_at IS NULL
+										LEFT OUTER JOIN categories on categories.id = grade_items.category_id AND categories.deleted_at IS NULL
+										LEFT OUTER JOIN course_grading_periods_categories c_gp_cat on c_gp_cat.category_id = categories.id AND c_gp_cat.deleted_at IS NULL
+										INNER JOIN courses_grading_periods c_gp on c_gp.id = c_gp_cat.courses_grading_period_id 
+										  AND c_gp.course_id = cg.course_id AND c_gp.deleted_at IS NULL
+										where  grade_items.grading_period_id = c_gp.grading_period_id 
+										AND   cg.deleted_at IS NULL
+										)b
+									left join -- (C)
+									(
+										SELECT /*+ NO_BNL() */ distinct cat.id, cat.name, cgp.course_id AS crs_id, cgpc.weight, cgpc.courses_grading_period_id, cgp.grading_period_id, gp.name AS quar_name, 
+										courses.order AS order_num FROM categories cat
+										inner join course_grading_periods_categories cgpc on cat.id = cgpc.category_id and cgpc.deleted_at is null
+										inner join courses_grading_periods cgp on cgp.id =  cgpc.courses_grading_period_id and cgp.deleted_at is null
+										inner join grading_periods gp on gp.id = cgp.grading_period_id
+										inner join courses on courses.id = cgp.course_id and courses.deleted_at is null
+										where cat.deleted_at is null
+									)c
+									on b.qur_id=c.grading_period_id and c.crs_id=b.course_id and c.id = b.category_id
+							)d
+						group by  d.student_id, d.student_name, d.category_id, d.quar_name, d.course_id
+								 , d.category_name, d.category_weight, d.order_num, d.cgp_id, d.parent_id,d.qur_id,d.status
+                                    
+							)d
+						group by  d.student_id, d.student_name, d.category_id, d.quar_name, d.course_id
+								 , d.category_name, d.category_weight, d.order_num, d.cgp_id, d.parent_id,d.qur_id, d.status
+					)e
+				)f
+		)z  
+		
+	INNER JOIN courses on z.course_id = courses.id
+	inner join
+	(SELECT /*+ NO_BNL() */ csg.student_id as student_id, cg.name as class_name, levels.level_code AS level_code, courses.hide as hide_num, courses.calculated_in_total
+		FROM student_course_groups csg
+		inner join course_groups cg on csg.course_group_id=cg.id and cg.deleted_at is null
+		inner join courses on cg.course_id= courses.id and courses.deleted_at is null
+		inner join levels on courses.level_id=levels.id and levels.deleted_at is null
+		where csg.deleted_at is null
+		and courses.hide = "false"
+		 
+		group by student_id, class_name, level_code
+		) d on d.student_id = z.student_id
+		
+	
+)
+x
+where x.status =0
+
+group by  x.student_id, x.student_name, x.course_id, x.quar_name, x.order_num
+		, x.parent_id, x.name, x.class_name, x.level_code, x.hide_num
+		, PARENT_CATEGORY_WEIGHT
+		,x.cgp_id, x.qur_id, x.status
+order by  x.level_code,x.quar_name, x.student_id,x.course_id,x.order_num
+)y 
+on z.student_id=y.student_id 
+and z.course_id =y.course_id
+and z.parent_id =y.parent_id
+and z.qur_id =y.qur_id
+and z.cgp_id =y.cgp_id
+
+where y.status is null
+and z.student_id=x.student_id 
+and z.course_id =x.course_id
+and z.qur_id =x.qur_id
+and z.cgp_id =x.cgp_id
+
+group by 
+  z.student_id
+, z.course_id
+, z.qur_id 
+, z.cgp_id 
+
+
+	 ) AS west_weight
+
+from  -- (X)
+
+	(select /*+ NO_BNL() */ z.*, courses.name, d.class_name, d.level_code, d.hide_num 
+	
+	  from -- (Z)
+	  
+		(select /*+ NO_BNL() */ f.student_id, f.student_name, f.course_id, f.quar_name, f.qur_id, f.order_num,f.category_name,f.category_weight, f.max_grade,
+				if(f.parent_id IS NULL,f.category_id,f.parent_id) AS parent_id,IF(f.full_grade IS NULL,0,f.full_grade) AS full_grade, f.cgp_id
+                ,(IF(f.full_grade IS NULL,0,f.full_grade)*(f.category_weight *(select /*+ NO_BNL() */ weight from  course_grading_periods_categories where category_id = if(f.parent_id IS NULL,f.category_id,f.parent_id) and courses_grading_period_id = f.cgp_id limit 1))
+                /(select  /*+ NO_BNL() */ sum(weight) from course_grading_periods_categories where category_id IN (select /*+ NO_BNL() */ id from categories where id = f.new_cat)
+					and deleted_at is null and courses_grading_period_id= f.cgp_id ))/IF (f.category_weight is null , 0 ,f.category_weight) AS category_grade
+                
+				
+		  from  -- (F)
+		 
+				(select  /*+ NO_BNL() */ e.*,(e.grade*e.category_weight)/e.max_grade AS full_grade , if(e.parent_id IS NULL,e.category_id,e.parent_id) as new_cat
+				
+				 from  -- (E)
+
+
+					(select /*+ NO_BNL() */ d.student_id, d.student_name, d.category_id, d.category_name, d.parent_id, d.course_id, d.quar_name, d.qur_id
+							,sum(d.grade) AS grade, sum(d.max_grade) AS max_grade, d.category_weight AS category_weight, d.order_num, d.cgp_id
+							
+					 from  -- (D)
+						
+							(select /*+ NO_BNL() */ * 
+							
+							  from -- (B)
+								
+								(SELECT  /*+ NO_BNL() */ DISTINCT students.id AS student_id,
+										users.name AS student_name,
+										assignments.id AS item_id,
+									   'assignment' AS item_type,
+										assignments.name AS item_name,
+										IF(st_sub_assi.student_status = 1,0,assignments.points) AS max_grade,
+										st_sub_assi.id AS submission_id,
+										st_sub_assi.student_status AS status,
+										IF(st_sub_assi.student_status = 1,0,IF(st_sub_assi.grade IS NULL, 0, st_sub_assi.grade)) AS grade,
+										assignments.category_id AS category_id,
+										categories.name AS category_name, 
+										cg.course_id, 
+										c_gp_cat.weight AS category_weight,
+										assi_cg.hide_grade AS hide_grade, 
+										c_gp.grading_period_id AS qur_id,
+										categories.parent_id AS parent_id,
+										c_gp_cat.courses_grading_period_id as cgp_id
+										FROM course_groups cg
+										LEFT OUTER JOIN student_course_groups st_cg on st_cg.course_group_id = cg.id AND st_cg.deleted_at IS NULL and (st_cg.student_id in ($P!{STUDENT_ID}) OR $P{STUDENT_ID}  = "-1")
+										LEFT OUTER JOIN students on students.id = st_cg.student_id AND students.deleted_at IS NULL
+										LEFT OUTER JOIN users on users.actable_type = 'Student' AND users.actable_id = students.id AND users.deleted_at IS NULL
+										LEFT OUTER JOIN assignments_course_groups assi_cg on assi_cg.course_group_id = cg.id AND assi_cg.deleted_at IS NULL
+										LEFT OUTER JOIN assignments on assignments.id = assi_cg.assignment_id AND assignments.deleted_at IS NULL
+										LEFT OUTER JOIN student_submitted_assignments st_sub_assi on st_sub_assi.student_id = students.id AND st_sub_assi.assignment_id = assignments.id 
+										AND st_sub_assi.deleted_at IS NULL
+										LEFT OUTER JOIN categories on categories.id = assignments.category_id AND categories.deleted_at IS NULL
+										LEFT OUTER JOIN course_grading_periods_categories c_gp_cat on c_gp_cat.category_id = categories.id AND c_gp_cat.deleted_at IS NULL
+										INNER JOIN courses_grading_periods c_gp on c_gp.id = c_gp_cat.courses_grading_period_id 
+										AND (c_gp.grading_period_id in ($P!{GRADING_PERIOD_ID}) OR $P{GRADING_PERIOD_ID}  = "-1")
+										AND c_gp.course_id = cg.course_id AND c_gp.deleted_at IS NULL
+										where   assignments.grading_period_id = c_gp.grading_period_id 
+										AND cg.deleted_at IS NULL
+
+										UNION ALL
+												SELECT /*+ NO_BNL() */ DISTINCT students.id AS student_id, 
+												users.name AS student_name, 
+												quizzes.id AS item_id, 
+												'quiz' AS item_type, 
+												quizzes.name AS item_name,
+												IF(quiz_sub.student_status = 1,0,quizzes.total_score) AS max_grade, 
+												quiz_sub.id AS submission_id, 
+												quiz_sub.student_status AS status,
+												IF(quiz_sub.student_status = 1,0,IF(quiz_sub.score IS NULL, 0, quiz_sub.score)) AS grade, 
+												quizzes.category_id AS category_id, 
+												categories.name AS category_name,
+												cg.course_id,
+												c_gp_cat.weight AS category_weight, 		         		         
+												quiz_cg.hide_grade AS hide_grade, 
+												c_gp.grading_period_id AS qur_id,
+												categories.parent_id AS parent_id,
+												c_gp_cat.courses_grading_period_id as cgp_id
+										FROM course_groups cg
+										LEFT OUTER JOIN student_course_groups st_cg on st_cg.course_group_id = cg.id AND st_cg.deleted_at IS NULL and (st_cg.student_id in ($P!{STUDENT_ID}) OR $P{STUDENT_ID}  = "-1")
+										LEFT OUTER JOIN students on students.id = st_cg.student_id AND students.deleted_at IS NULL
+										LEFT OUTER JOIN users on users.actable_type = 'Student' AND users.actable_id = students.id AND users.deleted_at IS NULL
+										LEFT OUTER JOIN course_groups_quizzes quiz_cg on quiz_cg.course_group_id = cg.id AND quiz_cg.deleted_at IS NULL
+										LEFT OUTER JOIN quizzes on quizzes.id = quiz_cg.quiz_id AND quizzes.deleted_at IS NULL
+										LEFT OUTER JOIN quiz_submissions quiz_sub on quiz_sub.student_id = students.id AND quiz_sub.quiz_id = quizzes.id
+										  AND quiz_sub.deleted_at IS NULL
+										LEFT OUTER JOIN categories on categories.id = quizzes.category_id AND categories.deleted_at IS NULL
+										LEFT OUTER JOIN course_grading_periods_categories c_gp_cat on c_gp_cat.category_id = categories.id 
+														AND c_gp_cat.deleted_at IS NULL
+										INNER JOIN courses_grading_periods c_gp on c_gp.id = c_gp_cat.courses_grading_period_id 
+									    			AND (c_gp.grading_period_id in ($P!{GRADING_PERIOD_ID}) OR $P{GRADING_PERIOD_ID}  = "-1")
+													AND c_gp.course_id = cg.course_id AND c_gp.deleted_at IS NULL
+													
+										WHERE quizzes.grading_period_id = c_gp.grading_period_id
+												AND  cg.deleted_at IS NULL
+
+										UNION ALL
+												SELECT /*+ NO_BNL() */ DISTINCT students.id AS student_id, 
+												users.name AS student_name, 
+												grade_items.id AS item_id, 
+												'grade_item' AS item_type,
+												grade_items.name as item_name, 
+												IF(g_sub.student_status = 1,0,grade_items.max_grade) AS max_grade, 
+												g_sub.id AS submission_id,
+												g_sub.student_status AS status, 
+												IF(g_sub.student_status = 1,0,IF(g_sub.grade IS NULL, 0 , g_sub.grade)) AS grade,
+												grade_items.category_id AS category_id,		              
+												categories.name AS category_name , 
+												cg.course_id, 		  
+												c_gp_cat.weight AS category_weight, 
+												grade_items.hide_grade AS hide_grade, 
+												c_gp.grading_period_id AS qur_id,
+												categories.parent_id AS parent_id,
+												c_gp_cat.courses_grading_period_id as cgp_id
+										FROM course_groups cg
+										LEFT OUTER JOIN student_course_groups st_cg on st_cg.course_group_id = cg.id AND st_cg.deleted_at IS NULL and (st_cg.student_id in ($P!{STUDENT_ID}) OR $P{STUDENT_ID}  = "-1")
+										LEFT OUTER JOIN students on students.id = st_cg.student_id AND students.deleted_at IS NULL  
+										LEFT OUTER JOIN users on users.actable_type = 'Student' AND users.actable_id = students.id AND users.deleted_at IS NULL
+										LEFT OUTER JOIN grade_items on grade_items.course_group_id = cg.id AND grade_items.deleted_at IS NULL
+										LEFT OUTER JOIN grade_submissions g_sub on g_sub.student_id = students.id AND g_sub.grade_item_id = grade_items.id
+										  AND g_sub.deleted_at IS NULL
+										LEFT OUTER JOIN categories on categories.id = grade_items.category_id AND categories.deleted_at IS NULL
+										LEFT OUTER JOIN course_grading_periods_categories c_gp_cat on c_gp_cat.category_id = categories.id AND c_gp_cat.deleted_at IS NULL
+										INNER JOIN courses_grading_periods c_gp on c_gp.id = c_gp_cat.courses_grading_period_id 
+								          AND (c_gp.grading_period_id in ($P!{GRADING_PERIOD_ID}) OR $P{GRADING_PERIOD_ID}  = "-1")
+										  AND c_gp.course_id = cg.course_id AND c_gp.deleted_at IS NULL
+										where  grade_items.grading_period_id = c_gp.grading_period_id 
+										AND   cg.deleted_at IS NULL
+										)b
+									left join -- (C)
+									(
+										SELECT /*+ NO_BNL() */ distinct cat.id, cat.name, cgp.course_id AS crs_id, cgpc.weight, cgpc.courses_grading_period_id, cgp.grading_period_id, gp.name AS quar_name, 
+										courses.order AS order_num FROM categories cat
+										inner join course_grading_periods_categories cgpc on cat.id = cgpc.category_id and cgpc.deleted_at is null
+										inner join courses_grading_periods cgp on cgp.id =  cgpc.courses_grading_period_id and cgp.deleted_at is null
+										inner join grading_periods gp on gp.id = cgp.grading_period_id
+										inner join courses on courses.id = cgp.course_id and courses.deleted_at is null
+										where cat.deleted_at is null
+									)c
+									on b.qur_id=c.grading_period_id and c.crs_id=b.course_id and c.id = b.category_id
+							)d
+							WHERE (d.quar_name  in ($P!{PERIOD_NAME}) OR $P{PERIOD_NAME}  = "-1")
+						group by  d.student_id, d.student_name, d.category_id, d.quar_name, d.course_id
+								 , d.category_name, d.category_weight, d.order_num, d.cgp_id, d.parent_id,d.qur_id
+					)e
+				)f
+		)z  
+		
+	INNER JOIN courses on z.course_id = courses.id and courses.hide = "false"
+		 
+	inner join
+	(SELECT /*+ NO_BNL() */ csg.student_id as student_id, cg.name as class_name, levels.level_code AS level_code, courses.hide as hide_num, courses.calculated_in_total
+		FROM student_course_groups csg
+		inner join course_groups cg on csg.course_group_id=cg.id and cg.deleted_at is null
+		inner join courses on cg.course_id= courses.id and courses.deleted_at is null
+		inner join levels on courses.level_id=levels.id and levels.deleted_at is null
+		where csg.deleted_at is null
+		and	 (levels.level_code in ($P!{LEVEL_CODE}) OR $P{LEVEL_CODE}  = "-1")
+		
+		and (cg.name in ($P!{CLASS_NAME}) OR $P{CLASS_NAME}  = "-1")
+
+		and courses.hide = "false"
+		 
+		group by student_id, class_name, level_code
+		) d on d.student_id = z.student_id
+		
+	
+)
+x
+
+
+group by  x.student_id, x.student_name, x.course_id, x.quar_name, x.order_num
+		, x.parent_id, x.name, x.class_name, x.level_code, x.hide_num
+		, PARENT_CATEGORY_WEIGHT
+		,x.cgp_id, x.qur_id 
+		
+)z
+
+where  (category_name in ($P!{CATEGORY_NAME}) OR $P{CATEGORY_NAME}  = "-1") and PARENT_CATEGORY_WEIGHT != 0
+order by z.level_code, z.student_name , z.cal_in_total DESC , z.quar_name , z.order_num]]>
+	</queryString>
+	<field name="student_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="student_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="e"/>
+	</field>
+	<field name="student_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="student_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="e"/>
+	</field>
+	<field name="course_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="course_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="e"/>
+	</field>
+	<field name="quar_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="quar_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="grading_periods"/>
+	</field>
+	<field name="order_num" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="order_num"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="courses"/>
+	</field>
+	<field name="parent_id" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.label" value="parent_id"/>
+	</field>
+	<field name="name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="courses"/>
+	</field>
+	<field name="class_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="class_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="course_groups"/>
+	</field>
+	<field name="level_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="level_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="levels"/>
+	</field>
+	<field name="hide_num" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.label" value="hide_num"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="courses"/>
+	</field>
+	<field name="user_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="user_name"/>
+	</field>
+	<field name="Home_address" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="Home_address"/>
+	</field>
+	<field name="category_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="category_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="e"/>
+	</field>
+	<field name="secion_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="secion_name"/>
+	</field>
+	<field name="PARENT_CATEGORY_WEIGHT" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="PARENT_CATEGORY_WEIGHT"/>
+	</field>
+	<field name="full_grade1" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="full_grade1"/>
+	</field>
+	<field name="qur_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="qur_id"/>
+	</field>
+	<field name="main_period_wight" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="main_period_wight"/>
+	</field>
+	<field name="sub_period_weight" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="sub_period_weight"/>
+	</field>
+	<field name="main_pirod_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="main_pirod_name"/>
+	</field>
+	<field name="cgp_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="cgp_id"/>
+	</field>
+	<field name="cal_in_total" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="cal_in_total"/>
+	</field>
+	<field name="west_weight" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="west_weight"/>
+	</field>
+	<field name="full_grade" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="full_grade"/>
+	</field>
+	<field name="total_grade" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="total_grade"/>
+	</field>
+	<variable name="BIG_MAP" class="java.util.HashMap" resetType="None" calculation="System">
+		<initialValueExpression><![CDATA[Collections.singletonMap("TOTAL_SCORE", "0")]]></initialValueExpression>
+	</variable>
+	<variable name="CALLBACK_VAR" class="java.lang.String"/>
+	<variable name="CALLBACK_GRADE" class="java.lang.String"/>
+	<variable name="SCORES" class="java.lang.String"/>
+	<group name="Student_Group" isStartNewPage="true" isReprintHeaderOnEachPage="true">
+		<groupExpression><![CDATA[$F{student_id}]]></groupExpression>
+		<groupHeader>
+			<band height="166">
+				<textField>
+					<reportElement x="761" y="53" width="68" height="30" forecolor="#FFFFFF" uuid="98c485da-8128-4df3-a192-a30a29d4f09c"/>
+					<textElement>
+						<font fontName="Segoe UI"/>
+					</textElement>
+					<textFieldExpression><![CDATA[AND(true,"" !=
+	 T($P{MAP}.put("SCALE_ID",$P{LETTER_ID}))
+  + T($P{MAP}.put("CONNECTION",	$P{REPORT_CONNECTION} ))
+  + T($P{MAP}.put("ABSOLUTE_PATH",$P{ABSOLUTE_PATH}) )
+  )]]></textFieldExpression>
+				</textField>
+				<image scaleImage="FillFrame">
+					<reportElement x="14" y="12" width="1236" height="70" uuid="60203a76-2673-4118-b0b7-0540cf29d13d"/>
+					<imageExpression><![CDATA[$P{ABSOLUTE_PATH}+$P{REPORT_NAME}+"-HEADER.jpeg"]]></imageExpression>
+				</image>
+				<subreport>
+					<reportElement x="730" y="60" width="83" height="20" uuid="54438dc4-5439-473e-a426-40e74136c213"/>
+					<subreportParameter name="SCALE_ID">
+						<subreportParameterExpression><![CDATA[$P{LETTER_ID}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<returnValue subreportVariable="SCORES" toVariable="SCORES"/>
+					<subreportExpression><![CDATA[$P{ABSOLUTE_PATH}+"SCORES.jasper"]]></subreportExpression>
+				</subreport>
+				<textField evaluationTime="Band">
+					<reportElement x="748" y="55" width="75" height="30" forecolor="#FFFFFF" uuid="4eca7fa4-605b-4b5d-9a08-4eb54be07079"/>
+					<textElement>
+						<font fontName="Segoe UI"/>
+					</textElement>
+					<textFieldExpression><![CDATA[T($P{MAP}.put("db_name",$P{DB_NAME}))
++ T($P{MAP}.put("scale_id",$P{LETTER_ID}))
++ T($P{MAP}.put("scores",$V{SCORES}))]]></textFieldExpression>
+				</textField>
+				<frame>
+					<reportElement mode="Opaque" x="15" y="136" width="1235" height="30" backcolor="#DEDCDC" uuid="ba10ff2b-0da1-42ae-abbd-39b871a8f47a"/>
+					<textField>
+						<reportElement x="10" y="0" width="1225" height="30" uuid="c4835e10-922d-42cb-8124-78f6425072b4"/>
+						<textElement textAlignment="Left" verticalAlignment="Middle">
+							<font fontName="Segoe UI" size="14" isBold="true"/>
+						</textElement>
+						<textFieldExpression><![CDATA[($F{student_name} == null ? "" : "Student Name: "+ $F{student_name}) 
++ ($F{secion_name} != null ? " - ("+$F{secion_name}+")": "")
++ ($F{level_code} != null ? " - ("+$F{level_code} +")": "")
+ + ($F{class_name} != null ? " - ("+$F{class_name} +")": "")]]></textFieldExpression>
+					</textField>
+					<staticText>
+						<reportElement x="970" y="0" width="78" height="30" uuid="2df8ed00-36ff-4d01-8b15-acd363292701">
+							<printWhenExpression><![CDATA[EQUALS(UPPER($P{SHOW_TOTAL}),"YES")]]></printWhenExpression>
+						</reportElement>
+						<textElement textAlignment="Right" verticalAlignment="Middle">
+							<font fontName="Segoe UI" size="14" isBold="true"/>
+						</textElement>
+						<text><![CDATA[Grade:]]></text>
+					</staticText>
+					<textField evaluationTime="Page">
+						<reportElement x="1051" y="0" width="75" height="30" uuid="62f16d6e-82b9-4e60-9a6b-2d31d68f7cc8">
+							<printWhenExpression><![CDATA[EQUALS(UPPER($P{SHOW_TOTAL}),"YES")]]></printWhenExpression>
+						</reportElement>
+						<box>
+							<topPen lineWidth="0.0" lineColor="#FFFFFF"/>
+							<leftPen lineWidth="0.0" lineColor="#FFFFFF"/>
+							<bottomPen lineWidth="0.0" lineColor="#FFFFFF"/>
+							<rightPen lineWidth="0.0" lineColor="#FFFFFF"/>
+						</box>
+						<textElement textAlignment="Left" verticalAlignment="Middle">
+							<font fontName="Segoe UI" size="14" isBold="true"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$V{CALLBACK_GRADE} == null || EQUALS(TRIM($V{CALLBACK_GRADE}),"") ? "N/A" : $V{CALLBACK_GRADE}]]></textFieldExpression>
+					</textField>
+				</frame>
+				<textField>
+					<reportElement x="23" y="90" width="1177" height="30" uuid="6a9623c4-dbfe-4eb5-9c0e-01a00170647a"/>
+					<textElement textAlignment="Center">
+						<font fontName="Segoe UI" size="22" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Report Card"]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="274">
+				<subreport>
+					<reportElement positionType="Float" x="0" y="170" width="1250" height="27" uuid="ef2eaa64-6120-4297-b243-4440830f3bb9"/>
+					<subreportParameter name="SCALE_ID">
+						<subreportParameterExpression><![CDATA[$P{LETTER_ID}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA[$P{ABSOLUTE_PATH}+"GRADES_SEMESTER.jasper"]]></subreportExpression>
+				</subreport>
+				<crosstab horizontalPosition="Center">
+					<reportElement style="SubTitle" mode="Opaque" x="15" y="20" width="1235" height="81" uuid="55c0aa09-d884-4390-b932-a6060e880ec3">
+						<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+						<property name="com.jaspersoft.studio.crosstab.style.header" value="Crosstab_CH"/>
+						<property name="com.jaspersoft.studio.crosstab.style.group" value="Crosstab_CG"/>
+						<property name="com.jaspersoft.studio.crosstab.style.total" value="Crosstab_CT"/>
+						<property name="com.jaspersoft.studio.crosstab.style.detail" value="Crosstab_CD"/>
+						<property name="net.sf.jasperreports.export.headertoolbar.table.name" value=""/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<crosstabParameter name="Parameter1"/>
+					<parametersMapExpression><![CDATA[$P{MAP}]]></parametersMapExpression>
+					<crosstabDataset>
+						<dataset resetType="Group" resetGroup="Student_Group"/>
+					</crosstabDataset>
+					<crosstabHeaderCell>
+						<cellContents backcolor="#DDEFF8" mode="Opaque">
+							<staticText>
+								<reportElement mode="Opaque" x="0" y="0" width="160" height="60" forecolor="#17406C" backcolor="#DEF0FA" uuid="5deff3d4-25cc-47c8-a631-e0741ef6e258"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="16" isBold="false"/>
+								</textElement>
+								<text><![CDATA[Subject]]></text>
+							</staticText>
+						</cellContents>
+					</crosstabHeaderCell>
+					<rowGroup name="name" width="160" totalPosition="End">
+						<bucket order="None" class="java.lang.String">
+							<bucketExpression><![CDATA[$F{name}]]></bucketExpression>
+						</bucket>
+						<crosstabRowHeader>
+							<cellContents backcolor="#F0F0F0" mode="Opaque">
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								<property name="com.jaspersoft.studio.unit.width" value="px"/>
+								<box>
+									<topPen lineWidth="1.0" lineColor="#000000"/>
+									<leftPen lineWidth="1.0" lineColor="#000000"/>
+									<bottomPen lineWidth="1.0" lineColor="#000000"/>
+									<rightPen lineWidth="1.0" lineColor="#000000"/>
+								</box>
+								<textField>
+									<reportElement mode="Opaque" x="0" y="0" width="160" height="20" forecolor="#17406C" backcolor="#B2DEF7" uuid="5df09a5e-0218-4df7-8d23-e44dbeadee3c"/>
+									<textElement verticalAlignment="Middle">
+										<font fontName="Segoe UI" size="10" isBold="true"/>
+										<paragraph leftIndent="7"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$V{name}]]></textFieldExpression>
+								</textField>
+							</cellContents>
+						</crosstabRowHeader>
+						<crosstabTotalRowHeader>
+							<cellContents>
+								<box>
+									<pen lineColor="#FFFFFF"/>
+									<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+									<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+									<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+									<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								</box>
+								<staticText>
+									<reportElement mode="Opaque" x="0" y="0" width="160" height="1" isRemoveLineWhenBlank="true" forecolor="#FFFFFF" backcolor="#FFFFFF" uuid="8f71b46a-e9be-4089-9107-8df1cc215063"/>
+									<box>
+										<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+										<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+										<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+										<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+									</box>
+									<textElement verticalAlignment="Middle">
+										<font fontName="Segoe UI" size="13" isBold="true"/>
+										<paragraph lineSpacingSize="0.0"/>
+									</textElement>
+									<text><![CDATA[]]></text>
+								</staticText>
+							</cellContents>
+						</crosstabTotalRowHeader>
+					</rowGroup>
+					<columnGroup name="main_pirod_name" height="20" totalPosition="End" headerPosition="Stretch">
+						<bucket class="java.lang.String">
+							<bucketExpression><![CDATA[$F{main_pirod_name}]]></bucketExpression>
+						</bucket>
+						<crosstabColumnHeader>
+							<cellContents backcolor="#BBC2BC" mode="Opaque">
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								<box>
+									<leftPen lineWidth="1.0"/>
+									<rightPen lineWidth="0.0"/>
+								</box>
+								<textField>
+									<reportElement mode="Opaque" x="0" y="0" width="310" height="20" forecolor="#17406C" backcolor="#DEF0FA" uuid="e6776af3-03ee-4088-bd94-f8462a67896f"/>
+									<box>
+										<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+										<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+										<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+										<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+									</box>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font size="15"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$V{main_pirod_name}]]></textFieldExpression>
+								</textField>
+							</cellContents>
+						</crosstabColumnHeader>
+						<crosstabTotalColumnHeader>
+							<cellContents backcolor="#4B4C4B" mode="Opaque">
+								<box>
+									<pen lineColor="#000000"/>
+									<topPen lineWidth="1.0"/>
+									<leftPen lineWidth="1.0"/>
+									<bottomPen lineWidth="1.0"/>
+									<rightPen lineWidth="1.0"/>
+								</box>
+								<staticText>
+									<reportElement mode="Transparent" x="0" y="0" width="0" height="60" forecolor="#17406C" backcolor="#DEF0FA" uuid="caa77937-c320-498e-8431-099f17b57961"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font size="12" isBold="true"/>
+									</textElement>
+									<text><![CDATA[Total]]></text>
+								</staticText>
+							</cellContents>
+						</crosstabTotalColumnHeader>
+					</columnGroup>
+					<columnGroup name="quar_name" height="20" totalPosition="End" headerPosition="Stretch" mergeHeaderCells="true">
+						<bucket class="java.lang.String">
+							<bucketExpression><![CDATA[$F{quar_name}]]></bucketExpression>
+						</bucket>
+						<crosstabColumnHeader>
+							<cellContents backcolor="#D9D4D4" mode="Opaque" style="SubTitle">
+								<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+								<box>
+									<pen lineColor="#1A1A1A"/>
+									<topPen lineWidth="1.0"/>
+									<leftPen lineWidth="1.0"/>
+									<bottomPen lineWidth="1.0"/>
+									<rightPen lineWidth="1.0"/>
+								</box>
+								<textField isBlankWhenNull="true">
+									<reportElement mode="Opaque" x="0" y="0" width="210" height="20" forecolor="#17406C" backcolor="#DEF0FA" uuid="ab40e529-a1a5-49cb-aac3-f6628251faef"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Segoe UI" size="13" isBold="true"/>
+										<paragraph lineSpacingSize="2.0"/>
+									</textElement>
+									<textFieldExpression><![CDATA[EQUALS($V{quar_name},$V{main_pirod_name}) ? "" : $V{quar_name}]]></textFieldExpression>
+								</textField>
+							</cellContents>
+						</crosstabColumnHeader>
+						<crosstabTotalColumnHeader>
+							<cellContents backcolor="#D9D4D4" mode="Opaque">
+								<property name="com.jaspersoft.studio.unit.width" value="px"/>
+								<box>
+									<pen lineColor="#1A1A1A"/>
+									<topPen lineWidth="1.0" lineColor="#1A1A1A"/>
+									<leftPen lineWidth="1.0" lineColor="#1A1A1A"/>
+									<bottomPen lineWidth="1.0" lineColor="#1A1A1A"/>
+									<rightPen lineWidth="1.0" lineColor="#1A1A1A"/>
+								</box>
+								<staticText>
+									<reportElement stretchType="ElementGroupHeight" mode="Opaque" x="0" y="0" width="100" height="40" forecolor="#17406C" backcolor="#DEF0FA" uuid="4071825c-caf0-4632-a874-5a2108c9b895"/>
+									<box>
+										<pen lineColor="#1A1919"/>
+										<topPen lineWidth="0.0" lineColor="#21201F"/>
+										<leftPen lineWidth="0.0" lineColor="#21201F"/>
+										<bottomPen lineWidth="0.0" lineColor="#21201F"/>
+										<rightPen lineWidth="0.0" lineColor="#21201F"/>
+									</box>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Segoe UI" size="13" isBold="true"/>
+									</textElement>
+									<text><![CDATA[Final Total]]></text>
+								</staticText>
+							</cellContents>
+						</crosstabTotalColumnHeader>
+					</columnGroup>
+					<columnGroup name="category_name" height="20" totalPosition="End">
+						<bucket class="java.lang.String">
+							<bucketExpression><![CDATA[$F{category_name}]]></bucketExpression>
+						</bucket>
+						<crosstabColumnHeader>
+							<cellContents mode="Opaque">
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								<box>
+									<topPen lineWidth="1.0"/>
+									<leftPen lineWidth="1.0"/>
+									<bottomPen lineWidth="1.0"/>
+									<rightPen lineWidth="1.0"/>
+								</box>
+								<textField>
+									<reportElement mode="Opaque" x="0" y="0" width="90" height="20" forecolor="#17406C" backcolor="#DEF0FA" uuid="58012af6-1cd5-4750-98c8-1433fdf4f69a"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Segoe UI" size="10" isBold="true"/>
+									</textElement>
+									<textFieldExpression><![CDATA[" "+$V{category_name}]]></textFieldExpression>
+								</textField>
+							</cellContents>
+						</crosstabColumnHeader>
+						<crosstabTotalColumnHeader>
+							<cellContents>
+								<box>
+									<topPen lineWidth="1.0"/>
+									<leftPen lineWidth="1.0"/>
+									<bottomPen lineWidth="1.0"/>
+									<rightPen lineWidth="1.0"/>
+								</box>
+								<staticText>
+									<reportElement mode="Opaque" x="0" y="0" width="120" height="20" forecolor="#17406C" backcolor="#DEF0FA" uuid="136a3587-e61f-4d68-b0b0-bf9ac1eebfbc"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Segoe UI" size="11" isBold="true"/>
+									</textElement>
+									<text><![CDATA[ Total ]]></text>
+								</staticText>
+							</cellContents>
+						</crosstabTotalColumnHeader>
+					</columnGroup>
+					<measure name="full_grade_MEASURE" class="java.lang.Double" calculation="Sum">
+						<measureExpression><![CDATA[$F{full_grade}]]></measureExpression>
+					</measure>
+					<measure name="PARENT_CATEGORY_WEIGHT" class="java.math.BigDecimal" calculation="DistinctCount">
+						<measureExpression><![CDATA[$F{name}]]></measureExpression>
+					</measure>
+					<measure name="COUNTER" class="java.lang.Integer" calculation="Sum">
+						<measureExpression><![CDATA[1]]></measureExpression>
+					</measure>
+					<measure name="main_period_wight" class="java.math.BigDecimal">
+						<measureExpression><![CDATA[$F{main_period_wight} == null ? 0 : $F{main_period_wight}]]></measureExpression>
+					</measure>
+					<measure name="SCORES" class="java.lang.String">
+						<measureExpression><![CDATA[$V{SCORES}]]></measureExpression>
+					</measure>
+					<measure name="west_weight" class="java.math.BigDecimal">
+						<measureExpression><![CDATA[$F{west_weight}]]></measureExpression>
+					</measure>
+					<measure name="IS_AVAILABLE" class="java.lang.Long" calculation="Count">
+						<measureExpression><![CDATA[$F{full_grade}]]></measureExpression>
+					</measure>
+					<measure name="FULL_GRADE_TESTER" class="java.lang.Object" calculation="Sum">
+						<measureExpression><![CDATA[$F{full_grade}]]></measureExpression>
+					</measure>
+					<crosstabCell width="90" height="20">
+						<cellContents>
+							<box>
+								<pen lineWidth="1.0"/>
+							</box>
+							<textField isBlankWhenNull="true">
+								<reportElement key="" style="NOT_AVAILABLE" mode="Opaque" x="0" y="0" width="90" height="20" forecolor="#17406C" backcolor="#FFFFFF" uuid="eebe5db1-8303-4671-8848-bc0ebb5276f3"/>
+								<textElement verticalAlignment="Middle">
+									<font fontName="Segoe UI" size="13"/>
+									<paragraph leftIndent="3"/>
+								</textElement>
+								<textFieldExpression><![CDATA[($V{FULL_GRADE_TESTER}  == null ? "" : $V{full_grade_MEASURE} )]]></textFieldExpression>
+								<patternExpression><![CDATA["###0.00"]]></patternExpression>
+							</textField>
+						</cellContents>
+					</crosstabCell>
+					<crosstabCell width="120" height="20" columnTotalGroup="category_name">
+						<cellContents>
+							<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.HorizontalRowLayout"/>
+							<box>
+								<topPen lineWidth="1.0"/>
+								<leftPen lineWidth="1.0"/>
+								<bottomPen lineWidth="1.0"/>
+								<rightPen lineWidth="1.0"/>
+							</box>
+							<textField pattern=" #,##0.00">
+								<reportElement style="NOT_AVAILABLE" mode="Opaque" x="0" y="0" width="60" height="20" forecolor="#17406C" backcolor="#FFFFFF" uuid="aee8c38f-08ac-4a4b-8c10-7723a99d2865"/>
+								<box>
+									<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#17406C"/>
+									<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#17406C"/>
+									<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#17406C"/>
+									<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#17406C"/>
+								</box>
+								<textElement verticalAlignment="Middle">
+									<font fontName="Segoe UI" size="13"/>
+									<paragraph leftIndent="3"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{full_grade_MEASURE}*100/(100-(EQUALS($V{west_weight}, null) ? 0 : $V{west_weight}.doubleValue()))]]></textFieldExpression>
+							</textField>
+							<textField pattern=" #,##0.00">
+								<reportElement style="NOT_AVAILABLE" mode="Opaque" x="60" y="0" width="60" height="20" forecolor="#17406C" backcolor="#FFFFFF" uuid="fbd7e4f5-3def-451e-affa-234bb7c84d23">
+									<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+								</reportElement>
+								<box>
+									<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#17406C"/>
+									<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#17406C"/>
+									<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#17406C"/>
+									<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#17406C"/>
+								</box>
+								<textElement verticalAlignment="Middle">
+									<font fontName="Segoe UI" size="13"/>
+									<paragraph leftIndent="3"/>
+								</textElement>
+								<textFieldExpression><![CDATA[Utils.calculateGrade($V{full_grade_MEASURE},100 ,$P{REPORT_PARAMETERS_MAP}.get("scores"))]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabCell>
+					<crosstabCell width="100" height="20" columnTotalGroup="quar_name">
+						<cellContents>
+							<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.HorizontalRowLayout"/>
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<box>
+								<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textField pattern=" #,##0.00" isBlankWhenNull="true">
+								<reportElement mode="Opaque" x="0" y="0" width="50" height="20" forecolor="#17406C" backcolor="#FFFFFF" uuid="338a0e45-0d63-4949-9b10-70fc0a43c7ea"/>
+								<box>
+									<pen lineColor="#000000"/>
+									<topPen lineWidth="1.0"/>
+									<leftPen lineWidth="1.0"/>
+									<bottomPen lineWidth="1.0"/>
+									<rightPen lineWidth="1.0"/>
+								</box>
+								<textElement verticalAlignment="Middle">
+									<font fontName="Segoe UI" size="13" isBold="false"/>
+									<paragraph leftIndent="3"/>
+								</textElement>
+								<textFieldExpression><![CDATA[EQUALS((($V{full_grade_MEASURE} *$V{main_period_wight}.doubleValue())/(100-(EQUALS($V{west_weight}, null) ? 0 : $V{west_weight}.doubleValue()))), null) ? 0 : (($V{full_grade_MEASURE}*$V{main_period_wight}.doubleValue())/(100-(EQUALS($V{west_weight}, null) ? 0 : $V{west_weight}.doubleValue())))]]></textFieldExpression>
+							</textField>
+							<textField isBlankWhenNull="true">
+								<reportElement mode="Opaque" x="50" y="0" width="50" height="20" forecolor="#17406C" backcolor="#FFFFFF" uuid="91ae9143-bb11-44c9-aa20-64ebff9b663b"/>
+								<box>
+									<topPen lineWidth="1.0"/>
+									<leftPen lineWidth="1.0"/>
+									<bottomPen lineWidth="1.0"/>
+									<rightPen lineWidth="1.0"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Segoe UI" size="13" isBold="false"/>
+								</textElement>
+								<textFieldExpression><![CDATA[Utils.calculateGrade(
+			EQUALS((($V{full_grade_MEASURE} *$V{main_period_wight}.doubleValue())/100), null) ? 0 :
+			(($V{full_grade_MEASURE} *$V{main_period_wight}.doubleValue())/100) 
+	,  100 ,$P{REPORT_PARAMETERS_MAP}.get("scores")
+)]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabCell>
+					<crosstabCell width="0" height="20" columnTotalGroup="main_pirod_name">
+						<cellContents backcolor="#4B4C4B" mode="Opaque">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<textField pattern=" #,##0.##">
+								<reportElement mode="Opaque" x="0" y="0" width="0" height="20" forecolor="#17406C" backcolor="#FFFFFF" uuid="a058e111-97fe-4b08-9c00-79ee02be4307"/>
+								<box>
+									<pen lineColor="#1A1A1A"/>
+									<topPen lineWidth="1.0" lineColor="#1A1A1A"/>
+									<leftPen lineWidth="1.0" lineColor="#1A1A1A"/>
+									<bottomPen lineWidth="1.0" lineColor="#1A1A1A"/>
+									<rightPen lineWidth="1.0" lineColor="#1A1A1A"/>
+								</box>
+								<textElement verticalAlignment="Middle">
+									<font fontName="Segoe UI" size="11" isBold="false"/>
+								</textElement>
+								<textFieldExpression><![CDATA[""]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabCell>
+					<crosstabCell width="90" height="1" rowTotalGroup="name">
+						<cellContents mode="Opaque">
+							<box>
+								<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textField pattern=" #,##0.###">
+								<reportElement mode="Opaque" x="0" y="0" width="90" height="1" forecolor="#FFFFFF" backcolor="#FFFFFF" uuid="c35eea76-8450-41f2-b988-00a2d901d017"/>
+								<box>
+									<topPen lineWidth="1.0"/>
+									<leftPen lineWidth="1.0"/>
+									<bottomPen lineWidth="1.0"/>
+									<rightPen lineWidth="1.0"/>
+								</box>
+								<textElement verticalAlignment="Middle">
+									<font fontName="Segoe UI" size="11" isBold="true"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{full_grade_MEASURE}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabCell>
+					<crosstabCell width="120" height="1" rowTotalGroup="name" columnTotalGroup="category_name">
+						<cellContents mode="Opaque">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<box>
+								<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textField pattern=" #,##0.###">
+								<reportElement mode="Opaque" x="0" y="0" width="120" height="1" forecolor="#FFFFFF" backcolor="#FFFFFF" uuid="1f1c3916-6a06-4329-a4a2-7170c3a11c30">
+									<printWhenExpression><![CDATA[AND(true,"" !=
+	 T($P{REPORT_PARAMETERS_MAP}.put("TOTAL_SCORE",TEXT($V{PARENT_CATEGORY_WEIGHT_name_category_name_ALL},"##0.00")))
+  + T($P{REPORT_PARAMETERS_MAP}.put("STUDENT_SCORE",	TEXT($V{full_grade_MEASURE_name_category_name_ALL},"##0.00")) ))]]></printWhenExpression>
+								</reportElement>
+								<box>
+									<topPen lineWidth="1.0"/>
+									<leftPen lineWidth="1.0"/>
+									<bottomPen lineWidth="1.0"/>
+									<rightPen lineWidth="1.0"/>
+								</box>
+								<textElement verticalAlignment="Middle">
+									<font fontName="Segoe UI" size="9" isBold="true"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{full_grade_MEASURE}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabCell>
+					<crosstabCell width="100" height="1" rowTotalGroup="name" columnTotalGroup="quar_name">
+						<cellContents>
+							<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.HorizontalRowLayout"/>
+							<box>
+								<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textField pattern=" #,##0.###">
+								<reportElement mode="Opaque" x="0" y="0" width="100" height="1" forecolor="#FFFFFF" backcolor="#D9D4D4" uuid="6e5584e5-313e-459a-8c1d-0ab3231e9c88">
+									<printWhenExpression><![CDATA[AND(true,"" !=
+													 T($P{REPORT_PARAMETERS_MAP}.put("TOTAL_SCORE",TEXT($V{PARENT_CATEGORY_WEIGHT},"##0.00")))
+ + T($P{REPORT_PARAMETERS_MAP}.put("STUDENT_SCORE",	TEXT((($V{full_grade_MEASURE}*$V{main_period_wight}.doubleValue())/100),"##0.00")) ))]]></printWhenExpression>
+								</reportElement>
+								<box>
+									<pen lineColor="#F7F5F5"/>
+									<topPen lineWidth="1.0"/>
+									<leftPen lineWidth="1.0"/>
+									<bottomPen lineWidth="1.0"/>
+									<rightPen lineWidth="1.0"/>
+								</box>
+								<textElement verticalAlignment="Middle">
+									<font fontName="Segoe UI" size="9" isBold="true"/>
+								</textElement>
+								<textFieldExpression><![CDATA[(($V{full_grade_MEASURE} *$V{main_period_wight}.doubleValue())/100)]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabCell>
+					<crosstabCell width="0" height="1" rowTotalGroup="name" columnTotalGroup="main_pirod_name">
+						<cellContents>
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						</cellContents>
+					</crosstabCell>
+				</crosstab>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band height="1000" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<rectangle radius="0">
+				<reportElement key="rectangle-2" x="7" y="8" width="1241" height="991" uuid="d1290846-1ae5-401b-b53c-ef6b647fb13c">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="12.0" lineStyle="Solid" lineColor="#C2C2C2"/>
+				</graphicElement>
+			</rectangle>
+		</band>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="200" splitType="Stretch">
+			<frame>
+				<reportElement mode="Opaque" x="14" y="125" width="1236" height="30" forecolor="#D0B48E" backcolor="#E8E8E8" uuid="f27c0aca-4841-4a61-aaef-243e67123ebe"/>
+				<subreport>
+					<reportElement x="40" y="0" width="529" height="30" uuid="32c46178-e5cc-4c62-90c1-63ad59c8e9f6"/>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<returnValue subreportVariable="LOCAL_VAR" toVariable="CALLBACK_VAR"/>
+					<subreportExpression><![CDATA[$P{ABSOLUTE_PATH}+"SCHOOL_INFO.jasper"]]></subreportExpression>
+				</subreport>
+				<textField evaluationTime="Report">
+					<reportElement style="Column header" x="980" y="5" width="105" height="20" forecolor="#736343" uuid="617e6e88-87ee-466c-8ad0-a30a14ec3388">
+						<printWhenExpression><![CDATA[false]]></printWhenExpression>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Segoe UI" size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="Column header" x="900" y="5" width="145" height="20" forecolor="#736343" uuid="3fed981c-a13a-4815-ab20-10e71e4e9f12">
+						<printWhenExpression><![CDATA[false]]></printWhenExpression>
+					</reportElement>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Segoe UI" size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+				</textField>
+				<textField pattern="EEEEE dd MMMMM yyyy">
+					<reportElement style="Column header" x="5" y="5" width="198" height="20" forecolor="#736343" uuid="8cb49ae0-29d9-4508-b0c6-d1db2890b10c"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Segoe UI" size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+				</textField>
+				<subreport isUsingCache="false">
+					<reportElement positionType="Float" x="690" y="0" width="99" height="30" uuid="85bad2f5-3150-4458-99e2-dc4769765f12"/>
+					<subreportParameter name="STUDENT_SCORE">
+						<subreportParameterExpression><![CDATA[$P{MAP}.get("TOTAL_SCORE") != null && $P{MAP}.get("STUDENT_SCORE") != null ?
+IF(new Double(T($P{MAP}.get("TOTAL_SCORE"))) <= 0
+ , new Double("0"), 
+
+new Double(T($P{MAP}.get("STUDENT_SCORE"))) 
+/
+new Double(T($P{MAP}.get("TOTAL_SCORE"))) 
+) : new Double("0")]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="SCALE_ID">
+						<subreportParameterExpression><![CDATA[$P{LETTER_ID}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<returnValue subreportVariable="LOCAL_GRADE" toVariable="CALLBACK_GRADE"/>
+					<subreportExpression><![CDATA[$P{ABSOLUTE_PATH}+"GPA.jasper"]]></subreportExpression>
+				</subreport>
+				<textField evaluationTime="Page">
+					<reportElement x="390" y="0" width="165" height="30" uuid="5d2e227b-7bec-4ad7-8373-24a251958bec">
+						<printWhenExpression><![CDATA[false]]></printWhenExpression>
+					</reportElement>
+					<textElement>
+						<font fontName="Segoe UI"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{MAP}.get("TOTAL_SCORE")]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Page">
+					<reportElement x="200" y="2" width="100" height="30" uuid="78aa1e33-46a8-4327-a6a4-a39e0b717155">
+						<printWhenExpression><![CDATA[false]]></printWhenExpression>
+					</reportElement>
+					<textElement>
+						<font fontName="Segoe UI"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{MAP}.get("STUDENT_SCORE")]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="1034" y="0" width="200" height="30" forecolor="#A6A4A4" uuid="adf3a442-d19a-425f-b656-d4855316949a"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Segoe UI" size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Powered by Skolera®]]></text>
+				</staticText>
+			</frame>
+			<break>
+				<reportElement x="0" y="125" width="92" height="1" uuid="a1090cd4-ba50-48a6-ae90-d4a23ddd8140"/>
+			</break>
+			<componentElement>
+				<reportElement positionType="Float" x="1151" y="31" width="99" height="94" uuid="4e69d2fc-0fbf-47e6-a91f-bb90cff1e7c3"/>
+				<jr:QRCode xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" evaluationTime="Page">
+					<jr:codeExpression><![CDATA[CONCATENATE(
+	$V{CALLBACK_VAR} == null ? "" : $V{CALLBACK_VAR}
+	,"\n"
+	,"\n"
+	,"Date: " + DATEFORMAT( NOW(),"dd/MM/yyyy hh:mm:ss") 
+	,"\n"	
+	,$F{student_name}  == null ? "" : ("Name: " + $F{student_name} )
+	,"\n"
+    ,$F{class_name} == null ? "" : ("Class: "+$F{class_name})
+	,"\n"
+   ,$F{quar_name} == null ? "" : ("Period: "+$F{quar_name})
+   ,"\n"
+   ,$F{qur_id}== null ? "" : ("GPID: "+$F{qur_id})
+   ,"\n"
+    ,$F{student_id}== null ? "" : ("STID: "+$F{student_id})
+   ,"\n"
+   ,$P{MAP}.get("STUDENT_SCORE") == null || $P{MAP}.get("TOTAL_SCORE") == null ? "" :
+   "Total: "+ ($P{MAP}.get("STUDENT_SCORE")+"/"+new Double(T($P{MAP}.get("TOTAL_SCORE")))*100)
+  ,"\n"
+  ,$V{CALLBACK_GRADE} == null ? "" : ("Grade: "+$V{CALLBACK_GRADE})
+  )]]></jr:codeExpression>
+				</jr:QRCode>
+			</componentElement>
+			<image scaleImage="FillFrame" vAlign="Middle">
+				<reportElement positionType="Float" x="15" y="35" width="1136" height="87" uuid="b1105cd1-2f54-4d8d-8780-3038bd282115"/>
+				<imageExpression><![CDATA[$P{ABSOLUTE_PATH}+$P{REPORT_NAME}+"-FOOTER.jpeg"]]></imageExpression>
+			</image>
+			<frame>
+				<reportElement positionType="Float" mode="Opaque" x="14" y="1" width="1234" height="30" backcolor="#DEDCDC" uuid="8bd1d0c2-12bc-4d21-a318-9720456d184f">
+					<printWhenExpression><![CDATA[EQUALS(UPPER($P{INCLUDE_ATTENDANCE_RECORD}),"YES")]]></printWhenExpression>
+				</reportElement>
+				<subreport>
+					<reportElement x="0" y="0" width="272" height="30" uuid="8a8360d6-ad84-4a6f-98cf-6c3964f1257c"/>
+					<subreportParameter name="student_id">
+						<subreportParameterExpression><![CDATA[$F{student_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA[$P{ABSOLUTE_PATH}+"Student_Attendance.jasper"]]></subreportExpression>
+				</subreport>
+			</frame>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 7.3.1.final using JasperReports Library version 6.8.1-3d4b87119c827be13776e451fb3738062f84a87d  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Blank_A4_1" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="591f70fd-5e63-4bf3-afc3-a4649c012466">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Elite international"/>
+	<queryString language="SQL">
+		<![CDATA[select x.student_id, x.student_name, x.course_id, x.quar_name, x.order_num, x.parent_id,
+ x.name, x.class_name, x.level_code, x.hide_num, (SUM(x.full_grade)*(select weight from course_grading_periods_categories where category_id = x.parent_id and courses_grading_period_id = x.cgp_id)) /sum(x.category_weight) AS full_grade, (select name from categories where id = x.parent_id) AS category_name
+from
+(select z.*, courses.name, d.class_name, d.level_code, d.hide_num from
+(select f.student_id, f.student_name, f.course_id, f.quar_name, f.order_num,f.category_name,f.category_weight, 
+if(f.parent_id IS NULL,f.category_id,f.parent_id) AS parent_id,
+IF(f.full_grade IS NULL,0,f.full_grade) AS full_grade, f.cgp_id
+	 from
+
+(select e.*,(e.grade*e.category_weight)/e.max_grade AS full_grade from
+
+(select d.student_id, d.student_name, d.category_id, d.category_name, d.parent_id, d.course_id, d.quar_name, sum(d.grade) AS grade, sum(d.max_grade) AS max_grade, d.category_weight AS category_weight,  
+d.order_num, d.cgp_id  from
+
+(select * from
+
+(SELECT DISTINCT students.id AS student_id,
+	    users.name AS student_name,
+	    assignments.id AS item_id,
+	   'assignment' AS item_type,
+        assignments.name AS item_name,
+        assignments.points AS max_grade,
+        st_sub_assi.id AS submission_id,
+        st_sub_assi.student_status AS status,
+        IF(st_sub_assi.grade IS NULL, 0, st_sub_assi.grade) AS grade,
+        assignments.category_id AS category_id,
+        categories.name AS category_name, 
+        cg.course_id, 
+        c_gp_cat.weight AS category_weight,
+        assi_cg.hide_grade AS hide_grade, 
+        c_gp.grading_period_id AS qur_id,
+		categories.parent_id AS parent_id,
+        c_gp_cat.courses_grading_period_id as cgp_id
+        FROM course_groups cg
+        LEFT OUTER JOIN student_course_groups st_cg on st_cg.course_group_id = cg.id AND st_cg.deleted_at IS NULL
+        LEFT OUTER JOIN students on students.id = st_cg.student_id AND students.deleted_at IS NULL
+        LEFT OUTER JOIN users on users.actable_type = 'Student' AND users.actable_id = students.id AND users.deleted_at IS NULL
+        LEFT OUTER JOIN assignments_course_groups assi_cg on assi_cg.course_group_id = cg.id AND assi_cg.deleted_at IS NULL
+        LEFT OUTER JOIN assignments on assignments.id = assi_cg.assignment_id AND assignments.deleted_at IS NULL
+        LEFT OUTER JOIN student_submitted_assignments st_sub_assi on st_sub_assi.student_id = students.id
+          AND st_sub_assi.assignment_id = assignments.id AND st_sub_assi.deleted_at IS NULL
+        LEFT OUTER JOIN categories on categories.id = assignments.category_id AND categories.deleted_at IS NULL
+        LEFT OUTER JOIN course_grading_periods_categories c_gp_cat on c_gp_cat.category_id = categories.id AND c_gp_cat.deleted_at IS NULL
+        INNER JOIN courses_grading_periods c_gp on c_gp.id = c_gp_cat.courses_grading_period_id AND c_gp.grading_period_id = 673
+          AND c_gp.course_id = cg.course_id AND c_gp.deleted_at IS NULL
+        where  assignments.grading_period_id = 673 AND cg.deleted_at IS NULL
+
+        UNION ALL
+                SELECT DISTINCT students.id AS student_id, 
+                users.name AS student_name, 
+                quizzes.id AS item_id, 
+                'quiz' AS item_type, 
+                quizzes.name AS item_name,
+        		quizzes.total_score AS max_grade, 
+        		quiz_sub.id AS submission_id, 
+        		quiz_sub.student_status AS status,
+        	    IF(quiz_sub.score IS NULL, 0, quiz_sub.score) AS grade, 
+        	    quizzes.category_id AS category_id, 
+        	    categories.name AS category_name,
+        	    cg.course_id,
+		        c_gp_cat.weight AS category_weight, 		         		         
+		        quiz_cg.hide_grade AS hide_grade, 
+		        c_gp.grading_period_id AS qur_id,
+				categories.parent_id AS parent_id,
+                c_gp_cat.courses_grading_period_id as cgp_id
+        FROM course_groups cg
+        LEFT OUTER JOIN student_course_groups st_cg on st_cg.course_group_id = cg.id AND st_cg.deleted_at IS NULL
+        LEFT OUTER JOIN students on students.id = st_cg.student_id AND students.deleted_at IS NULL
+        LEFT OUTER JOIN users on users.actable_type = 'Student' AND users.actable_id = students.id AND users.deleted_at IS NULL
+        LEFT OUTER JOIN course_groups_quizzes quiz_cg on quiz_cg.course_group_id = cg.id AND quiz_cg.deleted_at IS NULL
+        LEFT OUTER JOIN quizzes on quizzes.id = quiz_cg.quiz_id AND quizzes.deleted_at IS NULL
+        LEFT OUTER JOIN quiz_submissions quiz_sub on quiz_sub.student_id = students.id AND quiz_sub.quiz_id = quizzes.id
+          AND quiz_sub.deleted_at IS NULL
+        LEFT OUTER JOIN categories on categories.id = quizzes.category_id AND categories.deleted_at IS NULL
+        LEFT OUTER JOIN course_grading_periods_categories c_gp_cat on c_gp_cat.category_id = categories.id AND c_gp_cat.deleted_at IS NULL
+        INNER JOIN courses_grading_periods c_gp on c_gp.id = c_gp_cat.courses_grading_period_id AND c_gp.grading_period_id = 673
+          AND c_gp.course_id = cg.course_id AND c_gp.deleted_at IS NULL
+        where quizzes.grading_period_id = 673 AND cg.deleted_at IS NULL
+
+        UNION ALL
+                SELECT DISTINCT students.id AS student_id, 
+                users.name AS student_name, 
+                grade_items.id AS item_id, 
+                'grade_item' AS item_type,
+		        grade_items.name as item_name, 
+		        grade_items.max_grade AS max_grade, 
+		        g_sub.id AS submission_id,
+		        g_sub.student_status AS status, 
+		        IF(g_sub.grade IS NULL, 0 , g_sub.grade) AS grade,
+		        grade_items.category_id AS category_id,		              
+		        categories.name AS category_name , 
+		        cg.course_id, 		  
+		        c_gp_cat.weight AS category_weight, 
+		        grade_items.hide_grade AS hide_grade, 
+		        c_gp.grading_period_id AS qur_id,
+				categories.parent_id AS parent_id,
+                c_gp_cat.courses_grading_period_id as cgp_id
+        FROM course_groups cg
+        LEFT OUTER JOIN student_course_groups st_cg on st_cg.course_group_id = cg.id AND st_cg.deleted_at IS NULL
+        LEFT OUTER JOIN students on students.id = st_cg.student_id AND students.deleted_at IS NULL
+        LEFT OUTER JOIN users on users.actable_type = 'Student' AND users.actable_id = students.id AND users.deleted_at IS NULL
+        LEFT OUTER JOIN grade_items on grade_items.course_group_id = cg.id AND grade_items.deleted_at IS NULL
+        LEFT OUTER JOIN grade_submissions g_sub on g_sub.student_id = students.id AND g_sub.grade_item_id = grade_items.id
+          AND g_sub.deleted_at IS NULL
+        LEFT OUTER JOIN categories on categories.id = grade_items.category_id AND categories.deleted_at IS NULL
+        LEFT OUTER JOIN course_grading_periods_categories c_gp_cat on c_gp_cat.category_id = categories.id AND c_gp_cat.deleted_at IS NULL
+        INNER JOIN courses_grading_periods c_gp on c_gp.id = c_gp_cat.courses_grading_period_id AND c_gp.grading_period_id = 673
+          AND c_gp.course_id = cg.course_id AND c_gp.deleted_at IS NULL
+        where grade_items.grading_period_id = 673 AND cg.deleted_at IS NULL
+		)b
+		left join 
+		(
+			SELECT distinct cat.id, cat.name, cgp.course_id AS crs_id, cgpc.weight, cgpc.courses_grading_period_id, cgp.grading_period_id, gp.name AS quar_name, 
+            courses.order AS order_num FROM categories cat
+			inner join course_grading_periods_categories cgpc on cat.id = cgpc.category_id and cgpc.deleted_at is null
+			inner join courses_grading_periods cgp on cgp.id =  cgpc.courses_grading_period_id and cgp.deleted_at is null
+			inner join grading_periods gp on gp.id = cgp.grading_period_id
+			inner join courses on courses.id = cgp.course_id and courses.deleted_at is null
+			where cat.deleted_at is null
+)c
+on b.qur_id=c.grading_period_id and c.crs_id=b.course_id and c.id = b.category_id
+)d
+group by d.student_id, d.student_name, d.category_id, d.quar_name, d.course_id, d.category_name, d.category_weight, d.order_num
+)e
+)f
+)z 
+INNER JOIN courses on z.course_id = courses.id
+inner join
+(SELECT csg.student_id as student_id, cg.name as class_name, levels.level_code AS level_code, courses.hide as hide_num
+	FROM student_course_groups csg
+	inner join course_groups cg on csg.course_group_id=cg.id and cg.deleted_at is null
+	inner join courses on cg.course_id= courses.id and courses.deleted_at is null
+	inner join levels on courses.level_id=levels.id and levels.deleted_at is null
+	where csg.deleted_at is null
+	group by student_id, class_name, level_code
+	)d on d.student_id = z.student_id
+where d.hide_num = "false"
+)
+x
+group by x.student_id, x.student_name, x.course_id, x.quar_name, x.order_num, x.parent_id, x.name, x.class_name, x.level_code, x.hide_num]]>
+	</queryString>
+	<field name="student_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="student_id"/>
+	</field>
+	<field name="student_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="student_name"/>
+	</field>
+	<field name="course_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="course_id"/>
+	</field>
+	<field name="quar_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="quar_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="grading_periods"/>
+	</field>
+	<field name="order_num" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="order_num"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="courses"/>
+	</field>
+	<field name="parent_id" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.label" value="parent_id"/>
+	</field>
+	<field name="name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="courses"/>
+	</field>
+	<field name="class_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="class_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="course_groups"/>
+	</field>
+	<field name="level_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="level_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="levels"/>
+	</field>
+	<field name="hide_num" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.label" value="hide_num"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="courses"/>
+	</field>
+	<field name="full_grade" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="full_grade"/>
+	</field>
+	<field name="category_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="category_name"/>
+	</field>
+	<group name="student_id">
+		<groupExpression><![CDATA[$F{student_id}]]></groupExpression>
+	</group>
+	<group name="student_name">
+		<groupExpression><![CDATA[$F{student_name}]]></groupExpression>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="156" splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="125" splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>
