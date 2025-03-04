@@ -1,0 +1,1108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.10.0.final using JasperReports Library version 6.10.0-unknown  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Y06 Report Card" pageWidth="615" pageHeight="950" columnWidth="575" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="f34ae5fe-3c2e-4c7e-875f-778597b99ead">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="EIS"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="0"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="1000"/>
+	<property name="ireport.callouts" value="callouts.1.fg=0,0,0\ncallouts.1.text=MOE Start\n\ncallouts.1.bounds=620,1112,228,16\ncallouts.1.bg=130,255,224\n"/>
+	<parameter name="ABSOLUTE_PATH" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="MAIN_GRADING_PERIOD_ID" class="java.lang.String">
+		<defaultValueExpression><![CDATA["-1"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="STUDENT_ID" class="java.lang.String">
+		<defaultValueExpression><![CDATA["-1"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUB_GRADING_PERIOD_ID" class="java.lang.String">
+		<defaultValueExpression><![CDATA["-1"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="USER_ID" class="java.lang.String"/>
+	<parameter name="LEVEL_CODE" class="java.lang.String">
+		<defaultValueExpression><![CDATA["-1"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select student_name, level_name, student_id , course_group_name ,
+(select group_concat(comment) from student_progress_reports spr
+inner join progress_reports pr on pr.id = progress_report_id and pr.deleted_at is null and pr.title like "%Autumn%"
+where spr.student_id = gs.student_id  and spr.deleted_at is null) as Comment,
+(SELECT count(id) absent_dayes FROM attendances where deleted_at is null and status in(1,3)  and attendances.student_id = gs.student_id) as absent_dayes,
+(SELECT count(id) late_dayes FROM attendances where deleted_at is null and status = 2  and attendances.student_id = gs.student_id) as late_dayes
+from grades_summaries gs
+ inner join levels on levels.id = level_id
+ inner join courses on courses.deleted_at is null and course_id = courses.id and calculated_in_total = 1 and hide = 0
+inner join users on users.deleted_at is null and users.actable_id = gs.student_id and users.user_type = "student" and (users.id in ($P!{USER_ID}) OR  $P{USER_ID}   = "-1")
+where (gs.student_id in ($P!{STUDENT_ID}) OR $P{STUDENT_ID}  = "-1")
+and (levels.level_code in ($P!{LEVEL_CODE}) OR $P{LEVEL_CODE}  = "-1")
+
+group by student_id]]>
+	</queryString>
+	<field name="student_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="student_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="grades_summaries"/>
+	</field>
+	<field name="level_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="level_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="grades_summaries"/>
+	</field>
+	<field name="student_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="student_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="grades_summaries"/>
+	</field>
+	<field name="course_group_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="course_group_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="grades_summaries"/>
+	</field>
+	<field name="Comment" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="Comment"/>
+	</field>
+	<field name="absent_dayes" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.label" value="absent_dayes"/>
+	</field>
+	<field name="late_dayes" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.label" value="late_dayes"/>
+	</field>
+	<group name="level" isReprintHeaderOnEachPage="true">
+		<groupExpression><![CDATA[$F{level_name}]]></groupExpression>
+		<groupHeader>
+			<band height="52">
+				<frame>
+					<reportElement x="5" y="0" width="575" height="38" uuid="760e56a5-744d-449f-837d-533da0de99e0"/>
+					<staticText>
+						<reportElement x="0" y="19" width="575" height="19" uuid="fb2bd835-12bc-4ff2-b066-d5893a69637c"/>
+						<textElement verticalAlignment="Middle">
+							<font size="12" isBold="true"/>
+						</textElement>
+						<text><![CDATA[Year Group / Class:]]></text>
+					</staticText>
+					<textField>
+						<reportElement x="113" y="19" width="386" height="19" uuid="b42b22f3-9e92-478d-8ec8-5cdef0aef3fe"/>
+						<textElement verticalAlignment="Middle">
+							<font size="12"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$F{level_name}+" - "+$F{course_group_name}]]></textFieldExpression>
+					</textField>
+					<textField>
+						<reportElement x="81" y="0" width="420" height="19" uuid="dea507e4-77aa-4a6e-ba73-b689ccaea280"/>
+						<textElement verticalAlignment="Middle">
+							<font size="12"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$F{student_name}]]></textFieldExpression>
+					</textField>
+					<staticText>
+						<reportElement x="0" y="0" width="575" height="19" uuid="57e9b81e-1193-44ce-bf81-54de5c4ad269"/>
+						<textElement verticalAlignment="Middle">
+							<font size="12" isBold="true"/>
+						</textElement>
+						<text><![CDATA[Pupil’s Name:]]></text>
+					</staticText>
+				</frame>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="student" isStartNewPage="true" isResetPageNumber="true" keepTogether="true">
+		<groupExpression><![CDATA[$F{student_id}]]></groupExpression>
+		<groupHeader>
+			<band height="735">
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<break>
+					<reportElement x="0" y="734" width="98" height="1" uuid="3d543ec6-212e-4d1e-88a5-66baae77688c"/>
+				</break>
+				<frame>
+					<reportElement x="0" y="409" width="287" height="60" uuid="5eeed105-94b3-454c-b850-3d461028b94e">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<staticText>
+						<reportElement mode="Opaque" x="0" y="0" width="281" height="20" forecolor="#FFFFFF" backcolor="#339933" uuid="596478d5-12a4-4bf7-a423-488b8df5a971"/>
+						<box>
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font size="10" isBold="true"/>
+						</textElement>
+						<text><![CDATA[Areas of Strength & Targets]]></text>
+					</staticText>
+					<textField>
+						<reportElement x="0" y="20" width="281" height="40" uuid="66a64d80-0545-4872-9d05-f1f7188c198b"/>
+						<box leftPadding="3" rightPadding="3">
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Left" verticalAlignment="Middle">
+							<font size="10" isBold="false"/>
+						</textElement>
+						<textFieldExpression><![CDATA["In core subjects, teachers highlight pupil's areas of strength and set targets (Specific area your child needs to work on to improve.)"]]></textFieldExpression>
+					</textField>
+				</frame>
+				<frame>
+					<reportElement x="288" y="409" width="287" height="60" uuid="14bc5614-cf25-4314-8d5d-34441d251073">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<staticText>
+						<reportElement mode="Opaque" x="0" y="0" width="287" height="20" forecolor="#FFFFFF" backcolor="#339933" uuid="9131a958-88f8-45dc-a5a5-59a9eb995acc"/>
+						<box>
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font size="10" isBold="true"/>
+						</textElement>
+						<text><![CDATA[Attendance Information]]></text>
+					</staticText>
+					<textField>
+						<reportElement x="0" y="20" width="287" height="40" uuid="6ef12c25-f925-4447-aeb7-6d808d587168"/>
+						<box leftPadding="3" rightPadding="3">
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Left" verticalAlignment="Middle">
+							<font size="10" isBold="false"/>
+						</textElement>
+						<textFieldExpression><![CDATA["Number of days of absence (Auhorised and Unauthorised): "+$F{absent_dayes}+"\n"+
+"Number of days of lateness: "+$F{late_dayes}]]></textFieldExpression>
+					</textField>
+				</frame>
+				<frame>
+					<reportElement x="1" y="480" width="287" height="240" uuid="8fc6baf5-2382-4155-bc44-39ddaf0cd796">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<staticText>
+						<reportElement mode="Opaque" x="0" y="0" width="280" height="40" forecolor="#FFFFFF" backcolor="#339933" uuid="c372ac0e-8e9f-49c6-a9c3-c860c133470f"/>
+						<box>
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font size="10" isBold="true"/>
+						</textElement>
+						<text><![CDATA[Ethos Descriptors 
+(Specialist subjects)]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="139" y="40" width="141" height="40" uuid="3a4732bb-4240-43ce-a530-bd0ccac44ee7"/>
+						<box leftPadding="3" rightPadding="3">
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font size="10" isBold="false"/>
+						</textElement>
+						<text><![CDATA[90% - 100%]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="139" y="80" width="141" height="40" uuid="acbadf27-8757-4b37-aee8-efaac36d5001"/>
+						<box leftPadding="3" rightPadding="3">
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font size="10" isBold="false"/>
+						</textElement>
+						<text><![CDATA[75% - 89%]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="139" y="120" width="141" height="40" uuid="862ff704-216c-4590-8f27-778e8c3a30c3"/>
+						<box leftPadding="3" rightPadding="3">
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font size="10" isBold="false"/>
+						</textElement>
+						<text><![CDATA[55% - 74%]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="139" y="160" width="141" height="40" uuid="ee57be82-4401-4666-8dfb-07e4f0d291b3"/>
+						<box leftPadding="3" rightPadding="3">
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font size="10" isBold="false"/>
+						</textElement>
+						<text><![CDATA[40% - 54%]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="139" y="200" width="141" height="40" uuid="ffb5e7c7-3a77-4509-be0c-2afb29c1a096"/>
+						<box leftPadding="3" rightPadding="3">
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font size="10" isBold="false"/>
+						</textElement>
+						<text><![CDATA[0% - 39%]]></text>
+					</staticText>
+					<staticText>
+						<reportElement mode="Opaque" x="0" y="40" width="139" height="40" forecolor="#FFFFFF" backcolor="#FF6600" uuid="becb6958-3192-4f38-bb89-996fccdf4f23"/>
+						<box leftPadding="3" rightPadding="3">
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font size="10" isBold="true"/>
+						</textElement>
+						<text><![CDATA[Mastering
+(M)]]></text>
+					</staticText>
+					<staticText>
+						<reportElement mode="Opaque" x="0" y="160" width="139" height="40" forecolor="#FFFFFF" backcolor="#FF6600" uuid="f694e7d7-44a8-4f07-8c74-b2f8efccd8e1"/>
+						<box leftPadding="3" rightPadding="3">
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font size="10" isBold="true"/>
+						</textElement>
+						<text><![CDATA[Entering
+(E)]]></text>
+					</staticText>
+					<staticText>
+						<reportElement mode="Opaque" x="0" y="80" width="139" height="40" forecolor="#FFFFFF" backcolor="#FF6600" uuid="2971f64b-d2b1-441b-b0ce-3d04d06a0877"/>
+						<box leftPadding="3" rightPadding="3">
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font size="10" isBold="true"/>
+						</textElement>
+						<text><![CDATA[Secure
+(S)]]></text>
+					</staticText>
+					<staticText>
+						<reportElement mode="Opaque" x="0" y="120" width="139" height="40" forecolor="#FFFFFF" backcolor="#FF6600" uuid="20ae25cc-6f9b-4c16-a3cd-260d33be54e9"/>
+						<box leftPadding="3" rightPadding="3">
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font size="10" isBold="true"/>
+						</textElement>
+						<text><![CDATA[Developing
+(D)]]></text>
+					</staticText>
+					<staticText>
+						<reportElement mode="Opaque" x="0" y="200" width="139" height="40" forecolor="#FFFFFF" backcolor="#FF6600" uuid="1915e15d-a45a-4575-8019-dc394fecba79"/>
+						<box leftPadding="3" rightPadding="3">
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font size="10" isBold="true"/>
+						</textElement>
+						<text><![CDATA[Below Entering
+(BE)]]></text>
+					</staticText>
+				</frame>
+				<frame>
+					<reportElement x="288" y="480" width="287" height="240" uuid="6c2dc8cd-f47c-4491-8dc8-99f4fa84b2dc">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<staticText>
+						<reportElement mode="Opaque" x="0" y="0" width="287" height="40" forecolor="#FFFFFF" backcolor="#339933" uuid="68db3561-96d2-4d59-9d3c-70aa73978c85"/>
+						<box>
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font size="10" isBold="true"/>
+						</textElement>
+						<text><![CDATA[Behaviour & Effort Rubric and Description Guide
+1=Needs Improvement / 2=Satisfactory / 3=Excellent]]></text>
+					</staticText>
+					<staticText>
+						<reportElement mode="Opaque" x="60" y="40" width="120" height="40" forecolor="#FFFFFF" backcolor="#FF6600" uuid="ffb226bc-d32f-4d02-bb09-38cbf3352faa">
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						</reportElement>
+						<box leftPadding="3" rightPadding="3">
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font size="10" isBold="true"/>
+						</textElement>
+						<text><![CDATA[Effort]]></text>
+					</staticText>
+					<staticText>
+						<reportElement mode="Opaque" x="180" y="40" width="107" height="40" forecolor="#FFFFFF" backcolor="#FF6600" uuid="df4de9cb-90e3-4972-ae42-2f5751e0edbd"/>
+						<box leftPadding="3" rightPadding="3">
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font size="10" isBold="true"/>
+						</textElement>
+						<text><![CDATA[Behaviour]]></text>
+					</staticText>
+					<staticText>
+						<reportElement mode="Opaque" x="0" y="40" width="60" height="40" forecolor="#FFFFFF" backcolor="#339933" uuid="1b1d360a-7e34-4bc7-a836-543cd00fb001"/>
+						<box>
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font size="10" isBold="true"/>
+						</textElement>
+						<text><![CDATA[Learning Profile]]></text>
+					</staticText>
+					<staticText>
+						<reportElement mode="Opaque" x="0" y="80" width="60" height="160" forecolor="#FFFFFF" backcolor="#339933" uuid="4d5297e5-f091-4010-972f-d309039623c1"/>
+						<box>
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font size="10" isBold="true"/>
+						</textElement>
+						<text><![CDATA[Description]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="60" y="80" width="120" height="160" uuid="f9ae4162-811e-4400-bced-0d504c30c5fa"/>
+						<box leftPadding="3" rightPadding="3">
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Left" verticalAlignment="Middle">
+							<font size="10" isBold="false"/>
+						</textElement>
+						<text><![CDATA[* The pupil is on task.
+* The pupil follows teacher instructions.
+* The pupil participates voluntarily.
+* The pupil is timely and punctual.
+* The pupil is organised in his/her work.
+]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="180" y="80" width="107" height="160" uuid="2fbe4d1c-d4ed-4d82-a7a8-379f291eff07"/>
+						<box leftPadding="3" rightPadding="3">
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Left" verticalAlignment="Middle">
+							<font size="10" isBold="false"/>
+						</textElement>
+						<text><![CDATA[* The pupil is respectful to teachers.
+* The pupil is respectful to peers.
+* The pupil acts/talks appropriately.
+* The pupil does not disrupt class time.
+* The pupil exhibits evidence of Ethos values.
+]]></text>
+					</staticText>
+				</frame>
+				<frame>
+					<reportElement x="0" y="0" width="575" height="409" uuid="990417a6-a48b-408f-b4e5-c4ec33be9f6a"/>
+					<staticText>
+						<reportElement mode="Opaque" x="0" y="0" width="575" height="50" forecolor="#FFFFFF" backcolor="#339933" uuid="3ee0c8ee-34fc-43c2-aa41-1efdbeedccac"/>
+						<box>
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font size="14" isBold="true"/>
+						</textElement>
+						<text><![CDATA[Attainment Criteria]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="90" y="50" width="485" height="40" uuid="c17e3477-0cea-4014-a967-5175c9111aad"/>
+						<box leftPadding="3" rightPadding="3">
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Left" verticalAlignment="Middle">
+							<font size="10" isBold="false"/>
+						</textElement>
+						<text><![CDATA[The pupil demonstrates strong, clear understanding and can independently apply concepts and skills in a range of contexts. (The pupil is working well above year-group level expectations.)]]></text>
+					</staticText>
+					<staticText>
+						<reportElement mode="Opaque" x="0" y="50" width="90" height="40" forecolor="#FFFFFF" backcolor="#FF6600" uuid="3fab4ef7-e8a1-4b38-8f65-1e7d4f694dc7"/>
+						<box>
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font size="10" isBold="true"/>
+						</textElement>
+						<text><![CDATA[Mastering (M)
+90% - 100%]]></text>
+					</staticText>
+					<staticText>
+						<reportElement mode="Opaque" x="0" y="90" width="90" height="40" forecolor="#FFFFFF" backcolor="#FF6600" uuid="816977cc-dd78-454a-93da-e2c7a7239c27"/>
+						<box>
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font size="10" isBold="true"/>
+						</textElement>
+						<text><![CDATA[Secure (S+)
+85% - 89%]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="90" y="90" width="485" height="40" uuid="932b7adf-7727-4fad-84a1-9d9fa40f7695"/>
+						<box leftPadding="3" rightPadding="3">
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Left" verticalAlignment="Middle">
+							<font size="10" isBold="false"/>
+						</textElement>
+						<text><![CDATA[The pupil demonstrates understanding and can apply concepts and skills. (The pupil is consistently working at year-group level expectations.)]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="90" y="192" width="485" height="38" uuid="6b63b799-a080-4331-b10c-1c805cf9cb7e"/>
+						<box leftPadding="3" rightPadding="3">
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Left" verticalAlignment="Middle">
+							<font size="10" isBold="false"/>
+						</textElement>
+						<text><![CDATA[The pupil is beginning to consistently apply understanding and skills but still needs some guidance. (The pupil is in line with year-group level expectations in some of their work.)
+]]></text>
+					</staticText>
+					<staticText>
+						<reportElement mode="Opaque" x="0" y="192" width="90" height="38" forecolor="#FFFFFF" backcolor="#FF6600" uuid="c539bfb2-0d9b-4407-a0c4-ba0996b848db"/>
+						<box>
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font size="10" isBold="true"/>
+						</textElement>
+						<text><![CDATA[Developing (D+)
+69% - 74%]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="90" y="299" width="485" height="31" uuid="32f9a01f-5579-4d27-b126-db6497d5e1cd"/>
+						<box leftPadding="3" rightPadding="3">
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Left" verticalAlignment="Middle">
+							<font size="10" isBold="false"/>
+						</textElement>
+						<text><![CDATA[The pupil is developing knowledge, understanding and skills but experiences difficulty grasping certain concepts and skills. (The pupil is below average in year-group level expectations.)]]></text>
+					</staticText>
+					<staticText>
+						<reportElement mode="Opaque" x="0" y="299" width="90" height="31" forecolor="#FFFFFF" backcolor="#FF6600" uuid="8b654da0-229b-4190-8910-98ce22d71693"/>
+						<box>
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font size="10" isBold="true"/>
+						</textElement>
+						<text><![CDATA[Entering (E)
+40% - 54%]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="90" y="330" width="485" height="39" uuid="d25548e4-727c-40eb-b9d3-240d89fbfc77"/>
+						<box leftPadding="3" rightPadding="3">
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Left" verticalAlignment="Middle">
+							<font size="10" isBold="false"/>
+						</textElement>
+						<text><![CDATA[The pupil is experiencing difficulty in grasping concepts and skills. (The pupil is well below average in year-group level expectations.)]]></text>
+					</staticText>
+					<staticText>
+						<reportElement mode="Opaque" x="0" y="330" width="90" height="39" forecolor="#FFFFFF" backcolor="#FF6600" uuid="d1db623c-f31e-4abe-8bc4-b6e38c0d4eeb"/>
+						<box>
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font size="10" isBold="true"/>
+						</textElement>
+						<text><![CDATA[Below Entering (BE)
+0% - 39%]]></text>
+					</staticText>
+					<staticText>
+						<reportElement mode="Opaque" x="0" y="369" width="90" height="20" forecolor="#FFFFFF" backcolor="#FF6600" uuid="a01d2266-ebdf-468f-be81-dbe27c96d156"/>
+						<box>
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font size="10" isBold="true"/>
+						</textElement>
+						<text><![CDATA[N/A]]></text>
+					</staticText>
+					<staticText>
+						<reportElement mode="Opaque" x="0" y="389" width="90" height="20" forecolor="#FFFFFF" backcolor="#FF6600" uuid="dad04017-3874-4cba-b141-23f139e6be39"/>
+						<box>
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font size="10" isBold="true"/>
+						</textElement>
+						<text><![CDATA[LS]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="90" y="389" width="485" height="20" uuid="1dc56536-58f5-45e3-bfd4-fd1a523dc24f"/>
+						<box leftPadding="3" rightPadding="3">
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Left" verticalAlignment="Middle">
+							<font size="10" isBold="false"/>
+						</textElement>
+						<text><![CDATA[The pupil is pulled out from a subject to attend learning support sessions]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="90" y="369" width="485" height="20" uuid="5413dc77-43c5-41dd-848c-196e3d990bef"/>
+						<box leftPadding="3" rightPadding="3">
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Left" verticalAlignment="Middle">
+							<font size="10" isBold="false"/>
+						</textElement>
+						<text><![CDATA[Not applicable to the pupil]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="90" y="130" width="485" height="31" uuid="d9a8d6d5-2be3-44a5-8a8c-a2730a395517"/>
+						<box leftPadding="3" rightPadding="3">
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Left" verticalAlignment="Middle">
+							<font size="10" isBold="false"/>
+						</textElement>
+						<text><![CDATA[The pupil demonstrates understanding and can independently apply concepts and skills. (The pupil is consistently working at year-group level expectations.)]]></text>
+					</staticText>
+					<staticText>
+						<reportElement mode="Opaque" x="0" y="130" width="90" height="31" forecolor="#FFFFFF" backcolor="#FF6600" uuid="b8530a55-afe4-4a91-916b-eea6bc122f89"/>
+						<box>
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font size="10" isBold="true"/>
+						</textElement>
+						<text><![CDATA[Secure (S)
+80% - 84%]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="90" y="161" width="485" height="31" uuid="ebeb4e06-b0dc-490a-b65a-8344fb225153"/>
+						<box leftPadding="3" rightPadding="3">
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Left" verticalAlignment="Middle">
+							<font size="10" isBold="false"/>
+						</textElement>
+						<text><![CDATA[The pupil demonstrates understanding and can apply concepts and skills. (The pupil is at the low end of year-group level expectations.)]]></text>
+					</staticText>
+					<staticText>
+						<reportElement mode="Opaque" x="0" y="161" width="90" height="31" forecolor="#FFFFFF" backcolor="#FF6600" uuid="1f9323c2-5212-49f8-82db-b9c386a92e8d"/>
+						<box>
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font size="10" isBold="true"/>
+						</textElement>
+						<text><![CDATA[Secure (S-)
+75% - 79%]]></text>
+					</staticText>
+					<staticText>
+						<reportElement mode="Opaque" x="0" y="230" width="90" height="35" forecolor="#FFFFFF" backcolor="#FF6600" uuid="c2e9df68-a4e9-4c06-a1c5-e5221d603e56">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						</reportElement>
+						<box>
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font size="10" isBold="true"/>
+						</textElement>
+						<text><![CDATA[Developing (D)
+62% - 68%]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="90" y="230" width="485" height="35" uuid="bf9dd84a-259b-4c1a-97be-7833610a4b64">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						</reportElement>
+						<box leftPadding="3" rightPadding="3">
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Left" verticalAlignment="Middle">
+							<font size="10" isBold="false"/>
+						</textElement>
+						<text><![CDATA[The pupil is at the beginning stages of understanding and applying concepts/skills. (The pupil is approaching year-group level expectations.)
+]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="90" y="265" width="485" height="34" uuid="23749e08-90cd-42cf-b507-3774d50f287c"/>
+						<box leftPadding="3" rightPadding="3">
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Left" verticalAlignment="Middle">
+							<font size="10" isBold="false"/>
+						</textElement>
+						<text><![CDATA[The pupil is starting to understand and apply concepts/skills but with support. (The pupil is working towards year-group level expectations.)
+]]></text>
+					</staticText>
+					<staticText>
+						<reportElement mode="Opaque" x="0" y="265" width="90" height="34" forecolor="#FFFFFF" backcolor="#FF6600" uuid="36e57df4-4684-4ae1-8a05-399dbfffb85b"/>
+						<box>
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font size="10" isBold="true"/>
+						</textElement>
+						<text><![CDATA[Developing (D-)
+55% - 61%]]></text>
+					</staticText>
+				</frame>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="62">
+				<subreport>
+					<reportElement x="-10" y="0" width="594" height="44" uuid="d7e247d5-a833-4521-9c3e-e3d62a317c72"/>
+					<subreportParameter name="ST_ID">
+						<subreportParameterExpression><![CDATA[$F{student_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="Course_id">
+						<subreportParameterExpression><![CDATA["English"]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="ABSOLUTE_PATH">
+						<subreportParameterExpression><![CDATA[$P{ABSOLUTE_PATH}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="MAIN_GRADING_PERIOD_ID">
+						<subreportParameterExpression><![CDATA[$P{MAIN_GRADING_PERIOD_ID}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA[$P{ABSOLUTE_PATH}+"//Y03//Course_report.jasper"]]></subreportExpression>
+				</subreport>
+				<break>
+					<reportElement x="0" y="60" width="100" height="1" uuid="21e85bc7-2cdc-4a73-951b-b964e85c864c"/>
+				</break>
+			</band>
+			<band height="61">
+				<subreport>
+					<reportElement x="-10" y="0" width="594" height="50" uuid="f250be68-6b32-4abe-9a7c-15f0dbefb0ef"/>
+					<subreportParameter name="ST_ID">
+						<subreportParameterExpression><![CDATA[$F{student_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="Course_id">
+						<subreportParameterExpression><![CDATA["Math"]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="ABSOLUTE_PATH">
+						<subreportParameterExpression><![CDATA[$P{ABSOLUTE_PATH}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="MAIN_GRADING_PERIOD_ID">
+						<subreportParameterExpression><![CDATA[$P{MAIN_GRADING_PERIOD_ID}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA[$P{ABSOLUTE_PATH}+"//Y03//Math_report.jasper"]]></subreportExpression>
+				</subreport>
+				<break>
+					<reportElement x="0" y="60" width="100" height="1" uuid="a4aee3dd-567d-4b55-b4b0-9cbd2dc59808"/>
+				</break>
+			</band>
+			<band height="61">
+				<subreport>
+					<reportElement x="-10" y="0" width="594" height="44" uuid="5acd8984-ca08-4800-94df-33f856b81d91"/>
+					<subreportParameter name="ST_ID">
+						<subreportParameterExpression><![CDATA[$F{student_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="Course_id">
+						<subreportParameterExpression><![CDATA["Science"]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="ABSOLUTE_PATH">
+						<subreportParameterExpression><![CDATA[$P{ABSOLUTE_PATH}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="MAIN_GRADING_PERIOD_ID">
+						<subreportParameterExpression><![CDATA[$P{MAIN_GRADING_PERIOD_ID}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA[$P{ABSOLUTE_PATH}+"//Y03//Course_report.jasper"]]></subreportExpression>
+				</subreport>
+				<break>
+					<reportElement x="0" y="60" width="100" height="1" uuid="4a69a1d2-fd46-4b03-b374-838b079dea52"/>
+				</break>
+			</band>
+			<band height="61">
+				<subreport>
+					<reportElement x="-10" y="0" width="594" height="44" uuid="98b74076-a880-4c62-b721-494337d38f0d"/>
+					<subreportParameter name="ST_ID">
+						<subreportParameterExpression><![CDATA[$F{student_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="Course_id">
+						<subreportParameterExpression><![CDATA["Arabic"]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="ABSOLUTE_PATH">
+						<subreportParameterExpression><![CDATA[$P{ABSOLUTE_PATH}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="MAIN_GRADING_PERIOD_ID">
+						<subreportParameterExpression><![CDATA[$P{MAIN_GRADING_PERIOD_ID}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA[$P{ABSOLUTE_PATH}+"//Y03//Arabic_report.jasper"]]></subreportExpression>
+				</subreport>
+				<break>
+					<reportElement x="0" y="60" width="100" height="1" uuid="0a0642c2-d27b-4e22-9945-62ebbeaf6fa9"/>
+				</break>
+			</band>
+			<band height="141">
+				<subreport>
+					<reportElement positionType="Float" x="-10" y="0" width="594" height="44" uuid="1ac61c3b-13bd-469c-9305-3babbf36f980"/>
+					<subreportParameter name="ST_ID">
+						<subreportParameterExpression><![CDATA[$F{student_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="Course_id">
+						<subreportParameterExpression><![CDATA["Topic"]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="ABSOLUTE_PATH">
+						<subreportParameterExpression><![CDATA[$P{ABSOLUTE_PATH}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="MAIN_GRADING_PERIOD_ID">
+						<subreportParameterExpression><![CDATA[$P{MAIN_GRADING_PERIOD_ID}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA[$P{ABSOLUTE_PATH}+"//Y03//Topic_report.jasper"]]></subreportExpression>
+				</subreport>
+				<frame>
+					<reportElement positionType="Float" x="-10" y="90" width="594" height="44" uuid="d0d63807-093b-4254-8794-0d8c08148d6a"/>
+					<subreport>
+						<reportElement x="0" y="0" width="594" height="44" uuid="6673c550-79d9-4766-827a-f4224598e9c2"/>
+						<subreportParameter name="ST_ID">
+							<subreportParameterExpression><![CDATA[$F{student_id}]]></subreportParameterExpression>
+						</subreportParameter>
+						<subreportParameter name="Course_id">
+							<subreportParameterExpression><![CDATA["German"]]></subreportParameterExpression>
+						</subreportParameter>
+						<subreportParameter name="ABSOLUTE_PATH">
+							<subreportParameterExpression><![CDATA[$P{ABSOLUTE_PATH}]]></subreportParameterExpression>
+						</subreportParameter>
+						<subreportParameter name="MAIN_GRADING_PERIOD_ID">
+							<subreportParameterExpression><![CDATA[$P{MAIN_GRADING_PERIOD_ID}]]></subreportParameterExpression>
+						</subreportParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+						<subreportExpression><![CDATA[$P{ABSOLUTE_PATH}+"//Y03//Course_report2.jasper"]]></subreportExpression>
+					</subreport>
+					<subreport>
+						<reportElement x="0" y="0" width="594" height="44" uuid="eac4e502-833b-4be2-824c-ba8382c865bc"/>
+						<subreportParameter name="ST_ID">
+							<subreportParameterExpression><![CDATA[$F{student_id}]]></subreportParameterExpression>
+						</subreportParameter>
+						<subreportParameter name="Course_id">
+							<subreportParameterExpression><![CDATA["French"]]></subreportParameterExpression>
+						</subreportParameter>
+						<subreportParameter name="ABSOLUTE_PATH">
+							<subreportParameterExpression><![CDATA[$P{ABSOLUTE_PATH}]]></subreportParameterExpression>
+						</subreportParameter>
+						<subreportParameter name="MAIN_GRADING_PERIOD_ID">
+							<subreportParameterExpression><![CDATA[$P{MAIN_GRADING_PERIOD_ID}]]></subreportParameterExpression>
+						</subreportParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+						<subreportExpression><![CDATA[$P{ABSOLUTE_PATH}+"//Y03//Course_report2.jasper"]]></subreportExpression>
+					</subreport>
+				</frame>
+				<subreport>
+					<reportElement positionType="Float" x="-10" y="46" width="594" height="44" uuid="e6c1caac-e6a5-4ad3-9795-0a4f148d79b0"/>
+					<subreportParameter name="ST_ID">
+						<subreportParameterExpression><![CDATA[$F{student_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="Course_id">
+						<subreportParameterExpression><![CDATA["Computing"]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="ABSOLUTE_PATH">
+						<subreportParameterExpression><![CDATA[$P{ABSOLUTE_PATH}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="MAIN_GRADING_PERIOD_ID">
+						<subreportParameterExpression><![CDATA[$P{MAIN_GRADING_PERIOD_ID}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA[$P{ABSOLUTE_PATH}+"//Y03//Com_Course_report.jasper"]]></subreportExpression>
+				</subreport>
+				<break>
+					<reportElement x="0" y="140" width="92" height="1" uuid="64b83651-b5ae-486d-a789-5e14b052cf66"/>
+				</break>
+			</band>
+			<band height="141">
+				<break>
+					<reportElement x="0" y="140" width="96" height="1" uuid="318304da-2130-434d-a893-e3c1ae8a29d8"/>
+				</break>
+				<subreport>
+					<reportElement positionType="Float" x="-11" y="44" width="594" height="44" uuid="d8f383fa-1f8d-4710-90e1-d956534f6288"/>
+					<subreportParameter name="ST_ID">
+						<subreportParameterExpression><![CDATA[$F{student_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="Course_id">
+						<subreportParameterExpression><![CDATA["Religion"]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="ABSOLUTE_PATH">
+						<subreportParameterExpression><![CDATA[$P{ABSOLUTE_PATH}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="MAIN_GRADING_PERIOD_ID">
+						<subreportParameterExpression><![CDATA[$P{MAIN_GRADING_PERIOD_ID}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA[$P{ABSOLUTE_PATH}+"//Y03//Relgion_report.jasper"]]></subreportExpression>
+				</subreport>
+				<subreport>
+					<reportElement positionType="Float" x="-11" y="0" width="594" height="44" uuid="5c02086e-fb8f-49e3-a142-989d3fb9f115"/>
+					<subreportParameter name="ST_ID">
+						<subreportParameterExpression><![CDATA[$F{student_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="Course_id">
+						<subreportParameterExpression><![CDATA["Character Education"]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="ABSOLUTE_PATH">
+						<subreportParameterExpression><![CDATA[$P{ABSOLUTE_PATH}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="MAIN_GRADING_PERIOD_ID">
+						<subreportParameterExpression><![CDATA[$P{MAIN_GRADING_PERIOD_ID}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA[$P{ABSOLUTE_PATH}+"//Y03//CE_Course_report.jasper"]]></subreportExpression>
+				</subreport>
+				<subreport>
+					<reportElement positionType="Float" x="-10" y="88" width="594" height="44" uuid="5bec5f1d-a966-4367-9f0d-a3666dc8186c"/>
+					<subreportParameter name="ST_ID">
+						<subreportParameterExpression><![CDATA[$F{student_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="Course_id">
+						<subreportParameterExpression><![CDATA["Physical Education"]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="ABSOLUTE_PATH">
+						<subreportParameterExpression><![CDATA[$P{ABSOLUTE_PATH}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="MAIN_GRADING_PERIOD_ID">
+						<subreportParameterExpression><![CDATA[$P{MAIN_GRADING_PERIOD_ID}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA[$P{ABSOLUTE_PATH}+"//Y03//Com_Course_report.jasper"]]></subreportExpression>
+				</subreport>
+			</band>
+			<band height="88">
+				<subreport>
+					<reportElement positionType="Float" x="-10" y="0" width="594" height="44" uuid="d46a39b2-6943-40f6-a568-5b25b308bfc4"/>
+					<subreportParameter name="ST_ID">
+						<subreportParameterExpression><![CDATA[$F{student_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="Course_id">
+						<subreportParameterExpression><![CDATA["Art"]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="ABSOLUTE_PATH">
+						<subreportParameterExpression><![CDATA[$P{ABSOLUTE_PATH}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="MAIN_GRADING_PERIOD_ID">
+						<subreportParameterExpression><![CDATA[$P{MAIN_GRADING_PERIOD_ID}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA[$P{ABSOLUTE_PATH}+"//Y03//Com_Course_report.jasper"]]></subreportExpression>
+				</subreport>
+				<subreport>
+					<reportElement positionType="Float" x="-10" y="44" width="594" height="44" uuid="cc302432-c169-431d-a8ed-4f46ced82e58"/>
+					<subreportParameter name="ST_ID">
+						<subreportParameterExpression><![CDATA[$F{student_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="Course_id">
+						<subreportParameterExpression><![CDATA["Music"]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="ABSOLUTE_PATH">
+						<subreportParameterExpression><![CDATA[$P{ABSOLUTE_PATH}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="MAIN_GRADING_PERIOD_ID">
+						<subreportParameterExpression><![CDATA[$P{MAIN_GRADING_PERIOD_ID}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA[$P{ABSOLUTE_PATH}+"//Y03//Com_Course_report.jasper"]]></subreportExpression>
+				</subreport>
+			</band>
+			<band height="105">
+				<printWhenExpression><![CDATA[$F{Comment} != null]]></printWhenExpression>
+				<textField isStretchWithOverflow="true">
+					<reportElement x="-10" y="30" width="593" height="40" uuid="c87eec13-404e-4e38-84c2-00965aa55bc1"/>
+					<box topPadding="5" leftPadding="5" bottomPadding="5" rightPadding="5">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement>
+						<font fontName="Arial"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{Comment}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement mode="Opaque" x="-10" y="10" width="593" height="20" backcolor="#0D9F4A" uuid="2daeb6d4-7774-4a58-a541-f168ad784fd2">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[General Comments]]></text>
+				</staticText>
+			</band>
+			<band height="110">
+				<image hAlign="Center" vAlign="Middle">
+					<reportElement positionType="FixRelativeToBottom" x="0" y="10" width="575" height="100" uuid="19972e87-cb9e-4a7e-a7d2-fdc4754a5ddd"/>
+					<imageExpression><![CDATA[$P{ABSOLUTE_PATH}+"//Y03//Y03 Sgin.jpg"]]></imageExpression>
+				</image>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="60" splitType="Stretch">
+			<image>
+				<reportElement x="0" y="0" width="140" height="60" uuid="98f0e7b4-aeb7-4a1f-99a4-255194887a32"/>
+				<imageExpression><![CDATA[$P{ABSOLUTE_PATH}+"//EIS_LOGO2.jpg"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="0" y="0" width="575" height="60" uuid="e2afcd21-fd70-4c5a-b1a4-ab4e0a47615b"/>
+				<box leftPadding="3" rightPadding="3">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Ethos International School
+2024 – 2025
+Term Report]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<pageFooter>
+		<band height="42" splitType="Stretch">
+			<staticText>
+				<reportElement x="501" y="10" width="72" height="30" forecolor="#60DC88" uuid="3c5816a6-daf0-4845-90a7-cf43d1a2808a"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ Skolera]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="429" y="10" width="72" height="30" uuid="208a8f9d-afc7-4f5c-9bcf-9349cf633903"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Powered by]]></text>
+			</staticText>
+			<textField evaluationTime="Report">
+				<reportElement x="320" y="10" width="70" height="30" uuid="3b268452-1368-4cc0-9e0f-4eb30864fff5"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="248" y="10" width="70" height="30" uuid="abca98e1-9bf2-48fa-ab0f-aafb69679a8c"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER} + " of "]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

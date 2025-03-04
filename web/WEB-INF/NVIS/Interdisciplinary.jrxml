@@ -1,0 +1,926 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.10.0.final using JasperReports Library version 6.10.0-unknown  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Interdisciplinary" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="cf65d424-42cc-4c31-a311-eff298dbb2c1">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="NVIS"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<style name="Crosstab_CH" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.0" lineColor="#000000"/>
+			<topPen lineWidth="0.0" lineColor="#000000"/>
+			<leftPen lineWidth="0.0" lineColor="#000000"/>
+			<bottomPen lineWidth="0.0" lineColor="#000000"/>
+			<rightPen lineWidth="0.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Crosstab_CG" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.0" lineColor="#000000"/>
+			<topPen lineWidth="0.0" lineColor="#000000"/>
+			<leftPen lineWidth="0.0" lineColor="#000000"/>
+			<bottomPen lineWidth="0.0" lineColor="#000000"/>
+			<rightPen lineWidth="0.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Crosstab_CT" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.0" lineColor="#000000"/>
+			<topPen lineWidth="0.0" lineColor="#000000"/>
+			<leftPen lineWidth="0.0" lineColor="#000000"/>
+			<bottomPen lineWidth="0.0" lineColor="#000000"/>
+			<rightPen lineWidth="0.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Crosstab_CD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.0" lineColor="#000000"/>
+			<topPen lineWidth="0.0" lineColor="#000000"/>
+			<leftPen lineWidth="0.0" lineColor="#000000"/>
+			<bottomPen lineWidth="0.0" lineColor="#000000"/>
+			<rightPen lineWidth="0.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="Dataset1" uuid="77ebf3ca-2890-4ef2-941c-a014580fd012">
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="NVIS"/>
+		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		<parameter name="Student_ID" class="java.lang.String"/>
+		<queryString>
+			<![CDATA[select
+levels.id as level_id, levels.name as level_name, levels.level_code as level_code,
+RIGHT(students.batch_name, 1) as course_group_name,
+students.id as student_id, users.name as student_name,
+spr.comment as general_comment,
+courses.id as course_id, courses.name AS course_name, courses.code as course_code,
+domains.id as domain_id, domains.title as domain_title, domains.order as domain_order,
+dc.id as competency, dc.title AS competency_title, dc.order as competency_order,
+IF(ec.name is null, "N/A",ec.name) criteria_name,
+IF(ec.code is null, "N/A",ec.code) criteria_code,
+sprdc.comment as domain_comment
+
+from students
+inner join users on users.actable_id = students.id and users.actable_type = "student" and users.deleted_at is null
+inner join levels on levels.id = students.level_id and levels.deleted_at is null
+
+inner join student_progress_reports spr on spr.student_id = students.id and spr.deleted_at is null
+inner join progress_reports pr on pr.id = spr.progress_report_id and pr.deleted_at is null
+
+-- change choosed title as per you sub report needs -- 
+inner join domains on domains.progress_report_id = pr.id and domains.deleted_at is null and domains.title like "Inter%"
+inner join courses on courses.id = domains.course_id and courses.deleted_at is null 
+inner join domain_competencies dc on dc.domain_id = domains.id and dc.deleted_at is null
+
+-- if you want all competencies even the comp that not given critria make the next 2 joins left --
+inner join student_progress_report_competencies sprc on sprc.student_progress_report_id = spr.id and sprc.progress_report_domain_competency_id = dc.id and sprc.deleted_at is null
+inner join evaluation_criteria ec on ec.id = sprc.progress_report_evaluation_criteria_id and ec.deleted_at is null
+
+left join student_progress_report_domain_comments sprdc on sprdc.student_progress_report_id = spr.id and sprdc.domain_id = domains.id and sprdc.deleted_at is null
+
+
+where students.deleted_at is null
+and students.id =  $P{Student_ID} 
+
+order by levels.name, batch_name, users.name, domains.id]]>
+		</queryString>
+		<field name="level_id" class="java.lang.Integer">
+			<property name="com.jaspersoft.studio.field.label" value="level_id"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="levels"/>
+		</field>
+		<field name="level_name" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="level_name"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="levels"/>
+		</field>
+		<field name="level_code" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="level_code"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="levels"/>
+		</field>
+		<field name="course_group_name" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="course_group_name"/>
+		</field>
+		<field name="student_id" class="java.lang.Integer">
+			<property name="com.jaspersoft.studio.field.label" value="student_id"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="students"/>
+		</field>
+		<field name="student_name" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="student_name"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="users"/>
+		</field>
+		<field name="general_comment" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="general_comment"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="student_progress_reports"/>
+		</field>
+		<field name="course_id" class="java.lang.Integer">
+			<property name="com.jaspersoft.studio.field.label" value="course_id"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="courses"/>
+		</field>
+		<field name="course_name" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="course_name"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="courses"/>
+		</field>
+		<field name="course_code" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="course_code"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="courses"/>
+		</field>
+		<field name="domain_id" class="java.lang.Integer">
+			<property name="com.jaspersoft.studio.field.label" value="domain_id"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="domains"/>
+		</field>
+		<field name="domain_title" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="domain_title"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="domains"/>
+		</field>
+		<field name="domain_order" class="java.lang.Integer">
+			<property name="com.jaspersoft.studio.field.label" value="domain_order"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="domains"/>
+		</field>
+		<field name="competency" class="java.lang.Integer">
+			<property name="com.jaspersoft.studio.field.label" value="competency"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="domain_competencies"/>
+		</field>
+		<field name="competency_title" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="competency_title"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="domain_competencies"/>
+		</field>
+		<field name="competency_order" class="java.lang.Integer">
+			<property name="com.jaspersoft.studio.field.label" value="competency_order"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="domain_competencies"/>
+		</field>
+		<field name="criteria_name" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="criteria_name"/>
+		</field>
+		<field name="criteria_code" class="java.lang.Integer">
+			<property name="com.jaspersoft.studio.field.label" value="criteria_code"/>
+		</field>
+		<field name="domain_comment" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="domain_comment"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="student_progress_report_domain_comments"/>
+		</field>
+	</subDataset>
+	<parameter name="Student_ID" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[-- Courses Sub Report -- 
+select a.*
+
+from (select s.*,
+(select
+GROUP_CONCAT(REPLACE(dc.title, '[Name]', users.name) ORDER BY dc.order SEPARATOR '\n') AS course_comments
+
+from domains
+inner join domain_competencies dc on dc.domain_id = domains.id and dc.deleted_at is null
+inner join progress_reports pr on pr.id = domains.progress_report_id and pr.deleted_at is null
+inner join student_progress_reports spr on spr.progress_report_id = pr.id and spr.deleted_at is null
+inner join student_progress_report_competencies sprc on sprc.progress_report_domain_competency_id = dc.id and sprc.student_progress_report_id = spr.id and sprc.deleted_at is null and sprc.progress_report_evaluation_criteria_id = 23
+inner join students on students.id = spr.student_id and students.deleted_at is null
+inner join users on users.actable_id = students.id and users.actable_type = "student" and users.deleted_at is null
+where domains.title like "%Comments%" and domains.deleted_at is null
+and domains.course_id = s.course_id and students.id = s.student_id
+group by domains.course_id) as course_comments
+
+from (select
+levels.id as level_id, levels.name as level_name, levels.level_code as level_code,
+RIGHT(students.batch_name, 1) as course_group_name,
+students.id as student_id, users.name as student_name,
+courses.id as course_id, IF(courses.report_display_name is null, courses.name, courses.report_display_name) as course_name, courses.code as course_code,
+users.gender as student_gender
+from students
+inner join users on users.actable_id = students.id and users.actable_type = "student" and users.deleted_at is null
+inner join levels on levels.id = students.level_id and levels.deleted_at is null and levels.name like "MYP%"
+
+inner join student_progress_reports spr on spr.student_id = students.id and spr.deleted_at is null
+inner join progress_reports pr on pr.id = spr.progress_report_id and pr.deleted_at is null
+
+-- change choosed title as per you sub report needs -- 
+inner join domains on domains.progress_report_id = pr.id and domains.deleted_at is null
+inner join courses on courses.id = domains.course_id and courses.deleted_at is null and courses.name like "Inter%" 
+inner join domain_competencies dc on dc.domain_id = domains.id and dc.deleted_at is null
+
+-- if you want all competencies even the comp that not given critria make the next 2 joins left --
+inner join student_progress_report_competencies sprc on sprc.student_progress_report_id = spr.id and sprc.progress_report_domain_competency_id = dc.id and sprc.deleted_at is null
+inner join evaluation_criteria ec on ec.id = sprc.progress_report_evaluation_criteria_id and ec.deleted_at is null
+
+
+where students.deleted_at is null and students.id =   $P{Student_ID} 
+group by students.id, courses.id
+order by levels.name, batch_name, users.name)s)a]]>
+	</queryString>
+	<field name="level_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="level_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="levels"/>
+	</field>
+	<field name="level_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="level_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="levels"/>
+	</field>
+	<field name="level_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="level_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="levels"/>
+	</field>
+	<field name="course_group_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="course_group_name"/>
+	</field>
+	<field name="student_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="student_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="students"/>
+	</field>
+	<field name="student_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="student_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="users"/>
+	</field>
+	<field name="course_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="course_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="courses"/>
+	</field>
+	<field name="course_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="course_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="courses"/>
+	</field>
+	<field name="course_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="course_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="courses"/>
+	</field>
+	<field name="student_gender" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="student_gender"/>
+	</field>
+	<field name="course_comments" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="course_comments"/>
+	</field>
+	<group name="Student" footerPosition="ForceAtBottom">
+		<groupExpression><![CDATA[$F{student_id}]]></groupExpression>
+		<groupFooter>
+			<band height="70">
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<frame>
+					<reportElement x="0" y="10" width="555" height="60" uuid="ae8e7993-c4a9-4a66-9690-15e6161749b6"/>
+					<staticText>
+						<reportElement x="490" y="0" width="65" height="20" uuid="8985805f-3165-476b-af63-132393f0a431">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						</reportElement>
+						<box>
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font fontName="Arial" size="11"/>
+						</textElement>
+						<text><![CDATA[7]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="425" y="40" width="65" height="20" uuid="b38ec4de-1d7f-4996-844a-d9d27ba673e1">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						</reportElement>
+						<box>
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font fontName="Arial" size="11"/>
+						</textElement>
+						<text><![CDATA[18 - 20]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="165" y="0" width="65" height="20" uuid="1768df85-74e1-4a05-b520-0a5d5a90d6a8">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						</reportElement>
+						<box>
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font fontName="Arial" size="11"/>
+						</textElement>
+						<text><![CDATA[2]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="230" y="0" width="65" height="20" uuid="86c2858a-0cc2-4cdd-a379-9ce6bc6d00cf">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						</reportElement>
+						<box>
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font fontName="Arial" size="11"/>
+						</textElement>
+						<text><![CDATA[3]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="100" y="0" width="65" height="20" uuid="40737baa-885f-446d-8c4f-c4785268c6b0">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						</reportElement>
+						<box>
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font fontName="Arial" size="11"/>
+						</textElement>
+						<text><![CDATA[1]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="295" y="40" width="65" height="20" uuid="6381e102-cd39-48f7-bc2f-d5c6f32aa216">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						</reportElement>
+						<box>
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font fontName="Arial" size="11"/>
+						</textElement>
+						<text><![CDATA[11 - 13]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="0" y="0" width="100" height="20" forecolor="#0B5394" uuid="9c349dca-5f66-4987-be11-6913141a4623">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						</reportElement>
+						<box>
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement verticalAlignment="Middle">
+							<font fontName="Arial" size="12"/>
+						</textElement>
+						<text><![CDATA[Grade]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="100" y="40" width="65" height="20" uuid="dbc38e78-4a38-4a9a-b40d-a1bf773130fd">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						</reportElement>
+						<box>
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font fontName="Arial" size="11"/>
+						</textElement>
+						<text><![CDATA[0 - 3]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="360" y="0" width="65" height="20" uuid="bd53ca31-5bdd-4cec-a9a9-5a83c6edbb52">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						</reportElement>
+						<box>
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font fontName="Arial" size="11"/>
+						</textElement>
+						<text><![CDATA[5]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="230" y="40" width="65" height="20" uuid="0098686a-3993-4055-bbd9-e810b4868175">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						</reportElement>
+						<box>
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font fontName="Arial" size="11"/>
+						</textElement>
+						<text><![CDATA[7 - 10]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="425" y="0" width="65" height="20" uuid="4ce6b0d0-87cf-459c-92d1-b3a739cb056b">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						</reportElement>
+						<box>
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font fontName="Arial" size="11"/>
+						</textElement>
+						<text><![CDATA[6]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="0" y="40" width="100" height="20" forecolor="#0B5394" uuid="8c1a5186-ce61-4319-84b1-0de6c6a22df7">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						</reportElement>
+						<box>
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement verticalAlignment="Middle">
+							<font fontName="Arial" size="12"/>
+						</textElement>
+						<text><![CDATA[Boundaries]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="360" y="40" width="65" height="20" uuid="e8b578b5-dd88-4611-ad95-3efde121cf87">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						</reportElement>
+						<box>
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font fontName="Arial" size="11"/>
+						</textElement>
+						<text><![CDATA[14 - 17]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="490" y="40" width="65" height="20" uuid="8136207b-7b92-4c3f-b0a2-d9fe349dee46">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						</reportElement>
+						<box>
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font fontName="Arial" size="11"/>
+						</textElement>
+						<text><![CDATA[21 - 24]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="165" y="40" width="65" height="20" uuid="880666cc-423c-4b77-8daa-76a3c76a5446">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						</reportElement>
+						<box>
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font fontName="Arial" size="11"/>
+						</textElement>
+						<text><![CDATA[4 - 6]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="295" y="0" width="65" height="20" uuid="9c26f4fe-1b97-4d3d-8659-1d604c3a73b7">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						</reportElement>
+						<box>
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font fontName="Arial" size="11"/>
+						</textElement>
+						<text><![CDATA[4]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="0" y="20" width="100" height="20" forecolor="#0B5394" uuid="54bf1cab-53a7-49cf-b644-a578d31fe836">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						</reportElement>
+						<box>
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement verticalAlignment="Middle">
+							<font fontName="Arial" size="12"/>
+						</textElement>
+						<text><![CDATA[Local Grade]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="230" y="20" width="65" height="20" uuid="921385a0-c6f8-47ae-87ea-38fc84070fcc">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						</reportElement>
+						<box>
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font fontName="Arial" size="11"/>
+						</textElement>
+						<text><![CDATA[C+]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="165" y="20" width="65" height="20" uuid="e9b45be7-dc42-4187-b31d-9bc12ab44c68">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						</reportElement>
+						<box>
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font fontName="Arial" size="11"/>
+						</textElement>
+						<text><![CDATA[C]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="360" y="20" width="65" height="20" uuid="94a364b0-f942-41aa-8e58-95ac8b5628f4">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						</reportElement>
+						<box>
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font fontName="Arial" size="11"/>
+						</textElement>
+						<text><![CDATA[B+]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="425" y="20" width="65" height="20" uuid="352e71ce-c5f4-4ebb-a475-36356a36f62d">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						</reportElement>
+						<box>
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font fontName="Arial" size="11"/>
+						</textElement>
+						<text><![CDATA[A]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="100" y="20" width="65" height="20" uuid="e0dce99f-0540-4d35-8ba9-b792ee3af8eb">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						</reportElement>
+						<box>
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font fontName="Arial" size="11"/>
+						</textElement>
+						<text><![CDATA[D]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="295" y="20" width="65" height="20" uuid="d08a522f-3898-4d80-bcc4-e455a733252f">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						</reportElement>
+						<box>
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font fontName="Arial" size="11"/>
+						</textElement>
+						<text><![CDATA[B]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="490" y="20" width="65" height="20" uuid="8dad5208-20b3-4d5e-9b66-b68cbd0df12f">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						</reportElement>
+						<box>
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font fontName="Arial" size="11"/>
+						</textElement>
+						<text><![CDATA[A+]]></text>
+					</staticText>
+				</frame>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="Group">
+		<groupExpression><![CDATA[$F{course_id}]]></groupExpression>
+		<groupFooter>
+			<band height="130">
+				<crosstab>
+					<reportElement x="0" y="0" width="555" height="130" uuid="c6ed0d2c-027b-4f23-bb66-b058562644a5">
+						<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+						<property name="com.jaspersoft.studio.crosstab.style.header" value="Crosstab_CH"/>
+						<property name="com.jaspersoft.studio.crosstab.style.group" value="Crosstab_CG"/>
+						<property name="com.jaspersoft.studio.crosstab.style.total" value="Crosstab_CT"/>
+						<property name="com.jaspersoft.studio.crosstab.style.detail" value="Crosstab_CD"/>
+					</reportElement>
+					<crosstabDataset>
+						<dataset>
+							<datasetRun subDataset="Dataset1" uuid="f05dcd5a-7eb6-4bd1-a744-e738acf48dee">
+								<datasetParameter name="Student_ID">
+									<datasetParameterExpression><![CDATA[$F{student_id}]]></datasetParameterExpression>
+								</datasetParameter>
+							</datasetRun>
+						</dataset>
+					</crosstabDataset>
+					<rowGroup name="competency_title" width="320" totalPosition="End">
+						<bucket class="java.lang.String">
+							<bucketExpression><![CDATA[$F{competency_title}]]></bucketExpression>
+						</bucket>
+						<crosstabRowHeader>
+							<cellContents mode="Opaque" style="Crosstab_CH">
+								<textField>
+									<reportElement x="0" y="0" width="320" height="20" uuid="5bb8a407-03b7-40b8-8e5e-e45e64d15558"/>
+									<box>
+										<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+										<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+										<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+										<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+									</box>
+									<textElement textAlignment="Left" verticalAlignment="Middle">
+										<font fontName="Arial" size="11" isBold="false"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$V{competency_title}]]></textFieldExpression>
+								</textField>
+							</cellContents>
+						</crosstabRowHeader>
+						<crosstabTotalRowHeader>
+							<cellContents mode="Opaque" style="Crosstab_CT">
+								<frame>
+									<reportElement x="0" y="0" width="320" height="90" uuid="a4828dfd-85a7-45f2-8045-c11c16851692"/>
+									<staticText>
+										<reportElement x="0" y="0" width="320" height="20" uuid="3e4e05a9-6bba-4546-aba9-947189c103d9"/>
+										<box>
+											<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+											<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+											<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+											<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+										</box>
+										<textElement textAlignment="Left" verticalAlignment="Middle">
+											<font fontName="Arial" size="11" isBold="true"/>
+										</textElement>
+										<text><![CDATA[]]></text>
+									</staticText>
+								</frame>
+							</cellContents>
+						</crosstabTotalRowHeader>
+					</rowGroup>
+					<columnGroup name="level_id" height="20">
+						<bucket class="java.lang.Integer">
+							<bucketExpression><![CDATA[$F{level_id}]]></bucketExpression>
+						</bucket>
+						<crosstabColumnHeader>
+							<cellContents mode="Opaque" style="Crosstab_CH">
+								<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.HorizontalRowLayout"/>
+								<staticText>
+									<reportElement x="0" y="0" width="110" height="20" forecolor="#0B5394" uuid="445a88f3-76bc-4bdf-924b-30a4a147ca65"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Arial" size="11" isBold="true"/>
+									</textElement>
+									<text><![CDATA[Achievement Level]]></text>
+								</staticText>
+								<staticText>
+									<reportElement x="110" y="0" width="110" height="20" forecolor="#0B5394" uuid="e59c0469-af91-44d4-bd79-79ddf2c3cc3f"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Arial" size="11" isBold="true"/>
+									</textElement>
+									<text><![CDATA[Maximaum Grade]]></text>
+								</staticText>
+							</cellContents>
+						</crosstabColumnHeader>
+						<crosstabTotalColumnHeader>
+							<cellContents mode="Opaque" style="Crosstab_CT">
+								<staticText>
+									<reportElement x="0" y="0" width="60" height="20" uuid="13855dd4-de20-4733-bf6c-829f821df7b2"/>
+									<text><![CDATA[Total level_id]]></text>
+								</staticText>
+							</cellContents>
+						</crosstabTotalColumnHeader>
+					</columnGroup>
+					<measure name="criteria_code_MEASURE" class="java.lang.Integer" calculation="Sum">
+						<measureExpression><![CDATA[$F{criteria_code}]]></measureExpression>
+					</measure>
+					<crosstabCell width="220" height="20">
+						<cellContents mode="Opaque" style="Crosstab_CD">
+							<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.HorizontalRowLayout"/>
+							<textField>
+								<reportElement x="0" y="0" width="110" height="20" uuid="f67d4891-d509-4484-ab91-94db6cb1a962"/>
+								<box>
+									<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+									<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Arial" size="11"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{criteria_code_MEASURE}]]></textFieldExpression>
+							</textField>
+							<staticText>
+								<reportElement x="110" y="0" width="110" height="20" uuid="d2ce9d8b-7e17-4a68-988b-6770b3e6c66a"/>
+								<box>
+									<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+									<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Arial" size="11"/>
+								</textElement>
+								<text><![CDATA[8]]></text>
+							</staticText>
+						</cellContents>
+					</crosstabCell>
+					<crosstabCell width="60" height="20" columnTotalGroup="level_id">
+						<cellContents mode="Opaque" style="Crosstab_CT">
+							<textField>
+								<reportElement x="0" y="0" width="60" height="20" uuid="f2e84bc2-86ce-408f-98ed-de6c7f6415b6"/>
+								<textFieldExpression><![CDATA[$V{criteria_code_MEASURE}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabCell>
+					<crosstabCell width="220" height="90" rowTotalGroup="competency_title">
+						<cellContents mode="Opaque" style="Crosstab_CT">
+							<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.HorizontalRowLayout"/>
+							<frame>
+								<reportElement x="0" y="0" width="220" height="90" uuid="17dc558a-4613-4498-a3f2-228edfba453d"/>
+								<textField>
+									<reportElement x="0" y="0" width="110" height="20" uuid="74e1e113-f2e2-4c1c-a364-d2c3b75c938f"/>
+									<box>
+										<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+										<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+										<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+										<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+									</box>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Arial" size="11" isBold="true"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$V{criteria_code_MEASURE}]]></textFieldExpression>
+								</textField>
+								<staticText>
+									<reportElement x="110" y="0" width="110" height="20" uuid="fc8d803f-e6ef-476c-8abe-2f363be92c7c"/>
+									<box>
+										<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+										<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+										<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+										<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+									</box>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Arial" size="11" isBold="true"/>
+									</textElement>
+									<text><![CDATA[24]]></text>
+								</staticText>
+								<frame>
+									<reportElement x="-270" y="35" width="205" height="40" uuid="190a0bd2-8212-438e-bb73-72d02270888d"/>
+									<textField>
+										<reportElement mode="Opaque" x="0" y="20" width="100" height="20" forecolor="#000000" uuid="74c4f3e3-646c-4aad-ae37-949c851b5c89"/>
+										<box>
+											<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+											<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+											<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+											<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+										</box>
+										<textElement textAlignment="Center" verticalAlignment="Middle">
+											<font fontName="Arial" size="11"/>
+										</textElement>
+										<textFieldExpression><![CDATA[IF($V{criteria_code_MEASURE} > 20, 7, 
+	IF($V{criteria_code_MEASURE} > 17, 6, 
+		IF($V{criteria_code_MEASURE} > 13, 5, 
+			IF($V{criteria_code_MEASURE} > 10, 4, 
+				IF($V{criteria_code_MEASURE} > 6, 3, 
+					IF($V{criteria_code_MEASURE} > 3, 2,
+						IF($V{criteria_code_MEASURE} > 0, 1,"N/A")
+						
+					)
+				)
+			)
+		)
+	)
+)]]></textFieldExpression>
+									</textField>
+									<textField>
+										<reportElement mode="Opaque" x="100" y="20" width="105" height="20" forecolor="#000000" uuid="15e67aab-dd54-4d28-b09e-8991ce4f4fee"/>
+										<box>
+											<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+											<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+											<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+											<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+										</box>
+										<textElement textAlignment="Center" verticalAlignment="Middle">
+											<font fontName="Arial" size="11"/>
+										</textElement>
+										<textFieldExpression><![CDATA[IF($V{criteria_code_MEASURE} > 20, "A+", 
+	IF($V{criteria_code_MEASURE} > 17, "A", 
+		IF($V{criteria_code_MEASURE} > 13, "B+", 
+			IF($V{criteria_code_MEASURE} > 10, "B", 
+				IF($V{criteria_code_MEASURE} > 6, "C+", 
+					IF($V{criteria_code_MEASURE} > 3, "C",
+						IF($V{criteria_code_MEASURE} > 0, "D","F")
+						
+					)
+				)
+			)
+		)
+	)
+)]]></textFieldExpression>
+									</textField>
+									<staticText>
+										<reportElement mode="Opaque" x="0" y="0" width="100" height="20" forecolor="#0B5394" uuid="7cec25ae-bf43-4e2f-8fe0-5f0ac0bc928b"/>
+										<box>
+											<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+											<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+											<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+											<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+										</box>
+										<textElement textAlignment="Center" verticalAlignment="Middle">
+											<font fontName="Arial" size="12" isBold="true"/>
+										</textElement>
+										<text><![CDATA[Final Grade]]></text>
+									</staticText>
+									<staticText>
+										<reportElement mode="Opaque" x="100" y="0" width="105" height="20" forecolor="#0B5394" uuid="fa8e3de4-7fd7-4b98-8077-44d064975466"/>
+										<box>
+											<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+											<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+											<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+											<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+										</box>
+										<textElement textAlignment="Center" verticalAlignment="Middle">
+											<font fontName="Arial" size="12" isBold="true"/>
+										</textElement>
+										<text><![CDATA[Local Grade]]></text>
+									</staticText>
+								</frame>
+							</frame>
+						</cellContents>
+					</crosstabCell>
+					<crosstabCell width="60" height="20" rowTotalGroup="competency_title" columnTotalGroup="level_id">
+						<cellContents mode="Opaque" style="Crosstab_CT">
+							<textField>
+								<reportElement x="0" y="0" width="60" height="20" uuid="3a5d6362-3968-44a7-902e-029014ff8daf"/>
+								<textFieldExpression><![CDATA[$V{criteria_code_MEASURE}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabCell>
+				</crosstab>
+			</band>
+			<band height="60">
+				<printWhenExpression><![CDATA[$F{course_comments} != null]]></printWhenExpression>
+				<staticText>
+					<reportElement x="0" y="20" width="555" height="30" forecolor="#0B5394" uuid="553042d3-d60d-4c03-841d-e7bd344fff4e"/>
+					<box>
+						<topPen lineWidth="1.0"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial" size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Comment:]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true">
+					<reportElement stretchType="RelativeToBandHeight" x="0" y="50" width="555" height="10" uuid="30b32cf7-b9df-4f34-921e-a523d4f5bc97"/>
+					<box topPadding="10" leftPadding="20" bottomPadding="10">
+						<bottomPen lineWidth="1.0"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial" size="11"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{course_comments}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="35" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="-1" width="555" height="30" forecolor="#0B5394" uuid="786f045c-6bfd-401d-ba15-25706798d2ed"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="15" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Interdisciplinary]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+</jasperReport>

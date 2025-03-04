@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.10.0.final using JasperReports Library version 6.10.0-unknown  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Gradebook Ecxel Sheet" pageWidth="6960" pageHeight="2960" orientation="Landscape" columnWidth="6960" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="6a4495d4-f2c3-41a4-b63f-9b5f4987928c">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="KLS"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="ABSOLUTE_PATH" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="MAIN_GRADING_PERIOD_ID" class="java.lang.String">
+		<defaultValueExpression><![CDATA["-1"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUB_GRADING_PERIOD_ID" class="java.lang.String">
+		<defaultValueExpression><![CDATA["-1"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="LEVEL_CODE" class="java.lang.String">
+		<defaultValueExpression><![CDATA["-1"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="PARAMETER_1" class="java.lang.String">
+		<defaultValueExpression><![CDATA["-1"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="PARAMETER_2" class="java.lang.String">
+		<defaultValueExpression><![CDATA["-1"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select level_code, courses.name as course_name, cg.name as class_name, cg.id, teacher_id, group_concat(concat(IF(users.gender ="male","Mr. ","Ms. "),users.name)) as teacher_name, users.gender from course_groups cg 
+inner join course_groups_teachers cgt on cgt.course_group_id = cg.id and cgt.deleted_at is null
+inner join courses on courses.deleted_at is null and courses.id = course_id
+inner join users on users.deleted_at is null and users.actable_id = teacher_id and users.user_type = "teacher"
+inner join levels on levels.deleted_at is null and levels.id = level_id
+inner join (select course_id from grades_summaries where
+(sub_grading_period_id in ($P!{SUB_GRADING_PERIOD_ID}) OR $P{SUB_GRADING_PERIOD_ID}  = "-1")
+and (main_grading_period_id in ($P!{MAIN_GRADING_PERIOD_ID}) OR $P{MAIN_GRADING_PERIOD_ID}  = "-1")
+group by course_id)s on s.course_id = courses.id
+where cg.deleted_at is null
+and (levels.level_code in ($P!{LEVEL_CODE}) OR $P{LEVEL_CODE}  = "-1")
+group by cg.id]]>
+	</queryString>
+	<field name="level_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="level_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="levels"/>
+	</field>
+	<field name="course_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="course_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="courses"/>
+	</field>
+	<field name="class_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="class_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="course_groups"/>
+	</field>
+	<field name="id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="course_groups"/>
+	</field>
+	<field name="teacher_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="teacher_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="course_groups_teachers"/>
+	</field>
+	<field name="teacher_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="teacher_name"/>
+	</field>
+	<field name="gender" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="gender"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="users"/>
+	</field>
+	<sortField name="level_code"/>
+	<sortField name="course_name"/>
+	<sortField name="class_name"/>
+	<group name="Class" isStartNewPage="true" isReprintHeaderOnEachPage="true">
+		<groupExpression><![CDATA[$F{id}]]></groupExpression>
+		<groupHeader>
+			<band/>
+		</groupHeader>
+		<groupFooter>
+			<band height="80">
+				<subreport>
+					<reportElement x="0" y="0" width="6960" height="80" uuid="ec1e610b-8dd9-44f5-8327-9692f3e116ac"/>
+					<subreportParameter name="Class_id">
+						<subreportParameterExpression><![CDATA[$F{id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="Teacher_name">
+						<subreportParameterExpression><![CDATA[$F{teacher_name}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="ABSOLUTE_PATH">
+						<subreportParameterExpression><![CDATA[$P{ABSOLUTE_PATH}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="SUB_GRADING_PERIOD_ID">
+						<subreportParameterExpression><![CDATA[$P{SUB_GRADING_PERIOD_ID}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="MAIN_GRADING_PERIOD_ID">
+						<subreportParameterExpression><![CDATA[$P{MAIN_GRADING_PERIOD_ID}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA[$P{ABSOLUTE_PATH}+"//GradeBook.jasper"]]></subreportExpression>
+				</subreport>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+</jasperReport>

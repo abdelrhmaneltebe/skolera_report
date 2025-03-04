@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.10.0.final using JasperReports Library version 6.10.0-unknown  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Blank_A4_1" columnCount="4" pageWidth="2000" pageHeight="842" columnWidth="500" leftMargin="0" rightMargin="0" topMargin="20" bottomMargin="20" uuid="86f0de4c-826e-4083-82ef-2ca1b99ff649">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="ACIC"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="Student_id" class="java.lang.String"/>
+	<parameter name="SGP" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select a.*,b.total_cat_SGP,courses.report_display_name from (select student_name, student_id, main_grading_period_name, course_name, main_category_name, sum(student_grade_in_category) total_cat ,course_id
+from grades_summaries 
+inner join courses on courses.id = course_id and courses.hide = 0 and courses.calculated_in_total = 1
+where student_id =  $P{Student_id}  and main_grading_period_id =  $P{SGP}
+group by student_id, main_grading_period_name, main_category_name, course_id)a
+inner join
+(select student_name, student_id, main_grading_period_name, course_name, main_category_name, sum(student_grade_in_category) total_cat_SGP
+from grades_summaries 
+inner join courses on courses.id = course_id and courses.hide = 0 and courses.calculated_in_total = 1
+where student_id =  $P{Student_id}  and main_grading_period_id =  $P{SGP} 
+group by student_id, main_grading_period_name, course_id)b
+on a.student_id = b.student_id and a.main_grading_period_name = b.main_grading_period_name and a.course_name = b.course_name
+
+inner join courses on courses.id = course_id and courses.hide = 0 and courses.calculated_in_total = 1
+where total_cat >0]]>
+	</queryString>
+	<field name="student_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="student_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="grades_summaries"/>
+	</field>
+	<field name="student_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="student_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="grades_summaries"/>
+	</field>
+	<field name="main_grading_period_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="main_grading_period_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="grades_summaries"/>
+	</field>
+	<field name="course_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="course_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="grades_summaries"/>
+	</field>
+	<field name="main_category_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="main_category_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="grades_summaries"/>
+	</field>
+	<field name="total_cat" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="total_cat"/>
+	</field>
+	<field name="course_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="course_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="grades_summaries"/>
+	</field>
+	<field name="total_cat_SGP" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="total_cat_SGP"/>
+	</field>
+	<field name="report_display_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="report_display_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="courses"/>
+	</field>
+	<sortField name="course_name"/>
+	<group name="Course_Group">
+		<groupExpression><![CDATA[$F{course_name}]]></groupExpression>
+		<groupHeader>
+			<band/>
+		</groupHeader>
+		<groupFooter>
+			<band height="300">
+				<pieChart>
+					<chart isShowLegend="false" evaluationTime="Group" evaluationGroup="Course_Group">
+						<reportElement x="0" y="0" width="500" height="300" uuid="c3c0b782-390b-4dc2-bd2c-bc05cd1648c9">
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						</reportElement>
+						<box>
+							<pen lineWidth="1.5" lineColor="#000000"/>
+						</box>
+						<chartTitle>
+							<font size="22" isBold="true"/>
+							<titleExpression><![CDATA[IF($F{report_display_name} == null , $F{course_name}.split( "\\(" )[0],$F{report_display_name})]]></titleExpression>
+						</chartTitle>
+						<chartSubtitle/>
+						<chartLegend/>
+					</chart>
+					<pieDataset>
+						<dataset resetType="Group" resetGroup="Course_Group"/>
+						<keyExpression><![CDATA[$F{main_category_name}]]></keyExpression>
+						<valueExpression><![CDATA[$F{total_cat}]]></valueExpression>
+						<labelExpression><![CDATA[$F{main_category_name}+"\n"+new DecimalFormat("##.##").format((($F{total_cat}*100)/$F{total_cat_SGP})).toString()+"%"]]></labelExpression>
+					</pieDataset>
+					<piePlot>
+						<plot>
+							<seriesColor seriesOrder="0" color="#46B3E6"/>
+							<seriesColor seriesOrder="1" color="#7CBD1E"/>
+							<seriesColor seriesOrder="2" color="#F88F01"/>
+							<seriesColor seriesOrder="3" color="#FFE227"/>
+							<seriesColor seriesOrder="4" color="#E8009B"/>
+							<seriesColor seriesOrder="5" color="#C99747"/>
+							<seriesColor seriesOrder="6" color="#682BAC"/>
+						</plot>
+						<itemLabel>
+							<font size="12"/>
+						</itemLabel>
+					</piePlot>
+				</pieChart>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band splitType="Stretch">
+			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.HorizontalRowLayout"/>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

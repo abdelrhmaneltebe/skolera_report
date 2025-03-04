@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.10.0.final using JasperReports Library version 6.10.0-unknown  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ERP_STUDENT_PROFILE" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="80d630db-e7cb-4128-b6f2-21b7ec6fd95c">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="ODOO EIS"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="0"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="1000"/>
+	<parameter name="ABSOLUTE_PATH" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="USERNAME" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT x_medical_notes_description,x_travel_type_1,x_house,username,res_partner.name,x_ls,x_ls_schedule,x_ls_notes  FROM public.op_student
+inner join public.res_partner on res_partner.id = op_student.partner_id
+
+where username =  $P{USERNAME}]]>
+	</queryString>
+	<field name="x_medical_notes_description" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="x_medical_notes_description"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="op_student"/>
+	</field>
+	<field name="x_travel_type_1" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="x_travel_type_1"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="op_student"/>
+	</field>
+	<field name="x_house" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="x_house"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="op_student"/>
+	</field>
+	<field name="username" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="username"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="op_student"/>
+	</field>
+	<field name="name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="res_partner"/>
+	</field>
+	<field name="x_ls" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.label" value="x_ls"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="op_student"/>
+	</field>
+	<field name="x_ls_schedule" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="x_ls_schedule"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="op_student"/>
+	</field>
+	<field name="x_ls_notes" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="x_ls_notes"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="op_student"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="105">
+			<image>
+				<reportElement x="435" y="0" width="115" height="105" uuid="ccbe8e0d-2c8f-42b0-a8e9-e9a8e57169f5"/>
+				<imageExpression><![CDATA[$P{ABSOLUTE_PATH}+"//EIS.png"]]></imageExpression>
+			</image>
+			<image>
+				<reportElement x="0" y="0" width="555" height="105" uuid="e3f1efee-ecb7-4cec-9a32-3dac2a84042e"/>
+				<imageExpression><![CDATA[$P{ABSOLUTE_PATH}+"//SKOLERA_HEADER.png"]]></imageExpression>
+			</image>
+		</band>
+	</pageHeader>
+	<pageFooter>
+		<band height="30">
+			<staticText>
+				<reportElement x="410" y="0" width="72" height="30" uuid="36bdfd78-0cbb-4003-8301-aa2aeb7b37b8"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Powered by]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="482" y="0" width="72" height="30" forecolor="#60DC88" uuid="8a8e1261-a90f-46a3-b0f6-ab9d10633824"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ Skolera]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="424" splitType="Stretch">
+			<staticText>
+				<reportElement positionType="Float" x="0" y="80" width="120" height="30" uuid="66c13376-2aad-4a22-8cd0-254eb5c1d76c"/>
+				<box leftPadding="5">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Travel Type]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="Float" x="120" y="80" width="435" height="30" uuid="1f08ff38-714f-4480-b318-613a83290750"/>
+				<box leftPadding="5">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{x_travel_type_1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="120" y="0" width="435" height="30" uuid="2da075aa-2d96-4537-839a-e89b06c911e5"/>
+				<box leftPadding="5">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="120" y="30" width="435" height="30" uuid="3b5d9dcc-9c47-4acc-88c8-786d73a93d35"/>
+				<box leftPadding="5">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{username}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="0" width="120" height="30" uuid="c51f63dd-581f-4b45-88df-debd6a5d2733"/>
+				<box leftPadding="5">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Student Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="30" width="120" height="30" uuid="64e818ec-1d36-4805-b9bb-cbe62376cf60"/>
+				<box leftPadding="5">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Student username]]></text>
+			</staticText>
+			<frame>
+				<reportElement x="0" y="180" width="555" height="40" uuid="09502c78-19c2-477f-ad75-2b9f70fd043e"/>
+				<staticText>
+					<reportElement positionType="Float" stretchType="ElementGroupHeight" x="0" y="0" width="120" height="40" uuid="d8161f23-5ee8-4bf1-8770-b5ebc314d07f"/>
+					<box leftPadding="5">
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Medical Notes]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement positionType="Float" x="120" y="0" width="435" height="40" uuid="9ce1f750-32fd-43e6-a341-305e4e643990"/>
+					<box leftPadding="5">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement verticalAlignment="Top">
+						<font size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{x_medical_notes_description}]]></textFieldExpression>
+				</textField>
+			</frame>
+			<frame>
+				<reportElement x="0" y="240" width="555" height="50" uuid="79a05457-de48-44ca-9198-84a9d81bc3e5"/>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement positionType="Float" x="120" y="0" width="435" height="50" uuid="968f2170-c126-4fd2-bfa8-393c31f9c721"/>
+					<box leftPadding="5">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement verticalAlignment="Top">
+						<font size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{x_ls_schedule}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement positionType="Float" stretchType="ElementGroupHeight" x="0" y="0" width="120" height="50" uuid="0b86b646-bc98-44d5-94d8-462501560c8f"/>
+					<box leftPadding="5">
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[LS Schedule]]></text>
+				</staticText>
+			</frame>
+			<frame>
+				<reportElement x="0" y="310" width="555" height="50" uuid="0d63436c-2115-4351-8fc9-d002be1f790e"/>
+				<staticText>
+					<reportElement positionType="Float" stretchType="ElementGroupHeight" x="0" y="0" width="120" height="50" uuid="152c70f2-9aa5-4707-b0b7-e33944c5d139"/>
+					<box leftPadding="5">
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[LS Notes]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement positionType="Float" x="120" y="0" width="435" height="50" uuid="34e0de49-e5a9-4421-80c5-fc29467fe510"/>
+					<box leftPadding="5">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement verticalAlignment="Top">
+						<font size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{x_ls_notes}]]></textFieldExpression>
+				</textField>
+			</frame>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="130" width="120" height="30" uuid="7efe9a8c-9b85-4112-850e-fd3168392574"/>
+				<box leftPadding="5">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[House]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="Float" x="120" y="130" width="435" height="30" uuid="fc39ce14-37c0-4155-bad5-77bce898d17c"/>
+				<box leftPadding="5">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{x_house}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

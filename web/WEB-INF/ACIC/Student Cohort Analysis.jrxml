@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.10.0.final using JasperReports Library version 6.10.0-unknown  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="cohort report" pageWidth="715" pageHeight="995" columnWidth="675" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="f54623ea-f92b-489f-b09d-c73ca1348bf4">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="ACIC"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="ABSOLUTE_PATH" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="LEVEL_CODE" class="java.lang.String">
+		<defaultValueExpression><![CDATA["-1"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="USER_ID" class="java.lang.String">
+		<defaultValueExpression><![CDATA["-1"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select levels.*,(select name from academic_years where active = 1) as aca_year  from students 
+inner join levels on levels.id = level_id and levels.deleted_at is null and (levels.level_code in ($P!{LEVEL_CODE}) OR $P{LEVEL_CODE}  = "-1")
+inner join users on users.actable_id = students.id and user_type = "student" and users.deleted_at is null and (users.id in ($P!{USER_ID}) OR  $P{USER_ID}   = "-1")
+where students.deleted_at is null 
+group by level_id]]>
+	</queryString>
+	<field name="id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="levels"/>
+	</field>
+	<field name="name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="levels"/>
+	</field>
+	<field name="stage_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="stage_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="levels"/>
+	</field>
+	<field name="created_at" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="created_at"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="levels"/>
+	</field>
+	<field name="updated_at" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="updated_at"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="levels"/>
+	</field>
+	<field name="level_type" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="level_type"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="levels"/>
+	</field>
+	<field name="slots_count" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="slots_count"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="levels"/>
+	</field>
+	<field name="level_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="level_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="levels"/>
+	</field>
+	<field name="grading_type" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="grading_type"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="levels"/>
+	</field>
+	<field name="deleted_at" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="deleted_at"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="levels"/>
+	</field>
+	<field name="academic_term_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="academic_term_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="levels"/>
+	</field>
+	<field name="grading_category_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="grading_category_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="levels"/>
+	</field>
+	<field name="erp_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="erp_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="levels"/>
+	</field>
+	<field name="aca_year" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="aca_year"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="60" splitType="Stretch">
+			<subreport>
+				<reportElement x="0" y="0" width="675" height="60" uuid="396cd08f-adee-469e-8a03-ba6325f296c5"/>
+				<subreportParameter name="2020">
+					<subreportParameterExpression><![CDATA[$F{id}-3]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="2021">
+					<subreportParameterExpression><![CDATA[$F{id}-2]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="2022">
+					<subreportParameterExpression><![CDATA[$F{id}-1]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="2023">
+					<subreportParameterExpression><![CDATA[$F{id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="ABSOLUTE_PATH">
+					<subreportParameterExpression><![CDATA[$P{ABSOLUTE_PATH}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="Year1">
+					<subreportParameterExpression><![CDATA["grades_summaries_"+(new Double($F{aca_year}.split( "-")[0].trim()).intValue())]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="Yaer2">
+					<subreportParameterExpression><![CDATA["grades_summaries_"+(new Double($F{aca_year}.split( "-")[0].trim()).intValue()-1)]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="Year3">
+					<subreportParameterExpression><![CDATA["grades_summaries_"+(new Double($F{aca_year}.split( "-")[0].trim()).intValue()-2)]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="USER_ID">
+					<subreportParameterExpression><![CDATA[$P{USER_ID}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{ABSOLUTE_PATH}+"//Student Cohort.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</summary>
+</jasperReport>

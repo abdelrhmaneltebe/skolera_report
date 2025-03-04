@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.10.0.final using JasperReports Library version 6.10.0-unknown  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Class_Performance" pageWidth="842" pageHeight="950" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="047cce33-2b53-45f6-8c57-40745730f9f9">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="SGIS"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="COURSE_GROUP_ID" class="java.lang.String"/>
+	<parameter name="COURSE_ID" class="java.lang.String"/>
+	<parameter name="ABSOLUTE_PATH" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select (select school_description from schools limit 1) as school_name, courses.name as course_name, 
+cg.name as class_name,cg.id as class_id ,
+(select code from schools limit 1) as school_code
+from courses 
+inner join course_groups cg on cg.course_id = courses.id and cg.deleted_at is null and cg.id =  $P{COURSE_GROUP_ID}]]>
+	</queryString>
+	<field name="school_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="school_name"/>
+	</field>
+	<field name="course_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="course_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="courses"/>
+	</field>
+	<field name="class_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="class_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="course_groups"/>
+	</field>
+	<field name="class_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="class_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="course_groups"/>
+	</field>
+	<field name="school_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="school_code"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="110" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<image scaleImage="FillFrame">
+				<reportElement x="0" y="0" width="802" height="110" uuid="fc914ce6-2e3a-4cc8-a394-017ad91c3548"/>
+				<imageExpression><![CDATA[$P{ABSOLUTE_PATH}+"SKOLERA_HEADER.png"]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="540" y="20" width="262" height="60" uuid="fb64c411-9a2b-40cd-8ef4-8a6fc1d0af6e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{school_name}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="30" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<frame>
+				<reportElement positionType="FixRelativeToBottom" x="345" y="0" width="462" height="30" uuid="07293ef4-5b1c-4878-8778-5185a9fb73ed"/>
+				<textField>
+					<reportElement x="0" y="0" width="100" height="30" uuid="046bbfbc-3671-49bf-a47b-d58dc3ece3e8"/>
+					<textElement verticalAlignment="Middle">
+						<font size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[NOW( )]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="318" y="0" width="72" height="30" uuid="44b7c3a3-6ab1-426d-8446-044c449503e9"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="12"/>
+					</textElement>
+					<text><![CDATA[Powered by]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="390" y="0" width="72" height="30" forecolor="#60DC88" uuid="b326a71e-34c4-4103-b3fb-58c7519d4558"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[ Skolera]]></text>
+				</staticText>
+			</frame>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="575" splitType="Stretch">
+			<subreport>
+				<reportElement x="0" y="90" width="800" height="200" uuid="d2e27f5f-d2b7-477b-a137-46eb86ff8172"/>
+				<subreportParameter name="cg_id">
+					<subreportParameterExpression><![CDATA[$P{COURSE_GROUP_ID}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{ABSOLUTE_PATH}+"grading_period_categories.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement x="0" y="340" width="802" height="180" uuid="3de5fcf2-fcd4-41d9-ac53-944394bd6c23"/>
+				<subreportParameter name="cg_id">
+					<subreportParameterExpression><![CDATA[$P{COURSE_GROUP_ID}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{ABSOLUTE_PATH}+"category_performance.jasper"]]></subreportExpression>
+			</subreport>
+			<textField>
+				<reportElement x="0" y="20" width="802" height="30" uuid="1f671ac5-3d3b-4684-ba1f-59c24626b15f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{course_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="50" width="802" height="30" uuid="c604416d-c79d-4414-9604-564e497cca24"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{class_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="0" y="520" width="802" height="30" forecolor="#3679FF" uuid="454d1aff-89c3-455d-a6a9-c117e2924a35"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="html">
+					<font size="16" isBold="true" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<a target='_blank' href='skoleragenerator.000webhostapp.com?SGP="+"Quarter 1"+"&report_name="+"grading_period_grades"+"&class_id="+$F{class_id}+"&school_code="+$F{school_code}+"'>"+"View Overall Grades</a>"]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

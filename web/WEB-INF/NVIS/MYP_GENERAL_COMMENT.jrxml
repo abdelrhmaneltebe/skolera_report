@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.10.0.final using JasperReports Library version 6.10.0-unknown  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="MYP_GENERAL_COMMENT" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="bb8db379-e74e-4a59-859b-64e886740c91">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="NVIS"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="Student_ID" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select 
+levels.id as level_id, levels.name as level_name,
+RIGHT(students.batch_name, 1) as course_group_name,
+students.id as student_id, users.name as student_name, spr.comment
+from students
+inner join users on users.actable_id = students.id and users.actable_type = "student" and users.deleted_at is null
+inner join levels on levels.id = students.level_id and levels.deleted_at is null
+inner join student_progress_reports spr on spr.student_id = students.id and spr.deleted_at is null
+where students.deleted_at is null and students.id =  $P{Student_ID} 
+order by levels.id, students.batch_name, users.name]]>
+	</queryString>
+	<field name="level_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="level_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="levels"/>
+	</field>
+	<field name="level_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="level_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="levels"/>
+	</field>
+	<field name="course_group_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="course_group_name"/>
+	</field>
+	<field name="student_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="student_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="students"/>
+	</field>
+	<field name="student_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="student_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="users"/>
+	</field>
+	<field name="comment" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="comment"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="student_progress_reports"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="77" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="555" height="40" forecolor="#0B5394" uuid="4d460080-326b-441c-b1b1-6eb3a2bde2af"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Arial" size="15" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Homeroom Comments]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="0" y="47" width="555" height="30" uuid="2f2b7f19-ad0a-4d97-987d-0fb7177ed773"/>
+				<box bottomPadding="10">
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{comment}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+</jasperReport>

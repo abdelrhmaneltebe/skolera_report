@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.10.0.final using JasperReports Library version 6.10.0-unknown  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Hide Grades" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="e8e08bd4-8a64-49da-8bc0-58fa7ab63a82">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="KLS"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="ABSOLUTE_PATH" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="LEVEL_CODE" class="java.lang.String">
+		<defaultValueExpression><![CDATA["-1"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT 
+(select school_description from schools limit 1) as school_name,
+(select code from schools limit 1) as school_code,
+students.id as student_id,
+users.name as student_name,
+students.level_id as level_id,
+levels.name as level_name,
+batch_name,
+replace(batch_name,"EIS", "") as level_batch,
+SUBSTRING(batch_name FROM LOCATE('-', batch_name) + 2) as batch
+FROM students
+inner join users on users.actable_id = students.id and users.deleted_at is null and users.user_type = "student"
+inner join levels on levels.id = students.level_id and levels.deleted_at is null and (levels.level_code in ($P!{LEVEL_CODE}) OR $P{LEVEL_CODE}  = "-1")
+where hide_grades = 1
+group by students.id
+order by levels.id, students.id]]>
+	</queryString>
+	<field name="school_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="school_name"/>
+	</field>
+	<field name="school_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="school_code"/>
+	</field>
+	<field name="student_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="student_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="students"/>
+	</field>
+	<field name="student_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="student_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="users"/>
+	</field>
+	<field name="level_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="level_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="students"/>
+	</field>
+	<field name="level_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="level_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="levels"/>
+	</field>
+	<field name="batch_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="batch_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="students"/>
+	</field>
+	<field name="level_batch" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="level_batch"/>
+	</field>
+	<field name="batch" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="batch"/>
+	</field>
+	<sortField name="level_id"/>
+	<sortField name="batch"/>
+	<sortField name="student_name"/>
+	<variable name="ROW_COUNT" class="java.lang.Integer" resetType="Group" resetGroup="Level" calculation="Count">
+		<variableExpression><![CDATA[new java.lang.Integer(1)]]></variableExpression>
+		<initialValueExpression><![CDATA[new java.lang.Integer(0)]]></initialValueExpression>
+	</variable>
+	<group name="Level" keepTogether="true">
+		<groupExpression><![CDATA[$F{level_id}]]></groupExpression>
+		<groupHeader>
+			<band height="80">
+				<textField>
+					<reportElement x="180" y="15" width="200" height="30" uuid="6ea258ba-b2cc-4f59-9c1f-3f43a9cb19da"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="14" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{level_name}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="0" y="50" width="50" height="30" uuid="056a9c84-8a9b-4b27-ba3b-4ac246871092"/>
+					<box>
+						<pen lineWidth="1.0"/>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[No.]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="50" y="50" width="420" height="30" uuid="6ea57141-1c15-43cd-9a86-eae5f571b305"/>
+					<box leftPadding="8">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Student Name"]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="470" y="50" width="85" height="30" uuid="087a310a-7848-4662-93f7-41a712eb0336"/>
+					<box>
+						<pen lineWidth="1.0"/>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Batch]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="110" splitType="Stretch">
+			<image>
+				<reportElement x="0" y="0" width="555" height="110" uuid="32e9067e-9216-47d0-9666-6464382a04e7"/>
+				<imageExpression><![CDATA[$P{ABSOLUTE_PATH}+"//SKOLERA_HEADER.png"]]></imageExpression>
+			</image>
+			<image scaleImage="FillFrame">
+				<reportElement x="272" y="0" width="90" height="80" uuid="f20fed11-d726-4731-b78c-529912e23ae5"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<imageExpression><![CDATA[$P{ABSOLUTE_PATH}+"/logo/"+$F{school_code}.toUpperCase()+".jpg"]]></imageExpression>
+			</image>
+			<textField isBlankWhenNull="true">
+				<reportElement x="362" y="0" width="195" height="80" uuid="7259e4e7-46c1-42c5-a103-2d0f2a70cf96"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{school_name}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="30">
+			<textField>
+				<reportElement x="0" y="0" width="50" height="30" uuid="a5bc738e-ec5e-49ee-a9b2-2c3aac7aeebe"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{ROW_COUNT}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="50" y="0" width="420" height="30" uuid="b7b6b96a-7887-46b1-adae-65a1e03ee4ed"/>
+				<box leftPadding="8">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{student_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="470" y="0" width="85" height="30" uuid="76e3b60a-ec1c-4413-888c-7c9415730c39"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{level_batch}.split(" - ")[1]]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="44" splitType="Stretch">
+			<staticText>
+				<reportElement x="484" y="14" width="71" height="30" forecolor="#60DC88" uuid="5493a9d3-dd33-4b8a-a106-150baeac99df"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ Skolera]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="412" y="14" width="72" height="30" uuid="98d5f9f8-7127-43fd-bc4c-5fdb10fae6ba"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Powered by]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+</jasperReport>

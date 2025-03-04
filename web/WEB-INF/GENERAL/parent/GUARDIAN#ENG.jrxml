@@ -1,0 +1,540 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.10.0.final using JasperReports Library version 6.10.0-unknown  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Guardian " pageWidth="650" pageHeight="1220" columnWidth="610" leftMargin="20" rightMargin="20" topMargin="0" bottomMargin="0" uuid="88416a58-2e3e-4d81-9348-fcbf355a6e01">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="KIAS"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<style name="Crosstab_CH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Crosstab_CG" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Crosstab_CT" mode="Opaque" backcolor="#005FB3">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Crosstab_CD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<parameter name="ABSOLUTE_PATH" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="PARAMETER_1" class="java.lang.String"/>
+	<parameter name="STUDENT_ID" class="java.lang.String">
+		<defaultValueExpression><![CDATA["-1"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="USER_ID" class="java.lang.String">
+		<defaultValueExpression><![CDATA["-1"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="PARAMETER_2" class="java.lang.String">
+		<defaultValueExpression><![CDATA["null"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="LEVEL_CODE" class="java.lang.String">
+		<defaultValueExpression><![CDATA["-1"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select 
+(select school_description from schools where deleted_at is null limit 1) as school_name ,
+(select code from schools where deleted_at is null limit 1) as school_code ,
+u1.id,
+u1.name as parent_name, 
+u1.username as parent_username, 
+concat(u1.username,"") as parent_password ,
+students.id as student_id,
+u2.name as student_name,
+u2.username as student_username,
+concat(u2.username,"") as student_password,
+students.batch_name as Class,
+levels.level_code
+from users u1
+inner join students on students.parent_id = u1.actable_id and students.deleted_at is null and (students.id in ($P!{STUDENT_ID}) OR   $P{STUDENT_ID} = "-1")
+inner join users u2 on students.id = u2.actable_id and u2.user_type = "student" 
+inner join levels on levels.id = students.level_id and levels.deleted_at is null and (levels.level_code in ($P!{LEVEL_CODE}) OR   $P{LEVEL_CODE} = "-1")
+inner join stages on stages.deleted_at is null and levels.stage_id = stages.id
+inner join sections on sections.deleted_at is null and sections.id = stages.section_id and (sections.name in ($P!{PARAMETER_2}) OR   $P{PARAMETER_2} = "null")
+where u1.deleted_at is null and u1.user_type = "parent"  and u1.deleted_at is null and (u1.id in ($P!{USER_ID}) OR   $P{USER_ID} = "-1")]]>
+	</queryString>
+	<field name="school_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="school_name"/>
+	</field>
+	<field name="school_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="school_code"/>
+	</field>
+	<field name="id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="users"/>
+	</field>
+	<field name="parent_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="parent_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="users"/>
+	</field>
+	<field name="parent_username" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="parent_username"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="users"/>
+	</field>
+	<field name="parent_password" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="parent_password"/>
+	</field>
+	<field name="student_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="student_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="students"/>
+	</field>
+	<field name="student_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="student_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="users"/>
+	</field>
+	<field name="student_username" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="student_username"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="users"/>
+	</field>
+	<field name="student_password" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="student_password"/>
+	</field>
+	<field name="Class" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="Class"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="students"/>
+	</field>
+	<field name="level_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="level_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="levels"/>
+	</field>
+	<sortField name="parent_username"/>
+	<sortField name="parent_name"/>
+	<group name="parent_Group" isStartNewPage="true">
+		<groupExpression><![CDATA[$F{id}]]></groupExpression>
+		<groupHeader>
+			<band height="30">
+				<staticText>
+					<reportElement positionType="Float" x="0" y="0" width="90" height="30" uuid="6aa53ce9-9495-4a42-9fe9-4f9fd699de77"/>
+					<box leftPadding="4"/>
+					<textElement verticalAlignment="Middle"/>
+					<text><![CDATA[Guardian Name:]]></text>
+				</staticText>
+				<textField>
+					<reportElement positionType="Float" x="90" y="0" width="290" height="30" uuid="eb5303a8-a093-4945-a4b8-f7c98e2df14f"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{parent_name}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="740">
+				<textField>
+					<reportElement positionType="Float" x="0" y="20" width="610" height="30" uuid="65e361b6-605b-41f3-bccb-b4319a1fef3c"/>
+					<textElement verticalAlignment="Middle">
+						<font size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{school_name}+" and Skolera™ welcome you to a new academic year."]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement positionType="Float" x="0" y="60" width="610" height="70" uuid="fddd29a8-b45e-475c-9be3-fbe41d346a1f">
+						<property name="com.jaspersoft.studio.unit.spacingAfter" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font size="12"/>
+						<paragraph lineSpacing="1_1_2" lineSpacingSize="6.0" spacingAfter="10"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Skolera™ is an award winning Learning Management System (LMS) utilizing the power of advanced digital technologies with the latest educational methodologies to bring you the best in Education Technology."]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement positionType="Float" x="0" y="140" width="610" height="100" uuid="60a23d81-8752-4394-82cf-0bb8b4dcd35e">
+						<property name="com.jaspersoft.studio.unit.spacingAfter" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font size="12"/>
+						<paragraph lineSpacing="1_1_2" lineSpacingSize="6.0" spacingAfter="10"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Using Skolera™, you have full access to everything related to your child’s school activities. Skolera™ notifies you of any new content, assignments, quizzes and online classes. As a parent, you can use your account to view and supervise all your children’s tasks, grades, attendance and activities on the platform. You can also communicate with your child’s teachers or with the school administration."]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement positionType="Float" x="0" y="250" width="610" height="110" uuid="e96f2d7b-c314-426b-a70d-a08814fc6569">
+						<property name="com.jaspersoft.studio.unit.spacingAfter" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font size="12"/>
+						<paragraph lineSpacing="Double" lineSpacingSize="6.0" spacingAfter="10"/>
+					</textElement>
+					<textFieldExpression><![CDATA["To log in, open a web browser (Recommended Google Chrome, Safari or Firefox)."+"\n"+
+"Write your school URL at the top in the browser address bar (NOT in the search bar)."+"\n"+
+"Your school URL is:"+ $F{school_code}+".skoleralms.com"]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement positionType="Float" x="0" y="370" width="610" height="30" uuid="4829ecec-09a2-404a-a4b4-c4141fa6bb54"/>
+					<textElement verticalAlignment="Middle">
+						<font size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Your Log in Credentials are as follows:"]]></textFieldExpression>
+				</textField>
+				<crosstab horizontalPosition="Center">
+					<reportElement positionType="Float" x="-20" y="410" width="650" height="60" uuid="9464d0ed-d264-417e-af15-c1c5bbca4a84">
+						<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+						<property name="com.jaspersoft.studio.crosstab.style.header" value="Crosstab_CH"/>
+						<property name="com.jaspersoft.studio.crosstab.style.group" value="Crosstab_CG"/>
+						<property name="com.jaspersoft.studio.crosstab.style.total" value="Crosstab_CT"/>
+						<property name="com.jaspersoft.studio.crosstab.style.detail" value="Crosstab_CD"/>
+					</reportElement>
+					<crosstabDataset>
+						<dataset resetType="Group" resetGroup="parent_Group"/>
+					</crosstabDataset>
+					<crosstabHeaderCell>
+						<cellContents>
+							<textField>
+								<reportElement mode="Opaque" x="0" y="0" width="140" height="20" uuid="b0241214-b74b-44a2-89a0-7dc4dabc051c"/>
+								<box leftPadding="0">
+									<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								</box>
+								<textElement verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA["  Role"]]></textFieldExpression>
+							</textField>
+							<textField>
+								<reportElement mode="Opaque" x="0" y="20" width="140" height="20" uuid="98687b04-2c4e-4be6-8681-5136569cda52"/>
+								<box leftPadding="0">
+									<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								</box>
+								<textElement verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA["  Parent"]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabHeaderCell>
+					<rowGroup name="student_name" width="140">
+						<bucket class="java.lang.String">
+							<bucketExpression><![CDATA[$F{student_name}]]></bucketExpression>
+						</bucket>
+						<crosstabRowHeader>
+							<cellContents mode="Opaque" style="Crosstab_CH">
+								<textField>
+									<reportElement mode="Opaque" x="0" y="0" width="140" height="20" uuid="cf5e1157-5722-4893-9f70-c58e79072ce1"/>
+									<box leftPadding="0">
+										<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+										<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+										<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+										<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									</box>
+									<textElement verticalAlignment="Middle"/>
+									<textFieldExpression><![CDATA["  Student"]]></textFieldExpression>
+								</textField>
+							</cellContents>
+						</crosstabRowHeader>
+						<crosstabTotalRowHeader>
+							<cellContents mode="Opaque" style="Crosstab_CT">
+								<staticText>
+									<reportElement x="0" y="0" width="60" height="20" forecolor="#FFFFFF" uuid="1e5bcf98-8e3c-4d1d-95ce-401289c1e2ed"/>
+									<text><![CDATA[Total student_name]]></text>
+								</staticText>
+							</cellContents>
+						</crosstabTotalRowHeader>
+					</rowGroup>
+					<columnGroup name="parent_name" height="40">
+						<bucket class="java.lang.String">
+							<bucketExpression><![CDATA[$F{parent_name}]]></bucketExpression>
+						</bucket>
+						<crosstabColumnHeader>
+							<cellContents mode="Opaque" style="Crosstab_CH">
+								<frame>
+									<reportElement mode="Opaque" x="0" y="0" width="441" height="40" uuid="c9e41fd7-6434-42f4-9296-806626fcd600"/>
+									<box leftPadding="0">
+										<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+										<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+										<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+										<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									</box>
+									<textField>
+										<reportElement mode="Opaque" x="0" y="0" width="221" height="20" uuid="7182fd5b-dbd6-448a-bce7-ad24d6a32ee6"/>
+										<box leftPadding="0">
+											<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+											<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+											<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+											<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+										</box>
+										<textElement verticalAlignment="Middle"/>
+										<textFieldExpression><![CDATA["  Name"]]></textFieldExpression>
+									</textField>
+									<textField>
+										<reportElement mode="Opaque" x="0" y="20" width="221" height="20" uuid="c0194670-e3ab-4103-bb71-b71e8630d941"/>
+										<box leftPadding="5">
+											<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+											<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+											<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+											<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+										</box>
+										<textElement verticalAlignment="Middle">
+											<font fontName="Arial"/>
+										</textElement>
+										<textFieldExpression><![CDATA["  "+$V{parent_name}]]></textFieldExpression>
+									</textField>
+									<textField>
+										<reportElement mode="Opaque" x="221" y="0" width="100" height="20" uuid="6b54d75b-b566-489d-8292-82d87176cf11"/>
+										<box leftPadding="0">
+											<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+											<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+											<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+											<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+										</box>
+										<textElement verticalAlignment="Middle"/>
+										<textFieldExpression><![CDATA["  Username"]]></textFieldExpression>
+									</textField>
+									<textField>
+										<reportElement mode="Opaque" x="221" y="20" width="100" height="20" uuid="5827eed4-d4ca-4b29-8cf6-0d257d552fa1"/>
+										<box leftPadding="0">
+											<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+											<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+											<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+											<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+										</box>
+										<textElement verticalAlignment="Middle"/>
+										<textFieldExpression><![CDATA["  "+$V{parent_username}]]></textFieldExpression>
+									</textField>
+									<textField>
+										<reportElement mode="Opaque" x="321" y="0" width="120" height="20" uuid="f85a89a2-f29a-404a-85a3-d0a1779d2c92"/>
+										<box leftPadding="0">
+											<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+											<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+											<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+											<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+										</box>
+										<textElement verticalAlignment="Middle"/>
+										<textFieldExpression><![CDATA["  Password"]]></textFieldExpression>
+									</textField>
+									<textField>
+										<reportElement mode="Opaque" x="321" y="20" width="120" height="20" uuid="21626e7c-c96a-46d5-8224-16799c2f2ffc"/>
+										<box leftPadding="0">
+											<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+											<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+											<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+											<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+										</box>
+										<textElement verticalAlignment="Middle"/>
+										<textFieldExpression><![CDATA["  "+IF( $V{PARAMETER_1} == null,$V{parent_password} +"Aa@1",$V{PARAMETER_1} )]]></textFieldExpression>
+									</textField>
+								</frame>
+							</cellContents>
+						</crosstabColumnHeader>
+						<crosstabTotalColumnHeader>
+							<cellContents mode="Opaque" style="Crosstab_CT">
+								<staticText>
+									<reportElement x="0" y="0" width="60" height="20" forecolor="#FFFFFF" uuid="2005543b-bbb5-4be6-a6b2-2ff532910132"/>
+									<text><![CDATA[Total parent_name]]></text>
+								</staticText>
+							</cellContents>
+						</crosstabTotalColumnHeader>
+					</columnGroup>
+					<measure name="student_username_MEASURE" class="java.lang.String">
+						<measureExpression><![CDATA[$F{student_username}]]></measureExpression>
+					</measure>
+					<measure name="parent_username" class="java.lang.String">
+						<measureExpression><![CDATA[$F{parent_username}]]></measureExpression>
+					</measure>
+					<measure name="parent_password" class="java.lang.String">
+						<measureExpression><![CDATA[$F{parent_password}]]></measureExpression>
+					</measure>
+					<measure name="student_password" class="java.lang.String">
+						<measureExpression><![CDATA[$F{student_password}]]></measureExpression>
+					</measure>
+					<measure name="PARAMETER_1" class="java.lang.String">
+						<measureExpression><![CDATA[$P{PARAMETER_1}]]></measureExpression>
+					</measure>
+					<crosstabCell width="441" height="20">
+						<cellContents mode="Opaque" style="Crosstab_CD">
+							<frame>
+								<reportElement mode="Opaque" x="0" y="0" width="441" height="20" uuid="94b7f8b9-318e-4d65-8bd4-5561e54d92e5"/>
+								<box leftPadding="0">
+									<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								</box>
+								<textField>
+									<reportElement mode="Opaque" x="0" y="0" width="221" height="20" uuid="f1e87b51-15ae-4e1c-aa5e-1e7535932a69"/>
+									<box leftPadding="5">
+										<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+										<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+										<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+										<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									</box>
+									<textElement verticalAlignment="Middle">
+										<font fontName="Arial"/>
+									</textElement>
+									<textFieldExpression><![CDATA["  "+$V{student_name}]]></textFieldExpression>
+								</textField>
+								<textField>
+									<reportElement mode="Opaque" x="221" y="0" width="100" height="20" uuid="5a7db824-423f-4ea5-a8b9-9977c9a06db8"/>
+									<box leftPadding="0">
+										<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+										<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+										<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+										<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									</box>
+									<textElement verticalAlignment="Middle"/>
+									<textFieldExpression><![CDATA["  "+$V{student_username_MEASURE}]]></textFieldExpression>
+								</textField>
+								<textField>
+									<reportElement mode="Opaque" x="321" y="0" width="120" height="20" uuid="a154a1b8-63fb-435d-bf2c-27446dedf722"/>
+									<box leftPadding="0">
+										<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+										<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+										<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+										<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									</box>
+									<textElement verticalAlignment="Middle"/>
+									<textFieldExpression><![CDATA["  "+IF( $V{PARAMETER_1} == null,$V{student_password}+"Aa@1",$V{PARAMETER_1} )]]></textFieldExpression>
+								</textField>
+							</frame>
+						</cellContents>
+					</crosstabCell>
+					<crosstabCell width="60" height="20" columnTotalGroup="parent_name">
+						<cellContents mode="Opaque" style="Crosstab_CT">
+							<textField>
+								<reportElement x="0" y="0" width="60" height="20" forecolor="#FFFFFF" uuid="240f8c13-0628-42a6-ae52-5358984672e5"/>
+								<textFieldExpression><![CDATA[$V{student_username_MEASURE}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabCell>
+					<crosstabCell width="60" height="20" rowTotalGroup="student_name">
+						<cellContents mode="Opaque" style="Crosstab_CT">
+							<textField>
+								<reportElement x="0" y="0" width="60" height="20" forecolor="#FFFFFF" uuid="1c540501-59b0-40ee-8562-d8601254b787"/>
+								<textFieldExpression><![CDATA[$V{student_username_MEASURE}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabCell>
+					<crosstabCell width="60" height="20" rowTotalGroup="student_name" columnTotalGroup="parent_name">
+						<cellContents mode="Opaque" style="Crosstab_CT">
+							<textField>
+								<reportElement x="0" y="0" width="60" height="20" forecolor="#FFFFFF" uuid="53751c8e-8443-47ce-9c5a-f6994139faf8"/>
+								<textFieldExpression><![CDATA[$V{student_username_MEASURE}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabCell>
+				</crosstab>
+				<textField>
+					<reportElement positionType="Float" x="0" y="500" width="610" height="110" uuid="f5bb61b1-5740-443f-ae25-b872abd8087a">
+						<property name="com.jaspersoft.studio.unit.spacingAfter" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font size="12"/>
+						<paragraph lineSpacing="Double" lineSpacingSize="6.0" spacingAfter="10"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Please note that username and password are case sensitive."+"\n"+
+"For more information about Skolera™, Please visit our website at http://skolera.com"+"\n"+
+"You can find more help and support articles and videos on our support portal and knowledgebase at"+"\n"+" http://support.skolera.com"]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement positionType="Float" x="0" y="620" width="610" height="30" uuid="a5f9d069-c4dc-4a1e-92ec-9bd0e8f89fcd"/>
+					<textElement verticalAlignment="Middle">
+						<font size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA["If you require assistance or face any problems, please contact your school administration and IT team."]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement positionType="Float" x="0" y="650" width="610" height="50" uuid="53ebb7c2-9958-4749-a6eb-26e754c267d7"/>
+					<textElement verticalAlignment="Middle">
+						<font size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA["We at Skolera™ aim to provide the best user experience. We rely on our users’ feedback to develop and enhance our platform. For comments, feedback and suggestions please contact us by e-mail on info@skolera.com"]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement positionType="Float" x="0" y="720" width="610" height="20" uuid="18d58de0-b5da-4fd5-b163-726de5e5d337"/>
+					<textElement verticalAlignment="Middle">
+						<font size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Wishing you all a smooth and fruitful new academic year."]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="120" splitType="Stretch">
+			<image>
+				<reportElement positionType="Float" x="0" y="0" width="610" height="120" uuid="678fd1c2-d938-4251-be13-4d6a06f004ee"/>
+				<imageExpression><![CDATA[$P{ABSOLUTE_PATH}+"//parent/Guardian header.jpg"]]></imageExpression>
+			</image>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="30" splitType="Stretch">
+			<textField>
+				<reportElement positionType="Float" x="90" y="0" width="290" height="30" uuid="a3b0edf9-afda-4040-9911-500e42e57398"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{student_name} + " (" +$F{Class} + ")"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="0" width="90" height="30" uuid="e01609bf-051f-4ef5-a1d7-b53c0ecc5337"/>
+				<box leftPadding="4"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Student Name:]]></text>
+			</staticText>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="90" splitType="Stretch">
+			<textField>
+				<reportElement positionType="Float" x="460" y="20" width="150" height="20" uuid="55da8276-af51-4ea5-b5b8-f46c0a7dd37d"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Skolera Team"]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement positionType="Float" x="490" y="40" width="90" height="50" uuid="64cbdf36-4d97-4d24-b1d5-602b0f32cd45"/>
+				<imageExpression><![CDATA[$P{ABSOLUTE_PATH}+"//parent/signture.PNG"]]></imageExpression>
+			</image>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

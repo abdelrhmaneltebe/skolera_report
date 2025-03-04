@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.10.0.final using JasperReports Library version 6.10.0-unknown  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="content" pageWidth="555" pageHeight="842" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="20" bottomMargin="20" uuid="30605a25-cb5a-4f84-af41-d8ef2ac94af1">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="SGIS"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<style name="Crosstab_CH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Crosstab_CG" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Crosstab_CT" mode="Opaque" backcolor="#005FB3">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Crosstab_CD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<parameter name="class_id" class="java.lang.String"/>
+	<parameter name="Start_Date" class="java.lang.String"/>
+	<parameter name="End_Date" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select  
+course_content_id as ContentId,
+course_contents.name as ContentName,
+course_contents.published_at as PublishDate,
+courses.name as Course,
+course_group_id as GroupId,
+course_groups.name as Class
+from group_contents
+inner join course_contents on group_contents.course_content_id = course_contents.id and course_contents.deleted_at is null
+inner join course_groups on group_contents.course_group_id = course_groups.id and course_groups.deleted_at is null 
+and course_groups.id =  $P{class_id} 
+inner join courses on course_groups.course_id = courses.id and courses.deleted_at is null
+where (course_contents.published_at>= $P{Start_Date} and course_contents.published_at<= $P{End_Date} )
+order by courses.id]]>
+	</queryString>
+	<field name="ContentId" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="ContentId"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="group_contents"/>
+	</field>
+	<field name="ContentName" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="ContentName"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="course_contents"/>
+	</field>
+	<field name="PublishDate" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="PublishDate"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="course_contents"/>
+	</field>
+	<field name="Course" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="Course"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="courses"/>
+	</field>
+	<field name="GroupId" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="GroupId"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="group_contents"/>
+	</field>
+	<field name="Class" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="Class"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="course_groups"/>
+	</field>
+	<sortField name="PublishDate"/>
+	<group name="Group1">
+		<groupExpression><![CDATA[$F{GroupId}]]></groupExpression>
+		<groupHeader>
+			<band/>
+		</groupHeader>
+		<groupFooter>
+			<band height="70">
+				<crosstab horizontalPosition="Center">
+					<reportElement x="0" y="0" width="555" height="70" uuid="d00dd6c1-5ed7-4bde-92b0-31a01d3301e9">
+						<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+						<property name="com.jaspersoft.studio.crosstab.style.header" value="Crosstab_CH"/>
+						<property name="com.jaspersoft.studio.crosstab.style.group" value="Crosstab_CG"/>
+						<property name="com.jaspersoft.studio.crosstab.style.total" value="Crosstab_CT"/>
+						<property name="com.jaspersoft.studio.crosstab.style.detail" value="Crosstab_CD"/>
+					</reportElement>
+					<crosstabDataset>
+						<dataset resetType="Group" resetGroup="Group1"/>
+					</crosstabDataset>
+					<crosstabHeaderCell>
+						<cellContents>
+							<textField>
+								<reportElement mode="Opaque" x="0" y="0" width="300" height="20" uuid="6f914a9c-5ac0-4d82-b645-9dc43115ceb8"/>
+								<box>
+									<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font isBold="true"/>
+								</textElement>
+								<textFieldExpression><![CDATA["Content Name"]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabHeaderCell>
+					<rowGroup name="ContentName" width="300">
+						<bucket class="java.lang.String">
+							<bucketExpression><![CDATA[$F{ContentName}]]></bucketExpression>
+						</bucket>
+						<crosstabRowHeader>
+							<cellContents mode="Opaque" style="Crosstab_CH">
+								<frame>
+									<reportElement x="0" y="0" width="300" height="20" uuid="6c12d581-bf8d-48e8-b978-0429a3834693"/>
+									<textField>
+										<reportElement mode="Opaque" x="20" y="0" width="280" height="20" uuid="ee430c08-9db9-48e6-9285-b25e2f0033ff"/>
+										<box>
+											<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+											<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+											<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+											<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+										</box>
+										<textElement textAlignment="Center" verticalAlignment="Middle">
+											<font fontName="Arial"/>
+										</textElement>
+										<textFieldExpression><![CDATA[$V{ContentName}]]></textFieldExpression>
+									</textField>
+									<textField>
+										<reportElement mode="Opaque" x="0" y="0" width="20" height="20" uuid="8cca719c-e67f-4b43-9cdf-7cdd643022f1"/>
+										<box>
+											<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+											<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+											<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+											<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+										</box>
+										<textElement textAlignment="Center" verticalAlignment="Middle"/>
+										<textFieldExpression><![CDATA[$V{ROW_COUNT}]]></textFieldExpression>
+									</textField>
+								</frame>
+							</cellContents>
+						</crosstabRowHeader>
+						<crosstabTotalRowHeader>
+							<cellContents mode="Opaque" style="Crosstab_CT">
+								<staticText>
+									<reportElement x="0" y="0" width="300" height="20" forecolor="#FFFFFF" uuid="f45bc5f6-9871-416c-92c9-bb98c8082624"/>
+									<text><![CDATA[Total ContentName]]></text>
+								</staticText>
+							</cellContents>
+						</crosstabTotalRowHeader>
+					</rowGroup>
+					<columnGroup name="Class" height="20">
+						<bucket class="java.lang.String">
+							<bucketExpression><![CDATA[$F{Class}]]></bucketExpression>
+						</bucket>
+						<crosstabColumnHeader>
+							<cellContents mode="Opaque" style="Crosstab_CH">
+								<textField>
+									<reportElement mode="Opaque" x="0" y="0" width="200" height="20" uuid="701068af-cdc9-4593-ba8e-37dba40a1bb7"/>
+									<box>
+										<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+										<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+										<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+										<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									</box>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font isBold="true"/>
+									</textElement>
+									<textFieldExpression><![CDATA["Published at"]]></textFieldExpression>
+								</textField>
+							</cellContents>
+						</crosstabColumnHeader>
+						<crosstabTotalColumnHeader>
+							<cellContents mode="Opaque" style="Crosstab_CT">
+								<staticText>
+									<reportElement x="0" y="0" width="60" height="20" forecolor="#FFFFFF" uuid="a8d67345-0350-431b-aba3-49b72034f848"/>
+									<text><![CDATA[Total Class]]></text>
+								</staticText>
+							</cellContents>
+						</crosstabTotalColumnHeader>
+					</columnGroup>
+					<measure name="PublishDate_MEASURE" class="java.sql.Timestamp">
+						<measureExpression><![CDATA[$F{PublishDate}]]></measureExpression>
+					</measure>
+					<crosstabCell width="200" height="20">
+						<cellContents mode="Opaque" style="Crosstab_CD">
+							<textField>
+								<reportElement mode="Opaque" x="0" y="0" width="200" height="20" uuid="95ba24ef-dd56-4fd8-86ad-a62643e9d069"/>
+								<box>
+									<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$V{PublishDate_MEASURE}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabCell>
+					<crosstabCell width="60" height="20" columnTotalGroup="Class">
+						<cellContents mode="Opaque" style="Crosstab_CT">
+							<textField>
+								<reportElement x="0" y="0" width="60" height="20" forecolor="#FFFFFF" uuid="47a446cd-997a-42d8-a407-cb910a51b282"/>
+								<textFieldExpression><![CDATA[$V{PublishDate_MEASURE}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabCell>
+					<crosstabCell width="60" height="20" rowTotalGroup="ContentName">
+						<cellContents mode="Opaque" style="Crosstab_CT">
+							<textField>
+								<reportElement x="0" y="0" width="60" height="20" forecolor="#FFFFFF" uuid="40985fcd-3acb-4753-9eb1-a74215c66e78"/>
+								<textFieldExpression><![CDATA[$V{PublishDate_MEASURE}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabCell>
+					<crosstabCell width="60" height="20" rowTotalGroup="ContentName" columnTotalGroup="Class">
+						<cellContents mode="Opaque" style="Crosstab_CT">
+							<textField>
+								<reportElement x="0" y="0" width="60" height="20" forecolor="#FFFFFF" uuid="f9f1420b-5329-4d12-87a5-43162440f78c"/>
+								<textFieldExpression><![CDATA[$V{PublishDate_MEASURE}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabCell>
+				</crosstab>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

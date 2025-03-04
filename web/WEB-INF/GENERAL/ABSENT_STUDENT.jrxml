@@ -1,0 +1,362 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.10.0.final using JasperReports Library version 6.10.0-unknown  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="current_date_attendance" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="cbecd958-03fb-4df9-a5c4-a2449ccafff1">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="EIS"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<style name="Crosstab_CH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Crosstab_CG" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Crosstab_CT" mode="Opaque" backcolor="#005FB3">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Crosstab_CD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="no_attendance" uuid="58f3eadb-bacd-48fa-94de-fc87d16630cb">
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="ASAS"/>
+		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		<parameter name="level_code" class="java.lang.String"/>
+		<parameter name="date" class="java.lang.String">
+			<defaultValueExpression><![CDATA["%"+DATEFORMAT(NOW(),"YYYY-MM-dd")+"%"]]></defaultValueExpression>
+		</parameter>
+		<queryString>
+			<![CDATA[select distinct course_groups.name as real_class ,levels.level_code as real_level_code, a.* from course_groups 
+inner join courses on course_id = courses.id and courses.deleted_at is null
+inner join levels on levels.id = courses.level_id and levels.deleted_at is null
+left join (select distinct cg.name, level_code from attendances 
+inner join student_course_groups scg on scg.student_id = attendances.student_id and scg.deleted_at is null
+inner join course_groups cg on cg.id = scg.course_group_id and cg.deleted_at is null
+inner join courses on course_id = courses.id and courses.deleted_at is null
+inner join levels on levels.id = courses.level_id and levels.deleted_at is null
+where attendances.deleted_at is null and attendances.timetable_slot_id is null and attendances.date like  $P{date}  )a on a.name = course_groups.name and levels.level_code = a.level_code
+where course_groups.deleted_at is null and a.level_code is null and levels.level_code = $P{level_code}]]>
+		</queryString>
+		<field name="real_class" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="real_class"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="course_groups"/>
+		</field>
+		<field name="real_level_code" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="real_level_code"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="levels"/>
+		</field>
+		<field name="name" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="name"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="course_groups"/>
+		</field>
+		<field name="level_code" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="level_code"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="levels"/>
+		</field>
+	</subDataset>
+	<parameter name="Start_Date" class="java.lang.String">
+		<defaultValueExpression><![CDATA[DATEFORMAT(NOW(),"YYYY-MM-dd")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ABSOLUTE_PATH" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="LEVEL_CODE" class="java.lang.String">
+		<defaultValueExpression><![CDATA["-1"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT DISTINCT
+	(select school_description from schools limit 1) as school_name,
+    students.id as student_id,
+    users.name AS student_name,
+    levels.level_code,
+    course_groups.name as class_name,
+    attendances.date
+FROM
+    attendances
+        INNER JOIN
+    users ON users.actable_id = attendances.student_id
+        AND users.user_type = 'student'
+        AND users.deleted_at IS NULL
+        INNER JOIN
+    students ON students.id = student_id
+        AND students.deleted_at IS NULL
+        INNER JOIN
+    levels ON levels.id = students.level_id
+        AND levels.deleted_at IS NULL
+        AND (levels.level_code in( $P!{LEVEL_CODE} ) OR  $P{LEVEL_CODE} = "-1")
+        INNER JOIN
+    student_course_groups scg ON scg.student_id = students.id
+        AND scg.deleted_at IS NULL
+        INNER JOIN
+    course_groups ON course_groups.id = course_group_id
+        AND course_groups.deleted_at IS NULL
+WHERE
+    timetable_slot_id IS NULL
+        AND attendances.deleted_at IS NULL
+        AND status = 1
+        AND attendances.date like  CONCAT ("%",SUBSTRING_INDEX($P{Start_Date}, ' ', 1),"%")]]>
+	</queryString>
+	<field name="school_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="school_name"/>
+	</field>
+	<field name="student_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="student_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="students"/>
+	</field>
+	<field name="student_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="student_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="users"/>
+	</field>
+	<field name="level_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="level_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="levels"/>
+	</field>
+	<field name="class_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="class_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="course_groups"/>
+	</field>
+	<field name="date" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.label" value="date"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="attendances"/>
+	</field>
+	<sortField name="level_code"/>
+	<sortField name="class_name"/>
+	<variable name="row_count" class="java.lang.Integer" resetType="Group" resetGroup="class_Group" incrementType="Group" incrementGroup="student" calculation="Count">
+		<variableExpression><![CDATA[new java.lang.Integer(1)]]></variableExpression>
+		<initialValueExpression><![CDATA[new java.lang.Integer(0)]]></initialValueExpression>
+	</variable>
+	<group name="levels_Group" isStartNewPage="true" isReprintHeaderOnEachPage="true">
+		<groupExpression><![CDATA[$F{level_code}]]></groupExpression>
+		<groupHeader>
+			<band>
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="class_Group" isReprintHeaderOnEachPage="true" keepTogether="true">
+		<groupExpression><![CDATA[$F{class_name}]]></groupExpression>
+		<groupHeader>
+			<band height="97">
+				<textField>
+					<reportElement x="0" y="19" width="40" height="16" uuid="f7d117df-3a81-4fbf-8462-d889562cedf9">
+						<printWhenExpression><![CDATA[$F{school_name} != null]]></printWhenExpression>
+					</reportElement>
+					<textElement>
+						<font fontName="Arial" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Grade: "]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="0" y="35" width="40" height="30" uuid="e60eb1f8-cb61-4123-ba30-8b0a0c4e36f7">
+						<printWhenExpression><![CDATA[$F{school_name} != null]]></printWhenExpression>
+					</reportElement>
+					<textElement>
+						<font fontName="Arial" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Class: "]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="40" y="67" width="515" height="30" forecolor="#FFFFFF" backcolor="#3DD1C7" uuid="0656092e-a537-4245-882b-89ba972ebb14"/>
+					<box leftPadding="8">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial" size="12" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Student Name"]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="151" y="25" width="253" height="30" uuid="7d1cae81-7100-4517-a3dd-8e7fbd6f5003">
+						<printWhenExpression><![CDATA[$F{school_name} == null]]></printWhenExpression>
+					</reportElement>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="16" isBold="true"/>
+					</textElement>
+					<text><![CDATA[no Attendance taken yet]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="34" y="19" width="513" height="16" uuid="50fe43b1-c57f-40c3-afb8-8666be2712c0"/>
+					<textElement>
+						<font fontName="Arial"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{level_code}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="34" y="35" width="501" height="30" uuid="e8f158e3-5032-41ff-b11d-b666f0d0857c"/>
+					<textElement>
+						<font fontName="Arial"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{class_name}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement mode="Opaque" x="0" y="67" width="40" height="30" forecolor="#FFFFFF" backcolor="#3DD1C7" uuid="e283be58-e31a-470b-b69f-d7d1cb9bbaa6"/>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[No.]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="13">
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<staticText>
+					<reportElement x="-20" y="10" width="595" height="3" uuid="51ae84c3-f08b-47e6-a183-9c1b81992ec8">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box>
+						<pen lineWidth="1.75"/>
+						<topPen lineWidth="1.75" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.75" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement>
+						<font fontName="Arial"/>
+					</textElement>
+					<text><![CDATA[Static Text]]></text>
+				</staticText>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="student">
+		<groupExpression><![CDATA[$F{student_id}]]></groupExpression>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="154" splitType="Stretch">
+			<image>
+				<reportElement x="0" y="0" width="555" height="110" uuid="a6e84d7b-61c3-4716-aaba-b2305a433e64"/>
+				<imageExpression><![CDATA[$P{ABSOLUTE_PATH}+"SKOLERA_HEADER.png"]]></imageExpression>
+			</image>
+			<textField isBlankWhenNull="true">
+				<reportElement x="293" y="39" width="260" height="39" uuid="f491ecbc-7115-45db-a046-1e982f3b046b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{school_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="110" width="555" height="44" uuid="edeb3aa5-a14c-48b7-a5de-849584e290ca"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="16" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Absent Students' Report \n on "+ $P{Start_Date}.split( "\\ " )[0]]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="30" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField>
+				<reportElement x="40" y="0" width="515" height="30" uuid="1b45feb3-a15d-41e1-bb11-afb2901de912"/>
+				<box leftPadding="8">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{student_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="0" y="0" width="40" height="30" forecolor="#FFFFFF" backcolor="#3DD1C7" uuid="9f135021-903e-47b1-9504-4b8806c36e62"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{row_count}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="40" splitType="Stretch">
+			<textField evaluationTime="Report">
+				<reportElement x="320" y="10" width="50" height="30" uuid="c15cd6b3-00ec-44dc-9ad2-d68d9b14f390"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="408" y="10" width="72" height="30" uuid="7fbf7e22-570e-4aa5-81b4-2dee69d67e0a"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<text><![CDATA[Powered by]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="248" y="10" width="70" height="30" uuid="15c2d769-963e-4f40-bcd2-558c3ccf218f"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER} + " of "]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="480" y="10" width="72" height="30" forecolor="#60DC88" uuid="12bcfa44-31ff-448f-b772-5ca6d06c5cdd"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ Skolera]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="10" width="250" height="30" uuid="b7b2febd-b732-4c9d-8952-f4e3b6ab1d57"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Generated at: "+DATEFORMAT(NOW( ) ,"dd-MM-YYYY")]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

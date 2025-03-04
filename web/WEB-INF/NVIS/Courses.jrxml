@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.10.0.final using JasperReports Library version 6.10.0-unknown  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Courses" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="666b7ee1-0c92-42a1-bfef-c7d79fa37516">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="NVIS"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<style name="Style1" pattern="">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$F{ln}.equals("en")]]></conditionExpression>
+			<style hTextAlign="Left"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$F{ln}.equals("ar")]]></conditionExpression>
+			<style hTextAlign="Right"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="Student_ID" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[-- Courses Sub Report -- 
+select a.*
+
+from (select s.*,
+(select
+GROUP_CONCAT(REPLACE(dc.title, '[Name]', users.name) ORDER BY dc.order SEPARATOR '\n') AS course_comments
+
+from domains
+inner join domain_competencies dc on dc.domain_id = domains.id and dc.deleted_at is null
+inner join progress_reports pr on pr.id = domains.progress_report_id and pr.deleted_at is null
+inner join student_progress_reports spr on spr.progress_report_id = pr.id and spr.deleted_at is null
+inner join student_progress_report_competencies sprc on sprc.progress_report_domain_competency_id = dc.id and sprc.student_progress_report_id = spr.id and sprc.deleted_at is null and sprc.progress_report_evaluation_criteria_id = 23
+inner join students on students.id = spr.student_id and students.deleted_at is null
+inner join users on users.actable_id = students.id and users.actable_type = "student" and users.deleted_at is null
+where domains.title like "%Comments%" and domains.deleted_at is null
+and domains.course_id = s.course_id and students.id = s.student_id
+group by domains.course_id) as course_comments,
+CASE
+           WHEN s.domain_title like ("arabic%") THEN 'ar'  -- Arabic
+           ELSE 'en'  -- English
+       END AS ln
+from (select
+levels.id as level_id, levels.name as level_name, levels.level_code as level_code,
+RIGHT(students.batch_name, 1) as course_group_name,
+students.id as student_id, users.name as user_name,
+spr.comment as general_comment,
+courses.id as course_id,
+IF(courses.report_display_name is null, courses.name, courses.report_display_name) AS course_name,
+courses.code as course_code, courses.order as course_order,
+domains.id as domain_id, domains.title as domain_title, domains.order as domain_order,
+dc.id as competency, dc.title AS competency_title, dc.order as competency_order,
+IF(ec.name is null, "N/A",ec.name) criteria_name,
+IF(ec.code is null, "N/A",ec.code) criteria_code,
+users.gender as student_gender
+
+from students
+inner join users on users.actable_id = students.id and users.actable_type = "student" and users.deleted_at is null
+inner join levels on levels.id = students.level_id and levels.deleted_at is null
+inner join student_progress_reports spr on spr.student_id = students.id and spr.deleted_at is null
+inner join progress_reports pr on pr.id = spr.progress_report_id and pr.deleted_at is null
+inner join domains on domains.progress_report_id = pr.id and domains.deleted_at is null
+inner join courses on courses.id = domains.course_id and courses.deleted_at is null
+inner join domain_competencies dc on dc.domain_id = domains.id and dc.deleted_at is null
+
+inner join courses_students cs on students.id = cs.student_id and cs.course_id = courses.id and cs.deleted_at is null
+
+-- if you want all competencies even the comp that not given critria make the next 2 joins left --
+left join student_progress_report_competencies sprc on sprc.student_progress_report_id = spr.id and sprc.progress_report_domain_competency_id = dc.id and sprc.deleted_at is null
+left join evaluation_criteria ec on ec.id = sprc.progress_report_evaluation_criteria_id and ec.deleted_at is null
+
+where students.deleted_at is null
+
+-- this condition is for selecting the courses domains and select the specific domains as per their order -- 
+and (
+    (levels.id IN (24, 25, 26) AND domains.order > 3 AND domains.order < 12) OR
+    (levels.id IN (27, 28, 29) AND domains.order > 3 AND domains.order < 15) OR
+    (levels.id IN (30, 31) AND domains.order > 3 AND domains.order < 16)
+)
+and students.id =  $P{Student_ID}
+order by levels.name, batch_name, users.name, domains.order)s)a]]>
+	</queryString>
+	<field name="level_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="level_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="levels"/>
+	</field>
+	<field name="level_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="level_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="levels"/>
+	</field>
+	<field name="level_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="level_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="levels"/>
+	</field>
+	<field name="course_group_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="course_group_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="*"/>
+	</field>
+	<field name="student_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="student_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="students"/>
+	</field>
+	<field name="user_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="user_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="users"/>
+	</field>
+	<field name="general_comment" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="general_comment"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="student_progress_reports"/>
+	</field>
+	<field name="course_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="course_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="courses"/>
+	</field>
+	<field name="course_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="course_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="courses"/>
+	</field>
+	<field name="course_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="course_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="courses"/>
+	</field>
+	<field name="course_order" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="course_order"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="courses"/>
+	</field>
+	<field name="domain_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="domain_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="domains"/>
+	</field>
+	<field name="domain_title" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="domain_title"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="domains"/>
+	</field>
+	<field name="domain_order" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="domain_order"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="domains"/>
+	</field>
+	<field name="competency" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="competency"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="domain_competencies"/>
+	</field>
+	<field name="competency_title" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="competency_title"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="domain_competencies"/>
+	</field>
+	<field name="competency_order" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="competency_order"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="domain_competencies"/>
+	</field>
+	<field name="criteria_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="criteria_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="*"/>
+	</field>
+	<field name="criteria_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="criteria_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="*"/>
+	</field>
+	<field name="student_gender" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="student_gender"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="users"/>
+	</field>
+	<field name="course_comments" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="course_comments"/>
+	</field>
+	<field name="ln" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="ln"/>
+	</field>
+	<group name="Student">
+		<groupExpression><![CDATA[$F{student_id}]]></groupExpression>
+		<groupHeader>
+			<band height="65">
+				<staticText>
+					<reportElement x="5" y="25" width="170" height="30" forecolor="#0B5394" uuid="f28786fb-99ba-4ba9-acea-a2a051d83d3d"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial" size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Subjects]]></text>
+				</staticText>
+				<line>
+					<reportElement x="0" y="64" width="555" height="1" uuid="8d0314f8-842c-470a-9dd1-afb025d0a610"/>
+					<graphicElement>
+						<pen lineWidth="1.0" lineColor="#696969"/>
+					</graphicElement>
+				</line>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="Course" isReprintHeaderOnEachPage="true" keepTogether="true">
+		<groupExpression><![CDATA[$F{course_id}]]></groupExpression>
+		<groupHeader>
+			<band height="44">
+				<printWhenExpression><![CDATA[$F{ln}.equals("ar")]]></printWhenExpression>
+				<line>
+					<reportElement x="0" y="43" width="555" height="1" forecolor="#696969" uuid="790c3440-7874-4989-88d6-6c389688dfe8"/>
+					<graphicElement>
+						<pen lineWidth="1.0"/>
+					</graphicElement>
+				</line>
+				<textField>
+					<reportElement x="335" y="10" width="220" height="30" forecolor="#0B5394" uuid="41fcc5ce-30ab-45f3-ad13-28243470c217">
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<printWhenExpression><![CDATA[$F{ln}.equals("ar")]]></printWhenExpression>
+					</reportElement>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Arial" size="10" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{course_name}.split("\\(")[0]]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="0" y="10" width="335" height="30" forecolor="#0B5394" uuid="06115e9c-24f2-4008-b0e7-feec30fcf249">
+						<printWhenExpression><![CDATA[$F{ln}.equals("ar")]]></printWhenExpression>
+					</reportElement>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[New Vision International School Criteria]]></text>
+				</staticText>
+			</band>
+			<band height="45">
+				<printWhenExpression><![CDATA[$F{ln}.equals("en")]]></printWhenExpression>
+				<staticText>
+					<reportElement x="220" y="10" width="335" height="30" forecolor="#0B5394" uuid="16ee0cd7-2a1e-4dce-88e8-27413c712dcb">
+						<printWhenExpression><![CDATA[$F{ln}.equals("en")]]></printWhenExpression>
+					</reportElement>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[New Vision International School Criteria]]></text>
+				</staticText>
+				<line>
+					<reportElement x="0" y="44" width="555" height="1" forecolor="#696969" uuid="f36ae28e-fae0-43d9-bd9c-7143ef7957c2"/>
+					<graphicElement>
+						<pen lineWidth="1.0"/>
+					</graphicElement>
+				</line>
+				<textField>
+					<reportElement x="0" y="10" width="220" height="30" forecolor="#0B5394" uuid="3f012380-9c98-4fa8-b187-9e26e76cab21">
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<printWhenExpression><![CDATA[$F{ln}.equals("en")]]></printWhenExpression>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial" size="10" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{course_name}.split("\\(")[0]]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="71">
+				<printWhenExpression><![CDATA[$F{course_comments} != null]]></printWhenExpression>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="Style1" x="0" y="51" width="555" height="20" uuid="aabef05c-84bd-40ab-a431-b6cf16764160"/>
+					<box bottomPadding="10">
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial" size="10"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($F{student_gender}.compareTo("male") == 0 , 
+	$F{course_comments}.replace("[He/She]", " He ").replace("[Himself/Herself]", " Himself ").replace("[his/her]", " His"),
+	$F{course_comments}.replace("[He/She]", " She ").replace("[Himself/Herself]", " Herself ").replace("[his/her]", " Her ")
+)]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="0" y="20" width="100" height="30" forecolor="#0B5394" uuid="3c9b1dd9-3ef1-4536-8cff-d81dc861f390"/>
+					<textElement>
+						<font fontName="Arial" size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Comments:]]></text>
+				</staticText>
+			</band>
+			<band height="1">
+				<line>
+					<reportElement x="0" y="0" width="555" height="1" uuid="2e37ca8a-5a71-43f5-bb6f-526b3a81b487"/>
+					<graphicElement>
+						<pen lineWidth="2.0"/>
+					</graphicElement>
+				</line>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="30" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<printWhenExpression><![CDATA[$F{ln}.equals("en")]]></printWhenExpression>
+			<textField>
+				<reportElement x="0" y="0" width="220" height="30" uuid="e7d8b3f3-7079-4a5a-bb3a-7f2bd968b712"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{competency_title}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="220" y="0" width="335" height="30" uuid="317c0634-a1da-4227-ab57-372251c6036a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{criteria_code}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="30">
+			<printWhenExpression><![CDATA[$F{ln}.equals("ar")]]></printWhenExpression>
+			<textField>
+				<reportElement positionType="Float" x="0" y="0" width="335" height="30" uuid="c744e762-3467-49ef-9d4b-766183de6e51"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{criteria_code}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="335" y="0" width="219" height="30" uuid="434d85b5-7b77-4f4d-b947-47ef3a6065d3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{competency_title}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.10.0.final using JasperReports Library version 6.10.0-unknown  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="mgp" pageWidth="1040" pageHeight="842" columnWidth="1000" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="9f5b8e91-3616-4eea-a55a-7484ad7c2771">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="SGIS"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="STUDENT_ID" class="java.lang.String">
+		<defaultValueExpression><![CDATA["-1"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select *, sum(studentMGP) as studentMGP2 from (select 
+(select school_description from schools limit 1) as school_name,
+academic_year_name AS YEAR,
+section_name AS Section,
+level_name AS Level,
+student_username AS Username,
+student_name AS Student,
+course_name AS Subject,
+main_grading_period_name AS MGPeriod,
+main_grading_period_weight AS MGPWeight,
+student_grade_in_main_grading_period AS StudentMGP,
+sub_grading_period_name AS SGPeriod,
+sub_grading_period_weight AS SGPWeight,
+student_grade_in_sub_grading_period AS StudentSGP,
+main_category_name AS MCategory,
+main_category_weight AS MCWeight,
+student_grade_in_category AS StudentMC,
+sub_category_name AS SCategory,
+sub_category_weight AS SCWeight,
+student_grade_in_sub_category AS StudentSC,
+updated_at AS LAstUpdated
+from grades_summaries gs 
+where gs.student_id =  $P{STUDENT_ID} 
+group by main_grading_period_id, course_id)s
+group by Subject]]>
+	</queryString>
+	<field name="school_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="school_name"/>
+	</field>
+	<field name="YEAR" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="YEAR"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="grades_summaries"/>
+	</field>
+	<field name="Section" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="Section"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="grades_summaries"/>
+	</field>
+	<field name="Level" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="Level"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="grades_summaries"/>
+	</field>
+	<field name="Username" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="Username"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="grades_summaries"/>
+	</field>
+	<field name="Student" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="Student"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="grades_summaries"/>
+	</field>
+	<field name="Subject" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="Subject"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="grades_summaries"/>
+	</field>
+	<field name="MGPeriod" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="MGPeriod"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="grades_summaries"/>
+	</field>
+	<field name="MGPWeight" class="java.lang.Float">
+		<property name="com.jaspersoft.studio.field.label" value="MGPWeight"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="grades_summaries"/>
+	</field>
+	<field name="StudentMGP" class="java.lang.Float">
+		<property name="com.jaspersoft.studio.field.label" value="StudentMGP"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="grades_summaries"/>
+	</field>
+	<field name="SGPeriod" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="SGPeriod"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="grades_summaries"/>
+	</field>
+	<field name="SGPWeight" class="java.lang.Float">
+		<property name="com.jaspersoft.studio.field.label" value="SGPWeight"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="grades_summaries"/>
+	</field>
+	<field name="StudentSGP" class="java.lang.Float">
+		<property name="com.jaspersoft.studio.field.label" value="StudentSGP"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="grades_summaries"/>
+	</field>
+	<field name="MCategory" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="MCategory"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="grades_summaries"/>
+	</field>
+	<field name="MCWeight" class="java.lang.Float">
+		<property name="com.jaspersoft.studio.field.label" value="MCWeight"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="grades_summaries"/>
+	</field>
+	<field name="StudentMC" class="java.lang.Float">
+		<property name="com.jaspersoft.studio.field.label" value="StudentMC"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="grades_summaries"/>
+	</field>
+	<field name="SCategory" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="SCategory"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="grades_summaries"/>
+	</field>
+	<field name="SCWeight" class="java.lang.Float">
+		<property name="com.jaspersoft.studio.field.label" value="SCWeight"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="grades_summaries"/>
+	</field>
+	<field name="StudentSC" class="java.lang.Float">
+		<property name="com.jaspersoft.studio.field.label" value="StudentSC"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="grades_summaries"/>
+	</field>
+	<field name="LAstUpdated" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="LAstUpdated"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="grades_summaries"/>
+	</field>
+	<field name="studentMGP2" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="studentMGP2"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="327" splitType="Stretch">
+			<stackedBarChart>
+				<chart evaluationTime="Report" renderType="image">
+					<reportElement x="0" y="0" width="1000" height="327" uuid="d9f0e37b-712c-43b3-b8ea-dee360cc39c1"/>
+					<chartTitle/>
+					<chartSubtitle/>
+					<chartLegend/>
+				</chart>
+				<categoryDataset>
+					<categorySeries>
+						<seriesExpression><![CDATA[$F{Subject}.split( "\\(" )[0]]]></seriesExpression>
+						<categoryExpression><![CDATA[$F{Subject}]]></categoryExpression>
+						<valueExpression><![CDATA[$F{studentMGP2}]]></valueExpression>
+					</categorySeries>
+				</categoryDataset>
+				<barPlot isShowTickLabels="false">
+					<plot>
+						<seriesColor seriesOrder="0" color="#46B3E6"/>
+						<seriesColor seriesOrder="1" color="#7CBD1E"/>
+						<seriesColor seriesOrder="2" color="#F88F01"/>
+						<seriesColor seriesOrder="3" color="#F7E965"/>
+						<seriesColor seriesOrder="4" color="#E665B9"/>
+						<seriesColor seriesOrder="5" color="#C99747"/>
+						<seriesColor seriesOrder="6" color="#682BAC"/>
+						<seriesColor seriesOrder="7" color="#C46869"/>
+						<seriesColor seriesOrder="8" color="#2BAB82"/>
+					</plot>
+					<itemLabel/>
+					<categoryAxisFormat>
+						<axisFormat labelColor="#000000" tickLabelColor="#000000" axisLineColor="#000000">
+							<labelFont>
+								<font size="10"/>
+							</labelFont>
+							<tickLabelFont>
+								<font size="10"/>
+							</tickLabelFont>
+						</axisFormat>
+					</categoryAxisFormat>
+					<valueAxisFormat>
+						<axisFormat labelColor="#000000" tickLabelColor="#000000" axisLineColor="#000000"/>
+					</valueAxisFormat>
+				</barPlot>
+			</stackedBarChart>
+		</band>
+	</summary>
+</jasperReport>

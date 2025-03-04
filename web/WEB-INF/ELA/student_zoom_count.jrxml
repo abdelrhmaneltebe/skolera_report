@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.10.0.final using JasperReports Library version 6.10.0-unknown  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="student_zoom_count" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="0de5e14e-d7aa-45bf-9f2a-85d90c72a41a">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="ELA"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<queryString>
+		<![CDATA[select 
+courses.name as course_name,
+cg.name as class_name,
+zm.topic as meeting_topic,
+start_time,
+users.name as creator_name,
+meeting_id
+from course_group_zoom_meetings cgzm 
+inner join course_groups cg on cg.deleted_at is null and cg.id = cgzm.course_group_id
+inner join courses on courses.deleted_at is null and cg.course_id = courses.id
+inner join zoom_meetings zm on zm.deleted_at is null and zm.id = cgzm.zoom_meeting_id
+inner join users on users.deleted_at is null and users.id = creator_id
+where cgzm.deleted_at is null]]>
+	</queryString>
+	<field name="course_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="course_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="courses"/>
+	</field>
+	<field name="class_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="class_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="course_groups"/>
+	</field>
+	<field name="meeting_topic" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="meeting_topic"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="zoom_meetings"/>
+	</field>
+	<field name="start_time" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="start_time"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="zoom_meetings"/>
+	</field>
+	<field name="creator_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="creator_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="users"/>
+	</field>
+	<field name="meeting_id" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="meeting_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="zoom_meetings"/>
+	</field>
+	<sortField name="course_name"/>
+	<variable name="meeting_id1" class="java.lang.Integer" resetType="Group" resetGroup="course" calculation="DistinctCount">
+		<variableExpression><![CDATA[$F{meeting_id}]]></variableExpression>
+	</variable>
+	<group name="course" isStartNewPage="true" isReprintHeaderOnEachPage="true">
+		<groupExpression><![CDATA[$F{course_name}]]></groupExpression>
+		<groupHeader>
+			<band height="30">
+				<textField>
+					<reportElement x="0" y="0" width="555" height="30" uuid="c89d8c6e-1284-4d23-ba02-850127c6a1cf"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$F{course_name}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="134">
+				<textField>
+					<reportElement x="0" y="0" width="555" height="30" uuid="bbb9b958-7f62-47b6-865e-f06ac89923bf"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{meeting_id1}]]></textFieldExpression>
+				</textField>
+				<componentElement>
+					<reportElement x="0" y="59" width="555" height="30" uuid="4facce65-5680-4806-bcd7-cec7f0e50b4b"/>
+					<hc:html xmlns:hc="http://jasperreports.sourceforge.net/htmlcomponent" xsi:schemaLocation="http://jasperreports.sourceforge.net/htmlcomponent http://jasperreports.sourceforge.net/xsd/htmlcomponent.xsd" scaleType="RetainShape" horizontalAlign="Left" verticalAlign="Middle">
+						<hc:htmlContentExpression><![CDATA["<a href='https://www.google.com'>google</a>"]]></hc:htmlContentExpression>
+					</hc:html>
+				</componentElement>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

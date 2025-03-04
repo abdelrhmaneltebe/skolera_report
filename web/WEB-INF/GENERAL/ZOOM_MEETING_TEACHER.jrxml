@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.10.0.final using JasperReports Library version 6.10.0-unknown  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="zoom_meeting_teacher" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="e2c6db92-7111-4fb3-8547-79705b72ded0">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="SGIS"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="274"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="721"/>
+	<parameter name="teacher_name" class="java.lang.String">
+		<defaultValueExpression><![CDATA["-1"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ABSOLUTE_PATH" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="USER_ID" class="java.lang.String">
+		<defaultValueExpression><![CDATA["-1"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="Start_Date" class="java.lang.String">
+		<defaultValueExpression><![CDATA[new String(DATEFORMAT(NOW( ),"YYYY-MM-01 00:00:00" ))]]></defaultValueExpression>
+	</parameter>
+	<parameter name="End_Date" class="java.lang.String">
+		<defaultValueExpression><![CDATA[new String(DATEFORMAT(NOW( ),"YYYY-MM-dd hh:mm:SS" ))]]></defaultValueExpression>
+	</parameter>
+	<queryString language="SQL">
+		<![CDATA[select  *, GROUP_CONCAT(b.class_name) as class_name2, (select school_description from schools limit 1) as school_name  
+from (select count(distinct a.student_name) as student_num, 
+a.course_name, 
+a.class_name , 
+a.meeting_id, 
+a.teacher_name, 
+a.start_time, 
+a.course_group_id,
+a.deleted_on
+from (
+SELECT zmp.participant_id,
+zoom_meetings.meeting_id, 
+cgzm.course_group_id, 
+cg.name as class_name, 
+courses.name as course_name, 
+u1.name as student_name, 
+u1.user_type, 
+zmp.joined_date, 
+u2.name as teacher_name, 
+zoom_meetings.start_time,
+zoom_meetings.deleted_at as deleted_on
+FROM zoom_meeting_participants zmp
+inner join course_group_zoom_meetings cgzm on zmp.zoom_meeting_id = cgzm.zoom_meeting_id 
+inner join course_groups cg on cg.id = cgzm.course_group_id and cg.deleted_at is null
+inner join courses on cg.course_id = courses.id
+inner join users u1 on u1.id = zmp.participant_id and u1.deleted_at is null and u1.user_type = "student"
+inner join course_groups_teachers cgt on cg.id = cgt.course_group_id and cgt.deleted_at is null
+inner join users u2 on u2.actable_id = cgt.teacher_id and u2.user_type = 'teacher' and u2.deleted_at is null 
+and (u2.name in ($P!{teacher_name}) OR $P{teacher_name}  = "-1")
+and (u2.id in ($P!{USER_ID}) OR $P{USER_ID}  = "-1")
+inner join zoom_meetings on zmp.zoom_meeting_id = zoom_meetings.id 
+AND zoom_meetings.start_time BETWEEN  $P{Start_Date} AND concat($P{End_Date}, " 12:59:59"))a 
+group by a.course_name, a.class_name , a.meeting_id, a.teacher_name, a.start_time)b
+group by b.course_name, b.meeting_id, b.teacher_name, b.start_time, b.student_num]]>
+	</queryString>
+	<field name="student_num" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.label" value="student_num"/>
+		<property name="com.jaspersoft.studio.field.name" value="student_num"/>
+	</field>
+	<field name="course_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="course_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="courses"/>
+		<property name="com.jaspersoft.studio.field.name" value="course_name"/>
+	</field>
+	<field name="class_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="class_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="course_groups"/>
+		<property name="com.jaspersoft.studio.field.name" value="class_name"/>
+	</field>
+	<field name="meeting_id" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="meeting_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="zoom_meetings"/>
+		<property name="com.jaspersoft.studio.field.name" value="meeting_id"/>
+	</field>
+	<field name="teacher_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="teacher_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="users"/>
+		<property name="com.jaspersoft.studio.field.name" value="teacher_name"/>
+	</field>
+	<field name="start_time" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="start_time"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="zoom_meetings"/>
+		<property name="com.jaspersoft.studio.field.name" value="start_time"/>
+	</field>
+	<field name="course_group_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="course_group_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="course_group_zoom_meetings"/>
+		<property name="com.jaspersoft.studio.field.name" value="course_group_id"/>
+	</field>
+	<field name="deleted_on" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="deleted_on"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="zoom_meetings"/>
+	</field>
+	<field name="class_name2" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="class_name2"/>
+		<property name="com.jaspersoft.studio.field.name" value="class_name2"/>
+	</field>
+	<field name="school_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="school_name"/>
+		<property name="com.jaspersoft.studio.field.name" value="school_name"/>
+	</field>
+	<sortField name="teacher_name"/>
+	<sortField name="course_name"/>
+	<sortField name="start_time" order="Descending"/>
+	<group name="teacher_Group" isStartNewPage="true">
+		<groupExpression><![CDATA[$F{teacher_name}]]></groupExpression>
+		<groupHeader>
+			<band height="42">
+				<textField>
+					<reportElement x="0" y="0" width="555" height="30" uuid="256363c5-4442-42ac-9f95-e8963120c972"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="12" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{teacher_name}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band/>
+		</groupFooter>
+	</group>
+	<group name="course_Group" isReprintHeaderOnEachPage="true">
+		<groupExpression><![CDATA[$F{course_name}]]></groupExpression>
+		<groupHeader>
+			<band height="60">
+				<textField>
+					<reportElement mode="Opaque" x="-3" y="0" width="555" height="30" backcolor="#669966" uuid="62c171b7-6c9d-43a0-9d8d-ad8285819463"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font size="12" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{course_name}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="27" y="30" width="100" height="30" uuid="c2a6619b-4dcd-4402-9030-d5ec9d600784">
+						<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="994dd815-dd1f-4fac-a026-82b2efaf050a"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<text><![CDATA[Meeting ID]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="127" y="30" width="100" height="30" uuid="8e92c03d-8514-4dc8-b46f-fe131e03b793">
+						<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="5b689e44-fe0c-49df-bbff-8b9ca4be6b80"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<text><![CDATA[Classes]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="327" y="30" width="100" height="30" uuid="0052de1c-b96c-4159-b012-1d0cbc796a35">
+						<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="27cfa023-d341-4ae8-9082-0ff7b4eacdb6"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<text><![CDATA[Deleted On]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="227" y="30" width="100" height="30" uuid="fb8b16a5-b26d-47b5-a9cd-e9cf726e25fb">
+						<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="2e6c9463-47d1-40fb-bece-7d78d732a64a"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<text><![CDATA[Start Time]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="427" y="30" width="100" height="30" uuid="db4525a3-669f-46b8-be26-cae9988611aa">
+						<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="27cfa023-d341-4ae8-9082-0ff7b4eacdb6"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<text><![CDATA[Participants]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band/>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="109" splitType="Stretch">
+			<image>
+				<reportElement x="0" y="0" width="555" height="109" uuid="897f0cee-6f20-46d3-8f3b-2bb5628df6d5"/>
+				<imageExpression><![CDATA[$P{ABSOLUTE_PATH}+"//SKOLERA_HEADER.jpeg"]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="320" y="10" width="235" height="30" uuid="bfeda4a2-e62a-48af-9d4e-0666a258d201"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="16" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{school_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="327" y="50" width="225" height="30" uuid="0c9688d4-ba24-44fc-b710-3457a9b60eb0"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Teacher Zoom Meetings"]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="30" splitType="Stretch">
+			<frame>
+				<reportElement x="27" y="0" width="500" height="30" uuid="825db3b0-2fff-4c4b-a8fd-39bbb6dc51d9">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textField>
+					<reportElement x="0" y="0" width="100" height="30" uuid="17b555cb-998f-4d96-859d-883a0a7cfd01">
+						<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="994dd815-dd1f-4fac-a026-82b2efaf050a"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{meeting_id}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="100" y="0" width="100" height="30" uuid="f29f4020-3153-48ea-9cf7-71e2cfd0a168">
+						<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="5b689e44-fe0c-49df-bbff-8b9ca4be6b80"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{class_name2}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="200" y="0" width="100" height="30" uuid="2cd5d406-81f8-42e0-bc8c-5703c006f80e">
+						<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="2e6c9463-47d1-40fb-bece-7d78d732a64a"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{start_time}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="300" y="0" width="100" height="30" uuid="840b0d6c-5c7c-4dde-9a71-fea6d957bafb">
+						<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="27cfa023-d341-4ae8-9082-0ff7b4eacdb6"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{deleted_on}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="400" y="0" width="100" height="30" uuid="a79e08f0-2171-4e2b-8267-f17b5a511355">
+						<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="27cfa023-d341-4ae8-9082-0ff7b4eacdb6"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{student_num}]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="67" splitType="Stretch">
+			<frame>
+				<reportElement x="0" y="30" width="555" height="30" uuid="ce59e881-90ec-44ea-964b-436d1e6a183e"/>
+				<textField>
+					<reportElement x="0" y="0" width="100" height="30" uuid="5b3a53b3-8f6c-4bb6-bc93-3e6d0a989532"/>
+					<textElement verticalAlignment="Middle">
+						<font size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[NOW( )]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="480" y="0" width="72" height="30" forecolor="#60DC88" uuid="d8ff2fe9-a3a0-48be-9c10-43f1528c1a31"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[ Skolera]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="408" y="0" width="72" height="30" uuid="ce7af008-d868-4184-8aac-fd6907820408"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="12"/>
+					</textElement>
+					<text><![CDATA[Powered by]]></text>
+				</staticText>
+				<textField evaluationTime="Report">
+					<reportElement x="293" y="0" width="50" height="30" uuid="0ac00d40-b1c5-4314-bd47-eb7a41cb4ea6"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="221" y="0" width="70" height="30" uuid="fc137dd3-92e1-4c34-89ea-1dbb30ff3172"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER} + " of "]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

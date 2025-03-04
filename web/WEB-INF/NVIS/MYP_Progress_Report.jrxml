@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.10.0.final using JasperReports Library version 6.10.0-unknown  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="MYP_Progress_Report" pageWidth="595" pageHeight="920" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="63b01690-ad11-49b2-8645-fe56a0c6170c">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="NVIS"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="0"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="1000"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="ABSOLUTE_PATH" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="LEVEL_CODE" class="java.lang.String">
+		<defaultValueExpression><![CDATA["-1"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="USER_ID" class="java.lang.String">
+		<defaultValueExpression><![CDATA["-1"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select 
+levels.id as level_id, levels.name as level_name,
+RIGHT(students.batch_name, 1) as course_group_name,
+students.id as student_id, users.name as student_name, spr.comment,
+(select count(id) from attendances where students.id = attendances.student_id and attendances.deleted_at is null and attendances.status in (1,3)) as absence_days
+from students
+inner join users on users.actable_id = students.id and users.actable_type = "student" and users.deleted_at is null and (users.id in ($P!{USER_ID}) OR  $P{USER_ID}   = "-1")
+inner join levels on levels.id = students.level_id and levels.deleted_at is null and levels.id > 31 and levels.id < 37 and (levels.level_code in ($P!{LEVEL_CODE}) OR $P{LEVEL_CODE}  = "-1")
+inner join student_progress_reports spr on spr.student_id = students.id and spr.deleted_at is null
+where students.deleted_at is null
+order by levels.id, students.batch_name, users.name]]>
+	</queryString>
+	<field name="level_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="level_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="levels"/>
+	</field>
+	<field name="level_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="level_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="levels"/>
+	</field>
+	<field name="course_group_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="course_group_name"/>
+	</field>
+	<field name="student_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="student_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="students"/>
+	</field>
+	<field name="student_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="student_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="users"/>
+	</field>
+	<field name="comment" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="comment"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="student_progress_reports"/>
+	</field>
+	<field name="absence_days" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.label" value="absence_days"/>
+	</field>
+	<group name="Student" isStartNewPage="true" isResetPageNumber="true">
+		<groupExpression><![CDATA[$F{student_id}]]></groupExpression>
+		<groupHeader>
+			<band height="182">
+				<textField>
+					<reportElement x="90" y="106" width="370" height="30" uuid="42a1aceb-c5ce-4074-9ae7-213f10232612"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Arial" size="10"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{student_name}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="90" y="146" width="380" height="30" uuid="616b4e20-54d6-4a11-bc9f-98e37342027a"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Arial" size="10"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{level_name} + " - " + $F{course_group_name}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="0" y="106" width="90" height="30" forecolor="#0B5394" uuid="60ae9100-9825-4124-b247-d487bf7f188c"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Arial" size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Student Name: ]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="146" width="90" height="30" forecolor="#0B5394" uuid="c542b402-47c9-4b10-8d06-20787635e4a0"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Arial" size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Grade: ]]></text>
+				</staticText>
+				<line>
+					<reportElement x="0" y="141" width="555" height="1" forecolor="#696969" uuid="1a49ecaa-55f9-41c5-9c6f-9e1a550b5594"/>
+				</line>
+				<line>
+					<reportElement x="0" y="181" width="555" height="1" forecolor="#000000" uuid="10cd7dd9-302d-4526-8583-d809d56319e3"/>
+				</line>
+				<line>
+					<reportElement x="0" y="100" width="555" height="1" forecolor="#000000" uuid="845f4bbf-78bc-4791-8927-ff082f6d1e30"/>
+				</line>
+				<image>
+					<reportElement x="0" y="0" width="240" height="80" uuid="8a68a0d5-69bb-4af4-a20b-d70c8132ffe8">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<imageExpression><![CDATA[$P{ABSOLUTE_PATH} + "//New Vision Logo.png"]]></imageExpression>
+				</image>
+				<staticText>
+					<reportElement x="260" y="0" width="295" height="80" forecolor="#0B5394" uuid="0d4cad0b-82d4-46a9-a849-b8a58fe72987"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Arial" size="15" isBold="true"/>
+					</textElement>
+					<text><![CDATA[New Vision International School
+MYP Report
+Trimester-1 2024.2025]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="320" y="146" width="100" height="30" forecolor="#0B5394" uuid="7ca2b767-502c-4fc9-9365-5df92f9581c0"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Arial" size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Absence: ]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="420" y="146" width="100" height="30" uuid="1aed9bd2-41c2-443b-b27b-1828ab136b68"/>
+					<box leftPadding="5"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Arial" size="10"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{absence_days}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="468">
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<staticText>
+					<reportElement x="0" y="10" width="555" height="373" uuid="fc787eb9-7091-4c1d-ba2c-64f590bc243d"/>
+					<textElement>
+						<font fontName="Arial" size="12"/>
+					</textElement>
+					<text><![CDATA[Dear Parents,
+
+An education at New Vision International School is about actively combining challenging and enriching experiences with academic rigor and creative opportunities. We want our students to have the courage to push back the boundaries of their experience and to explore the possibilities that are available to them. Whilst we are proud of their academic results, there is so much more to the education we provide. It is, therefore, important that parents wholeheartedly support the ethos of the school. 
+
+Whether it is in the classroom, on the stage, whilst participating in an expedition, on the sports field, or when serving others, we want our students to experience the excitement of discovering they are capable of achieving far more than they ever felt was possible. We have high expectations of our students, and they, in turn, have high expectations of themselves. 
+
+On this note, I would like to present the report card for this trimester. Let’s work together to create an environment for true development. 
+
+Kindest Regards, 
+]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="398" width="280" height="70" uuid="deb0f57f-aa6c-48ad-90ed-0f06804e9820"/>
+					<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
+					<textElement textAlignment="Center" verticalAlignment="Top">
+						<font fontName="Arial" size="10"/>
+					</textElement>
+					<text><![CDATA[Mrs. Yasmin Hamoda
+School Principal
+]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="280" y="397" width="275" height="70" uuid="e895e205-ed4c-40d2-b39a-4b9b2257a0d0"/>
+					<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
+					<textElement textAlignment="Center" verticalAlignment="Top">
+						<font fontName="Arial" size="10"/>
+					</textElement>
+					<text><![CDATA[Mrs. Maysaa Wahby
+MYP Coordinator]]></text>
+				</staticText>
+			</band>
+			<band height="20">
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<subreport>
+					<reportElement x="0" y="0" width="555" height="20" uuid="5c9b330e-38cc-407f-88c1-4819b2fd7d3e">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<subreportParameter name="ABSOLUTE_PATH">
+						<subreportParameterExpression><![CDATA[$P{ABSOLUTE_PATH}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA[$P{ABSOLUTE_PATH} + "//MYP Learner Profile.jasper"]]></subreportExpression>
+				</subreport>
+			</band>
+			<band height="20">
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<subreport>
+					<reportElement x="0" y="0" width="555" height="20" uuid="a45543d3-d69d-4677-b1ac-2c006e80c5fd">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<subreportParameter name="Student_ID">
+						<subreportParameterExpression><![CDATA[$F{student_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="ABSOLUTE_PATH">
+						<subreportParameterExpression><![CDATA[$P{ABSOLUTE_PATH}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA[$P{ABSOLUTE_PATH} + "//CoursesMYP.jasper"]]></subreportExpression>
+				</subreport>
+			</band>
+			<band height="21">
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<subreport>
+					<reportElement x="0" y="1" width="555" height="20" uuid="b36f6659-3536-4987-ba5e-3769e27c4e8e">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<subreportParameter name="Student_ID">
+						<subreportParameterExpression><![CDATA[$F{student_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA[$P{ABSOLUTE_PATH} + "//Interdisciplinary.jasper"]]></subreportExpression>
+				</subreport>
+			</band>
+			<band height="21">
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<printWhenExpression><![CDATA[$F{level_id} == 36]]></printWhenExpression>
+				<subreport>
+					<reportElement x="0" y="0" width="555" height="20" uuid="988d97d0-b8bf-4ad7-ac1e-e2d668e111a1">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<subreportParameter name="Student_ID">
+						<subreportParameterExpression><![CDATA[$F{student_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA[$P{ABSOLUTE_PATH} + "//Personal.jasper"]]></subreportExpression>
+				</subreport>
+				<break>
+					<reportElement x="0" y="20" width="100" height="1" uuid="4ccfba4d-7220-4ab6-b7de-5339d8e8cdac"/>
+				</break>
+			</band>
+			<band height="21">
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<subreport>
+					<reportElement x="0" y="0" width="555" height="20" uuid="8023d8c7-a62f-4825-a845-042f1f9fd21d">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<subreportParameter name="Student_ID">
+						<subreportParameterExpression><![CDATA[$F{student_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA[$P{ABSOLUTE_PATH} + "//Services as Action.jasper"]]></subreportExpression>
+				</subreport>
+				<break>
+					<reportElement x="0" y="20" width="100" height="1" uuid="0ef18969-cb44-4704-8f02-b874ff9a18cd"/>
+				</break>
+			</band>
+			<band height="20">
+				<printWhenExpression><![CDATA[$F{comment} != null]]></printWhenExpression>
+				<subreport>
+					<reportElement x="0" y="0" width="555" height="20" uuid="8d75b419-ab09-472b-9031-8fcbe3973f63">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA[$P{ABSOLUTE_PATH} + "//MYP_GENERAL_COMMENT.jasper"]]></subreportExpression>
+				</subreport>
+			</band>
+			<band height="20">
+				<subreport>
+					<reportElement x="0" y="0" width="555" height="20" uuid="e0f065d8-cd88-4869-a7ba-ac9ea703f3af">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA[$P{ABSOLUTE_PATH} + "//Discriptors.jasper"]]></subreportExpression>
+				</subreport>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageFooter>
+		<band height="74" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<componentElement>
+				<reportElement x="411" y="5" width="143" height="50" uuid="f3675302-5918-48a5-bfbf-8f4bf889ebfb"/>
+				<jr:QRCode xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<jr:codeExpression><![CDATA[$F{student_name}+"\n"+$F{level_name}+"\n" + $F{course_group_name} +"\n"+NOW()]]></jr:codeExpression>
+				</jr:QRCode>
+			</componentElement>
+			<textField>
+				<reportElement x="0" y="5" width="411" height="20" forecolor="#696969" uuid="0b1085bf-a66f-4ca0-b19f-165f86d9199c"/>
+				<box leftPadding="5"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{student_name}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="25" width="439" height="20" forecolor="#696969" uuid="99c56097-0f6e-4ecb-ad1f-a8c039ab07ca"/>
+				<box leftPadding="5"/>
+				<textElement>
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<text><![CDATA[New Vision International School - MYP Report - Trimester-1 2024.2025]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="411" y="55" width="72" height="19" uuid="ce11b7d1-722e-464a-9164-ed8dac5031d8"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<text><![CDATA[Powered by]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="483" y="55" width="72" height="19" forecolor="#60DC88" uuid="4919bcf0-3862-4ca3-a646-38cdf9625390"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ Skolera]]></text>
+			</staticText>
+			<textField evaluationTime="Group" evaluationGroup="Student">
+				<reportElement x="281" y="55" width="50" height="19" uuid="621a30f2-f65a-4db3-846f-831a93404420"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="209" y="55" width="70" height="19" uuid="7b2ea27a-c930-4ed1-8bd7-a9886b0a0878"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER} + " of "]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

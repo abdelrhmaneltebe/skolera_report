@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.10.0.final using JasperReports Library version 6.10.0-unknown  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="gradebook_sheet" pageWidth="1240" pageHeight="800" orientation="Landscape" columnWidth="1200" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="0fa259fd-9991-437c-825a-a085fbd02cac">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="ILS"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="MGP" class="java.lang.String"/>
+	<parameter name="ABSOLUTE_PATH" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="MAIN_GRADING_PERIOD_ID" class="java.lang.String">
+		<defaultValueExpression><![CDATA["-1"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="LEVEL_CODE" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select 
+ (select school_description from schools limit 1) as school_name, 
+ level_code,
+ levels.name as level_name, 
+ courses.name as course_name, 
+ cg.id as class_id, 
+ cg.name as class_name,
+ ( select name from grading_periods where deleted_at is null and (id in ($P!{MAIN_GRADING_PERIOD_ID}) OR $P{MAIN_GRADING_PERIOD_ID}  = "-1")) as main_grading_period_name
+ from course_groups cg 
+ inner join courses on courses.deleted_at is null and courses.id = course_id and courses.hide = 0
+ inner join levels on levels.deleted_at is null and levels.id = level_id and (levels.level_code in ($P!{LEVEL_CODE}) OR $P{LEVEL_CODE}  = "-1")
+ where cg.deleted_at is null]]>
+	</queryString>
+	<field name="school_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="school_name"/>
+	</field>
+	<field name="level_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="level_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="levels"/>
+	</field>
+	<field name="level_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="level_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="levels"/>
+	</field>
+	<field name="course_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="course_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="courses"/>
+	</field>
+	<field name="class_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="class_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="course_groups"/>
+	</field>
+	<field name="class_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="class_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="course_groups"/>
+	</field>
+	<field name="main_grading_period_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="main_grading_period_name"/>
+	</field>
+	<sortField name="level_code"/>
+	<sortField name="course_name"/>
+	<sortField name="class_name"/>
+	<group name="class" isStartNewPage="true" isReprintHeaderOnEachPage="true">
+		<groupExpression><![CDATA[$F{class_id}]]></groupExpression>
+		<groupHeader>
+			<band height="180">
+				<textField>
+					<reportElement x="100" y="140" width="490" height="30" uuid="22029732-37ed-4905-8e81-adf2e10c58f0"/>
+					<box rightPadding="10"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font size="14" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Subject: "+$F{course_name}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="100" y="110" width="280" height="30" uuid="dc1abfba-9676-44d7-97fb-12a26e587a5e"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font size="14" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Class: "+$F{level_name} + "  "+$F{class_name}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="430" y="10" width="340" height="30" uuid="b1e39ce6-66a0-43b9-a420-da2f029c9397"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="14" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{school_name}]]></textFieldExpression>
+				</textField>
+				<image>
+					<reportElement x="100" y="0" width="100" height="100" uuid="0eb07b7e-d1ac-452b-906b-a1226bbd0a3f"/>
+					<imageExpression><![CDATA[$P{ABSOLUTE_PATH}+"//ILS.jpg"]]></imageExpression>
+				</image>
+				<image>
+					<reportElement x="910" y="0" width="150" height="150" uuid="e224be73-ed95-4216-baae-de24788cb977"/>
+					<imageExpression><![CDATA[$P{ABSOLUTE_PATH}+"//DEMO.jpg"]]></imageExpression>
+				</image>
+				<textField>
+					<reportElement x="430" y="100" width="340" height="30" uuid="e6ecf614-ac97-4118-92b1-623673d2c07a"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="14" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Grading Sheet For "+$F{main_grading_period_name}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="430" y="40" width="340" height="30" uuid="5a7e9fcb-5725-4e23-96df-de8cec380d5d"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="14" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["American Division"]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="430" y="70" width="340" height="30" uuid="1acff4c3-3ab4-47bd-ad97-4fd93b436d16"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="14" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Middle School Department"]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="90">
+				<subreport>
+					<reportElement x="0" y="0" width="1200" height="90" uuid="0a7855d8-47d7-453e-9b9e-6e365ea199f1"/>
+					<subreportParameter name="cg_id">
+						<subreportParameterExpression><![CDATA[$F{class_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="MGP">
+						<subreportParameterExpression><![CDATA[$P{MAIN_GRADING_PERIOD_ID}.replaceAll( "\"", "" )]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA[$P{ABSOLUTE_PATH}+"/gradebook_sub.jasper"]]></subreportExpression>
+				</subreport>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="30" splitType="Stretch">
+			<frame>
+				<reportElement x="738" y="0" width="462" height="30" uuid="77ebe774-c577-4951-b42d-94fdd662c5cc"/>
+				<textField>
+					<reportElement x="0" y="0" width="100" height="30" uuid="ad8a2407-dbaf-437a-a1ca-29c049583c51"/>
+					<textElement verticalAlignment="Middle">
+						<font size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[NOW( )]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="390" y="0" width="72" height="30" forecolor="#60DC88" uuid="0c532912-5905-4408-9ffc-9bea69596229"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[ Skolera]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="318" y="0" width="72" height="30" uuid="8cc5c8ca-dd03-452e-a5e9-264fb2d0c540"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="12"/>
+					</textElement>
+					<text><![CDATA[Powered by]]></text>
+				</staticText>
+				<textField evaluationTime="Report">
+					<reportElement x="230" y="0" width="50" height="30" uuid="e7dc898d-7761-4605-a8dc-3d1cffd4c0ae"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="158" y="0" width="70" height="30" uuid="bcd89163-e646-4a9b-af2c-5e1c27129d41"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER} + " of "]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

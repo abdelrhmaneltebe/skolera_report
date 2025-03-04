@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.10.0.final using JasperReports Library version 6.10.0-unknown  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Subject_AVG" pageWidth="1000" pageHeight="550" orientation="Landscape" columnWidth="960" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="1788efc8-8460-457f-af6b-e972da48d60a">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="MSG"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="Parameter1" class="javax.swing.JComboBox"/>
+	<parameter name="SUBJECT_NAME" class="java.lang.String">
+		<defaultValueExpression><![CDATA["-1"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ABSOLUTE_PATH" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="LEVEL_CODE" class="java.lang.String">
+		<defaultValueExpression><![CDATA["-1"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select (select school_description from schools limit 1) as school_name, 
+	(select code from schools limit 1) as school_code,
+a.level_code,
+  upper(TRIM(SUBSTRING_INDEX(a.course_name ,"(",1))) as subject,
+ (sum(a.student_grade_in_main_grading_period)/count(distinct a.student_id))/count(distinct main_grading_period_name) as AVG  from 
+(select levels.level_code,student_id, main_grading_period_name,(student_grade_in_main_grading_period*100)/main_grading_period_weight as student_grade_in_main_grading_period
+, course_name from grades_summaries
+inner join courses on courses.id = course_id  and courses.calculated_in_total = 1 and hide = 0
+inner join levels on levels.id = grades_summaries.level_id and (levels.level_code in( $P!{LEVEL_CODE} ) OR  $P{LEVEL_CODE} = "-1")
+group by student_id,main_grading_period_name,course_name)a
+where (SUBSTRING_INDEX(a.course_name ,"(",1) in ($P!{SUBJECT_NAME}) OR  $P{SUBJECT_NAME}   = "-1")
+group by a.course_name]]>
+	</queryString>
+	<field name="school_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="school_name"/>
+	</field>
+	<field name="school_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="school_code"/>
+	</field>
+	<field name="level_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="level_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="levels"/>
+	</field>
+	<field name="subject" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="subject"/>
+	</field>
+	<field name="AVG" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="AVG"/>
+	</field>
+	<sortField name="subject"/>
+	<sortField name="level_code"/>
+	<group name="Subject_Group">
+		<groupExpression><![CDATA[$F{subject}]]></groupExpression>
+		<groupHeader>
+			<band/>
+		</groupHeader>
+		<groupFooter>
+			<band height="350">
+				<barChart>
+					<chart evaluationTime="Group" evaluationGroup="Subject_Group" renderType="image">
+						<reportElement x="0" y="0" width="960" height="350" uuid="6bbce009-52be-4ed0-a5c4-a7367ed86540">
+							<property name="net.sf.jasperreports.customizer.0.maxValue" value="100"/>
+							<property name="net.sf.jasperreports.customizer.class.0" value="net.sf.jasperreports.customizers.axis.RangeAxisCustomizer"/>
+						</reportElement>
+						<chartTitle>
+							<titleExpression><![CDATA[$F{subject}+" Average By Grade"]]></titleExpression>
+						</chartTitle>
+						<chartSubtitle/>
+						<chartLegend position="Bottom"/>
+					</chart>
+					<categoryDataset>
+						<dataset resetType="Group" resetGroup="Subject_Group"/>
+						<categorySeries>
+							<seriesExpression><![CDATA[$F{level_code}]]></seriesExpression>
+							<categoryExpression><![CDATA[$F{subject}]]></categoryExpression>
+							<valueExpression><![CDATA[Double.parseDouble(new DecimalFormat("##.##").format(IF($F{AVG}>100,100,$F{AVG})))]]></valueExpression>
+						</categorySeries>
+					</categoryDataset>
+					<barPlot isShowLabels="true">
+						<plot>
+							<seriesColor seriesOrder="0" color="#7AC8F5"/>
+							<seriesColor seriesOrder="1" color="#C3F587"/>
+							<seriesColor seriesOrder="2" color="#F7C46A"/>
+							<seriesColor seriesOrder="3" color="#F0E87F"/>
+							<seriesColor seriesOrder="4" color="#34D2EB"/>
+							<seriesColor seriesOrder="5" color="#38E867"/>
+							<seriesColor seriesOrder="6" color="#CFA140"/>
+							<seriesColor seriesOrder="7" color="#C4CF36"/>
+							<seriesColor seriesOrder="8" color="#25BBCF"/>
+							<seriesColor seriesOrder="9" color="#2BAB82"/>
+							<seriesColor seriesOrder="10" color="#F5C76C"/>
+							<seriesColor seriesOrder="11" color="#D0D62B"/>
+						</plot>
+						<itemLabel/>
+						<categoryAxisFormat>
+							<axisFormat labelColor="#FFFFFF" tickLabelColor="#FFFFFF" axisLineColor="#000000"/>
+						</categoryAxisFormat>
+						<valueAxisFormat>
+							<axisFormat labelColor="#000000" tickLabelColor="#000000" axisLineColor="#000000"/>
+						</valueAxisFormat>
+					</barPlot>
+				</barChart>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="119" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<image>
+				<reportElement x="0" y="10" width="960" height="109" uuid="400687f2-2da7-412f-87f9-e090613bdaf1"/>
+				<imageExpression><![CDATA[$P{ABSOLUTE_PATH}+"//SKOLERA_HEADER.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement mode="Opaque" x="580" y="97" width="380" height="9" backcolor="#5ED785" uuid="e6cb2abb-a3de-4289-8c2f-fcfc7c09d20c">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<text><![CDATA[Static Text]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="760" y="10" width="195" height="80" uuid="62c2c981-a15f-410f-9e50-f69337a3f88c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{school_name}]]></textFieldExpression>
+			</textField>
+			<image scaleImage="FillFrame">
+				<reportElement x="670" y="10" width="90" height="80" uuid="faa4d547-53a4-4d18-b137-11159a5f8242"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<imageExpression><![CDATA[$P{ABSOLUTE_PATH}+"/logo/"+$F{school_code}.toUpperCase()+".jpg"]]></imageExpression>
+			</image>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="41" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<frame>
+				<reportElement x="500" y="5" width="462" height="30" uuid="27062005-800b-4879-b475-90661e5bb3d0"/>
+				<textField>
+					<reportElement x="0" y="0" width="100" height="30" uuid="9ca85508-dd0d-4eb2-a215-342698c56c9f"/>
+					<textElement verticalAlignment="Middle">
+						<font size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[NOW( )]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="390" y="0" width="72" height="30" forecolor="#60DC88" uuid="21ceaf4e-5bda-4142-b26a-f99c8c164735"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[ Skolera]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="318" y="0" width="72" height="30" uuid="68cd30a3-991f-4539-a6fe-752bcbee162a"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="12"/>
+					</textElement>
+					<text><![CDATA[Powered by]]></text>
+				</staticText>
+				<textField evaluationTime="Report">
+					<reportElement x="230" y="0" width="50" height="30" uuid="fd3d2631-60a2-40d1-b076-68799302d742"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="158" y="0" width="70" height="30" uuid="e735bbcb-9ed6-45c7-a647-bbc6337f603a"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER} + " of "]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+		</band>
+	</summary>
+</jasperReport>

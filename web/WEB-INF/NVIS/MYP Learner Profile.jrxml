@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.10.0.final using JasperReports Library version 6.10.0-unknown  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="MYP Learner Profile" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="6f6bf695-a549-4802-b2fa-0a993ae42c1c">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="KLSN"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="ABSOLUTE_PATH" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select 1]]>
+	</queryString>
+	<field name="1" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.label" value="1"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageFooter>
+		<band height="800">
+			<staticText>
+				<reportElement x="110" y="350" width="444" height="50" uuid="9f67c559-b157-45ea-bb5c-889196e36611"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<text><![CDATA[We develop and use conceptual understanding, exploring knowledge across a range of disciplines. We engage with issues and ideas that have local and global significance.
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="110" y="500" width="444" height="50" uuid="fc58a5cd-7a0c-4399-af81-0e904f4c57c2"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<text><![CDATA[We act with integrity and honesty, with a strong sense of fairness and justice, and with respect for the dignity and rights of people everywhere. We take responsibility for our actions and their consequences.
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="110" y="650" width="444" height="50" uuid="0c3d0f40-2b7a-45e9-8188-0e515665ece4"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<text><![CDATA[We approach uncertainty with forethought and determination; we work independently and cooperatively to explore new ideas and innovative strategies. We are resourceful and resilient in the face of challenges and change.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="600" width="110" height="50" forecolor="#0B5394" backcolor="#FFFFFF" uuid="1610ed43-5f13-4375-ae69-1d2dab6d73b4"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Caring:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="200" height="30" forecolor="#0B5394" uuid="14996fd0-a77e-4a1b-bff8-0bd348caa623"/>
+				<textElement>
+					<font fontName="Arial" size="15" isBold="true"/>
+				</textElement>
+				<text><![CDATA[IB Learner Profile]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="650" width="110" height="50" forecolor="#0B5394" backcolor="#FFFFFF" uuid="3f3530c5-0bd0-4034-add9-e77cd6bdefff"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Risk-takers:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="350" width="110" height="50" forecolor="#0B5394" backcolor="#FFFFFF" uuid="5212232e-2bfb-4144-b336-2ff7dfad5472"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Knowledgeable:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="750" width="110" height="50" forecolor="#0B5394" backcolor="#FFFFFF" uuid="a6dbb5a9-19be-4108-81db-77ade02ded94"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Reflective:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="700" width="110" height="50" forecolor="#0B5394" backcolor="#FFFFFF" uuid="48cc6c16-5d29-4376-88fb-d29a1cf3c703"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Balanced:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="110" y="450" width="444" height="50" uuid="24a17aa2-690e-4213-a4c9-3dd3c3c6220f"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<text><![CDATA[We express ourselves confidently and creatively in more than one language and in many ways. We collaborate effectively, listening carefully to the perspectives of other individuals and groups.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="110" y="750" width="444" height="50" uuid="61acb305-ea15-4865-be99-bb3f6dc93b5a"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<text><![CDATA[We thoughtfully consider the world and our own ideas and experiences. We work to understand our strengths and weaknesses in order to support our learning and personal development.
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="300" width="110" height="50" forecolor="#0B5394" backcolor="#FFFFFF" uuid="52084853-f17f-4611-baf7-bcdcac5acc6d"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Inquirers:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="110" y="550" width="444" height="50" uuid="ed207607-71df-46b5-9d5a-79d4c9d1e75e"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<text><![CDATA[We critically appreciate our own cultures and personal histories, as well as the values and traditions of others. We seek and evaluate a range of points of view, and we are willing to grow from the experience.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="110" y="600" width="444" height="50" uuid="b6010229-cefc-4136-9121-83eeabc66964"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<text><![CDATA[We show empathy, compassion, and respect. We have a commitment to service, and we act to make a positive difference in the lives of others and in the world around us.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="110" y="300" width="444" height="50" uuid="32c3a494-072d-4693-8646-5415235cf806"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<text><![CDATA[We nurture our curiosity, developing skills for inquiry and research. We know how to                     learn independently and with others. We learn with enthusiasm and sustain our love of learning throughout life.
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="400" width="110" height="50" forecolor="#0B5394" backcolor="#FFFFFF" uuid="0d01a331-52ba-4977-a121-c08d00b06c65"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Thinkers:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="110" y="400" width="444" height="50" uuid="decddb43-7193-4ece-b068-b8e5d562f948"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<text><![CDATA[We use critical and creative thinking skills to analyse and take responsible action on complex problems. We exercise initiative in making reasoned, ethical decisions.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="450" width="110" height="50" forecolor="#0B5394" backcolor="#FFFFFF" uuid="822c7714-9c94-4ad4-8355-d5d325bc676c"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Communicators:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="550" width="110" height="50" forecolor="#0B5394" backcolor="#FFFFFF" uuid="5d1339bc-b6eb-41d5-92e5-2261b3b86728"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Open-minded:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="500" width="110" height="50" forecolor="#0B5394" backcolor="#FFFFFF" uuid="aed45bca-c1f7-4f4d-9bdc-6e4a94a78e19"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Principled:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="110" y="700" width="444" height="50" uuid="7b1539f2-7126-4147-8da6-a1c45d0b895d"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<text><![CDATA[We understand the importance of balancing different aspects of our lives — intellectual, physical, (spiritual), and emotional — to achieve well-being for ourselves and others. We recognise our interdependence with other people and with the world in which we live.]]></text>
+			</staticText>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement x="0" y="29" width="555" height="270" uuid="1637eed9-fd0c-44dc-ba3c-b9dc01b79f6b"/>
+				<imageExpression><![CDATA[$P{ABSOLUTE_PATH} + "//MYP_LEARNER.png"]]></imageExpression>
+			</image>
+		</band>
+	</pageFooter>
+</jasperReport>

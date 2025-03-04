@@ -1,0 +1,486 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.10.0.final using JasperReports Library version 6.10.0-unknown  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Mega Quiz Report" pageWidth="595" pageHeight="1620" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="da98627d-8fb1-4638-86a1-7363c2aa2a0b">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="SGIS"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="0"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="1000"/>
+	<parameter name="LEVEL_CODE" class="java.lang.String">
+		<defaultValueExpression><![CDATA["-1"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ABSOLUTE_PATH" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select 
+quizzes.id as quiz_id, quizzes.name as quiz_name, quizzes.start_date as quiz_start_date, quizzes.total_score as quiz_score,
+questions.id as question_id, questions.body as question_body, questions.type as question_type, questions.order as question_order,
+courses.id as course_id, IF(courses.report_display_name IS NULL, SUBSTRING_INDEX(courses.name, "(", 1), courses.report_display_name) AS course_name,
+ust.name as teacher_name,
+cg.id as course_group_id, cg.name as class,
+gp.id as grading_period_id, gp.name as grading_period_name,
+((select avg(score) from quiz_submissions
+where quiz_submissions.deleted_at is null and quiz_submissions.quiz_id = qs.quiz_id and quiz_submissions.course_group_id = qs.course_group_id and quiz_submissions.is_submitted = 1
+group by quiz_submissions.quiz_id, quiz_submissions.course_group_id) / quizzes.total_score) * 100 as total_percentage,
+sum(ifnull(ans.iscorrect, 0)) as correct_students,
+count(distinct qs.id) as total_students,
+(sum(ifnull(ans.iscorrect, 0)) / count(distinct qs.id)) * 100 as per,
+levels.name as level_name,
+(select count(scg.student_id) as total_students from student_course_groups scg
+where scg.deleted_at is null and scg.course_group_id = cg.id
+group by scg.course_group_id) as total_students_in_cg
+
+from quizzes
+inner join questions on questions.quiz_id = quizzes.id and questions.deleted_at is null
+inner join grading_periods gp on gp.id = quizzes.grading_period_id and gp.deleted_at is null
+inner join teachers on teachers.id = quizzes.teacher_id and teachers.deleted_at is null
+inner join users ust on ust.actable_id = teachers.id and ust.actable_type = "teacher" and ust.deleted_at is null
+inner join courses on courses.id = quizzes.course_id and courses.deleted_at is null
+inner join levels on levels.id = courses.level_id and levels.deleted_at is null and (levels.level_code in ($P!{LEVEL_CODE}) OR $P{LEVEL_CODE}  = "-1")
+inner join quiz_submissions qs on qs.quiz_id = quizzes.id and qs.deleted_at is null
+inner join quiz_submission_attempts qst on qst.quiz_submission_id = qs.id and qst.deleted_at is null
+inner join course_groups cg on cg.id = qs.course_group_id and cg.deleted_at is null
+inner join students on students.id = qst.student_id and students.deleted_at is null
+inner join users uss on uss.actable_id = students.id and uss.actable_type = "student" and uss.deleted_at is null
+left join (select *, f.is_correct as iscorrect from (select 
+cg.id as course_group,
+qs.quiz_id,
+ans.quiz_submission_attempt_id, ans.answer_id, ans.question_id,
+IF(questions.type = "Essay", 1, ans.status) as status,
+IF(questions.type = "Essay", IF(ans.score > 0, 1 , 0),IF(ans.status = 2, 0, ans.status)) as is_correct,
+qst.id as qstid,
+qs.id as qsid,
+cg.name
+from answer_submissions ans
+inner join questions on questions.id = ans.question_id and questions.deleted_at is null
+inner join quiz_submission_attempts qst on ans.quiz_submission_attempt_id = qst.id and qst.deleted_at is null
+inner join quiz_submissions qs on qs.id = qst.quiz_submission_id and qs.deleted_at is null and qs.score = qst.score
+inner join course_groups cg on cg.id = qst.course_group_id and cg.deleted_at is null
+where ans.deleted_at is null
+order by qst.score desc)f
+where f.status != 0
+group by f.question_id, f.course_group, f.qsid) ans on ans.qstid = qst.id and ans.question_id = questions.id
+where quizzes.deleted_at is null and quizzes.name like "%mega quiz%"
+group by quizzes.id, questions.id, cg.id
+order by cg.name, courses.order, quizzes.id, questions.id]]>
+	</queryString>
+	<field name="quiz_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="quiz_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="quizzes"/>
+	</field>
+	<field name="quiz_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="quiz_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="quizzes"/>
+	</field>
+	<field name="quiz_start_date" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.label" value="quiz_start_date"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="quizzes"/>
+	</field>
+	<field name="quiz_score" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="quiz_score"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="quizzes"/>
+	</field>
+	<field name="question_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="question_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="questions"/>
+	</field>
+	<field name="question_body" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="question_body"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="questions"/>
+	</field>
+	<field name="question_type" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="question_type"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="questions"/>
+	</field>
+	<field name="question_order" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="question_order"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="questions"/>
+	</field>
+	<field name="course_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="course_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="courses"/>
+	</field>
+	<field name="course_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="course_name"/>
+	</field>
+	<field name="teacher_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="teacher_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="users"/>
+	</field>
+	<field name="course_group_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="course_group_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="course_groups"/>
+	</field>
+	<field name="class" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="class"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="course_groups"/>
+	</field>
+	<field name="grading_period_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="grading_period_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="grading_periods"/>
+	</field>
+	<field name="grading_period_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="grading_period_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="grading_periods"/>
+	</field>
+	<field name="total_percentage" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="total_percentage"/>
+	</field>
+	<field name="correct_students" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="correct_students"/>
+	</field>
+	<field name="total_students" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.label" value="total_students"/>
+	</field>
+	<field name="per" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="per"/>
+	</field>
+	<field name="level_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="level_name"/>
+	</field>
+	<field name="total_students_in_cg" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.label" value="total_students_in_cg"/>
+	</field>
+	<group name="Class">
+		<groupExpression><![CDATA[$F{class}]]></groupExpression>
+	</group>
+	<group name="Courses">
+		<groupExpression><![CDATA[$F{course_id}]]></groupExpression>
+	</group>
+	<group name="Quiz" isStartNewPage="true">
+		<groupExpression><![CDATA[$F{quiz_id}]]></groupExpression>
+		<groupHeader>
+			<band height="23">
+				<staticText>
+					<reportElement mode="Opaque" x="0" y="3" width="555" height="20" backcolor="#A6A6A6" uuid="501c1b01-60b8-437a-9abd-99c679b1c46e">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="11" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Mega Quiz Report]]></text>
+				</staticText>
+			</band>
+			<band height="100">
+				<textField>
+					<reportElement x="0" y="20" width="350" height="20" uuid="38a5aa59-eadb-497c-85ad-a98656caba85">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Left" verticalAlignment="Middle" markup="html">
+						<font fontName="Arial" size="11" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA["<b>" + "Quiz Name: " + "</b>" + $F{quiz_name}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="350" y="20" width="205" height="20" uuid="971ce764-ceba-4660-9bea-f273131082e9">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Left" verticalAlignment="Middle" markup="html">
+						<font fontName="Arial" size="11" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA["<b>" + "Publish Date: " + "</b>" + new java.text.SimpleDateFormat("dd-MM-yyyy").format($F{quiz_start_date})]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="0" y="0" width="350" height="20" uuid="6fecc2e5-357d-48dc-a4cc-8550c6f050f5">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Left" verticalAlignment="Middle" markup="html">
+						<font fontName="Arial" size="11" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA["<b>" + "Teacher Name: " + "</b>" + $F{teacher_name}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="350" y="40" width="204" height="20" uuid="58c26056-0d85-4778-894a-e11eb3530ace">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Left" verticalAlignment="Middle" markup="html">
+						<font fontName="Arial" size="11" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA["<b>" + "Trimester: " + "</b>" + $F{grading_period_name}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="350" y="0" width="204" height="20" uuid="aaee3280-d681-4fdc-98c3-eec4a845183f">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Left" verticalAlignment="Middle" markup="html">
+						<font fontName="Arial" size="11" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA["<b>" + "Subject Name: " + "</b>" + $F{course_name}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="0" y="80" width="554" height="20" uuid="7fef94ff-d1f2-4a50-a54a-d0dc1d4d4689">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Left" verticalAlignment="Middle" markup="html">
+						<font fontName="Arial" size="11" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA["<b>Total Percentage: </b>" + 
+( $F{total_percentage} != null ? new java.text.DecimalFormat("00.00").format($F{total_percentage}) : "N/A") + " %"
+]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="0" y="40" width="350" height="20" uuid="3a327ca0-deab-4bce-baae-0d761a15647c">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Left" verticalAlignment="Middle" markup="html">
+						<font fontName="Arial" size="11" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA["<b>" + "Grade: " + "</b>" + $F{level_name} + " - " + $F{class}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="0" y="60" width="350" height="20" uuid="63c04f35-39ed-444e-819f-eaaebb68c637">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Left" verticalAlignment="Middle" markup="html">
+						<font fontName="Arial" size="11" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA["<b>" + "Total Students Who Submitted the Quiz: " + "</b>" + $F{total_students}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="350" y="60" width="204" height="20" uuid="81d358c8-d771-4053-87fe-b4c169adf4c9">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Left" verticalAlignment="Middle" markup="html">
+						<font fontName="Arial" size="11" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA["<b>" + "Total Students in Class: " + "</b>" + $F{total_students_in_cg}]]></textFieldExpression>
+				</textField>
+			</band>
+			<band height="60">
+				<staticText>
+					<reportElement mode="Opaque" x="0" y="10" width="555" height="20" backcolor="#A6A6A6" uuid="caecd880-2dda-48e3-bfd1-f4981de02016">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="11" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Mega Quiz Analysis]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="30" width="185" height="30" uuid="918d35da-d995-4e09-bced-7fd8cf43441d">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Question Number]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="185" y="30" width="185" height="30" uuid="9423a6d0-db5a-4ae4-9b63-34f8295e308b">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Question Type]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="370" y="30" width="185" height="30" uuid="d0ce9738-cbe5-4d3d-ba82-ba81b06bf3b9">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Percentage %]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="270">
+				<lineChart>
+					<chart isShowLegend="false" evaluationTime="Group" evaluationGroup="Quiz">
+						<reportElement mode="Opaque" x="0" y="10" width="555" height="260" forecolor="#FFFFFF" backcolor="#404040" uuid="829eebc0-0c0f-4b52-a9a9-404c27ec6eb5">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						</reportElement>
+						<chartTitle>
+							<titleExpression><![CDATA["Percentage %"]]></titleExpression>
+						</chartTitle>
+						<chartSubtitle/>
+						<chartLegend/>
+					</chart>
+					<categoryDataset>
+						<dataset resetType="Group" resetGroup="Quiz"/>
+						<categorySeries>
+							<seriesExpression><![CDATA[$F{quiz_id}]]></seriesExpression>
+							<categoryExpression><![CDATA["Question " + ($F{question_order} + 1)]]></categoryExpression>
+							<valueExpression><![CDATA[$F{per}]]></valueExpression>
+						</categorySeries>
+					</categoryDataset>
+					<linePlot isShowShapes="true">
+						<plot backgroundAlpha="1.0" foregroundAlpha="1.0" labelRotation="45.0">
+							<seriesColor seriesOrder="0" color="#70AD47"/>
+						</plot>
+						<categoryAxisFormat labelRotation="45.0">
+							<axisFormat labelColor="#000000" tickLabelColor="#FFFFFF" axisLineColor="#DE9D15">
+								<labelFont>
+									<font size="10"/>
+								</labelFont>
+							</axisFormat>
+						</categoryAxisFormat>
+						<valueAxisFormat>
+							<axisFormat labelColor="#000000" tickLabelColor="#FFFFFF" axisLineColor="#404040"/>
+						</valueAxisFormat>
+						<rangeAxisMinValueExpression><![CDATA[0]]></rangeAxisMinValueExpression>
+						<rangeAxisMaxValueExpression><![CDATA[100]]></rangeAxisMaxValueExpression>
+					</linePlot>
+				</lineChart>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="Question">
+		<groupExpression><![CDATA[$F{question_id}]]></groupExpression>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="110" splitType="Stretch">
+			<image>
+				<reportElement x="0" y="0" width="80" height="110" uuid="abba9822-209b-41a5-84a4-65886cd90a33"/>
+				<imageExpression><![CDATA[$P{ABSOLUTE_PATH}+"//SGIS.jpg"]]></imageExpression>
+			</image>
+			<image>
+				<reportElement x="445" y="0" width="110" height="110" uuid="1076380a-bf40-408c-bc68-b8221d07d370"/>
+				<imageExpression><![CDATA[$P{ABSOLUTE_PATH}+"//Skolera_logo.jpeg"]]></imageExpression>
+			</image>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="30" splitType="Stretch">
+			<textField isStretchWithOverflow="true">
+				<reportElement x="0" y="0" width="185" height="30" uuid="503bc4fc-568f-4257-bdee-3296e794f4a7">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{question_order} + 1]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement stretchType="RelativeToBandHeight" x="185" y="0" width="185" height="30" uuid="5ea62cd0-596b-46c4-87cc-5a1433042a22">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{question_type}]]></textFieldExpression>
+			</textField>
+			<barChart>
+				<chart isShowLegend="false" evaluationTime="Group" evaluationGroup="Question">
+					<reportElement stretchType="RelativeToBandHeight" x="370" y="0" width="185" height="30" uuid="213423d2-1420-4729-9606-062818e836d6">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<chartTitle/>
+					<chartSubtitle/>
+					<chartLegend/>
+				</chart>
+				<categoryDataset>
+					<dataset resetType="Group" resetGroup="Question"/>
+					<categorySeries>
+						<seriesExpression><![CDATA[$F{question_id}]]></seriesExpression>
+						<categoryExpression><![CDATA[$F{question_id}]]></categoryExpression>
+						<valueExpression><![CDATA[$F{per}]]></valueExpression>
+					</categorySeries>
+				</categoryDataset>
+				<barPlot isShowLabels="false" isShowTickLabels="false" isShowTickMarks="false">
+					<plot orientation="Horizontal">
+						<seriesColor seriesOrder="0" color="#00DE16"/>
+					</plot>
+					<itemLabel/>
+					<categoryAxisFormat>
+						<axisFormat labelColor="#000000" tickLabelColor="#000000" axisLineColor="#000000"/>
+					</categoryAxisFormat>
+					<valueAxisFormat>
+						<axisFormat labelColor="#000000" tickLabelColor="#000000" axisLineColor="#000000"/>
+					</valueAxisFormat>
+					<rangeAxisMaxValueExpression><![CDATA[100]]></rangeAxisMaxValueExpression>
+				</barPlot>
+			</barChart>
+			<textField pattern="##.##">
+				<reportElement stretchType="RelativeToBandHeight" x="518" y="0" width="36" height="30" uuid="8582142b-fffe-4563-8a10-b2e8b7162e17"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{per}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="105" splitType="Stretch">
+			<staticText>
+				<reportElement x="411" y="75" width="72" height="30" uuid="1b1e16d1-244f-4e3a-b1f9-22cc43cd26d6"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<text><![CDATA[Powered by]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="483" y="75" width="72" height="30" forecolor="#60DC88" uuid="fbbc9a79-a75e-4fca-8267-ba4495b3a18b"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ Skolera]]></text>
+			</staticText>
+			<componentElement>
+				<reportElement x="415" y="5" width="140" height="70" uuid="137d404e-887b-4962-9e61-71fae2ea12b4"/>
+				<jr:QRCode xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<jr:codeExpression><![CDATA["Sun of Glory International School / " + " / 2024-2025" + NOW()]]></jr:codeExpression>
+				</jr:QRCode>
+			</componentElement>
+		</band>
+	</pageFooter>
+</jasperReport>

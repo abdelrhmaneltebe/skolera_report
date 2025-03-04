@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.10.0.final using JasperReports Library version 6.10.0-unknown  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="lower_subject_comment" pageWidth="500" pageHeight="802" columnWidth="500" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="6d37091e-d151-434a-aa2b-ad0b29821d05">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="ESE"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="827"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="163"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="0"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="1000"/>
+	<style name="Crosstab_CH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Crosstab_CG" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Crosstab_CT" mode="Opaque" backcolor="#005FB3">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Crosstab_CD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<parameter name="domin" class="java.lang.String"/>
+	<parameter name="student_id" class="java.lang.String"/>
+	<parameter name="order" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select 
+users.name as student_name,
+users.gender,
+students.id,
+levels.level_code,
+spr.progress_report_id, 
+domains.title as domain_title, 
+domains.order as domin_order,
+dc.title as criteria_title, 
+ec.name as criteria_name , 
+ec.code as criteria_code,
+sprc.id as is_graded,
+( select cg.name from student_course_groups scg
+ inner join course_groups cg on cg.deleted_at is null and cg.id = scg.course_group_id
+ where scg.deleted_at is null and student_id = students.id
+ group by student_id) as class_name
+from students 
+inner join student_progress_reports spr on spr.deleted_at is null and spr.student_id = students.id
+inner join domains on domains.deleted_at is null and domains.progress_report_id = spr.progress_report_id
+inner join domain_competencies dc on dc.deleted_at is null and dc.domain_id = domains.id
+right join evaluation_criteria ec on ec.deleted_at is null and ec.progress_report_id = spr.progress_report_id
+left join student_progress_report_competencies sprc on sprc.deleted_at is null 
+and sprc.progress_report_domain_competency_id = dc.id and sprc.progress_report_evaluation_criteria_id = ec.id and sprc.student_progress_report_id = spr.id
+inner join users on users.deleted_at is null and users.actable_id = students.id and users.user_type = "student"
+inner join levels on levels.deleted_at is null and levels.id = students.level_id 
+where students.deleted_at is null and students.id = $P{student_id} and sprc.id  is not null   and ec.code in ("YES") and sprc.id is not null and (domains.title = $P{domin} or domains.order =  $P{order}  )]]>
+	</queryString>
+	<field name="student_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="student_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="users"/>
+	</field>
+	<field name="gender" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="gender"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="users"/>
+	</field>
+	<field name="id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="students"/>
+	</field>
+	<field name="level_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="level_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="levels"/>
+	</field>
+	<field name="progress_report_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="progress_report_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="student_progress_reports"/>
+	</field>
+	<field name="domain_title" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="domain_title"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="domains"/>
+	</field>
+	<field name="domin_order" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="domin_order"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="domains"/>
+	</field>
+	<field name="criteria_title" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="criteria_title"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="domain_competencies"/>
+	</field>
+	<field name="criteria_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="criteria_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evaluation_criteria"/>
+	</field>
+	<field name="criteria_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="criteria_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evaluation_criteria"/>
+	</field>
+	<field name="is_graded" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="is_graded"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="student_progress_report_competencies"/>
+	</field>
+	<field name="class_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="class_name"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="50" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="500" height="30" backcolor="#E3E3E3" uuid="a722a8f4-46e4-4da9-987a-cdf8e04021f2">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Teacher Comment]]></text>
+			</staticText>
+			<crosstab>
+				<reportElement x="0" y="30" width="500" height="20" uuid="9a0d7930-9812-4e35-9587-e133f3cb9d51">
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+					<property name="com.jaspersoft.studio.crosstab.style.header" value="Crosstab_CH"/>
+					<property name="com.jaspersoft.studio.crosstab.style.group" value="Crosstab_CG"/>
+					<property name="com.jaspersoft.studio.crosstab.style.total" value="Crosstab_CT"/>
+					<property name="com.jaspersoft.studio.crosstab.style.detail" value="Crosstab_CD"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<crosstabHeaderCell>
+					<cellContents>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</cellContents>
+				</crosstabHeaderCell>
+				<rowGroup name="criteria_title" width="0">
+					<bucket order="None" class="java.lang.String">
+						<bucketExpression><![CDATA[$F{criteria_title}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents mode="Opaque" style="Crosstab_CH">
+							<textField>
+								<reportElement x="0" y="0" width="0" height="20" uuid="41a76936-02b3-4d14-9c7a-2e259f48d9f4"/>
+								<textFieldExpression><![CDATA[$V{criteria_title}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents mode="Opaque" style="Crosstab_CT">
+							<staticText>
+								<reportElement x="0" y="0" width="60" height="20" forecolor="#FFFFFF" uuid="4f4fe580-7aa1-4f48-b6a4-82af96495258"/>
+								<text><![CDATA[Total criteria_title]]></text>
+							</staticText>
+						</cellContents>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<columnGroup name="student_name" height="0">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{student_name}]]></bucketExpression>
+					</bucket>
+					<crosstabColumnHeader>
+						<cellContents mode="Opaque" style="Crosstab_CH">
+							<textField>
+								<reportElement x="0" y="0" width="500" height="0" uuid="b2e50b15-a7c2-4036-b074-43cbb6fd5f57"/>
+								<textFieldExpression><![CDATA[$V{student_name}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabColumnHeader>
+					<crosstabTotalColumnHeader>
+						<cellContents mode="Opaque" style="Crosstab_CT">
+							<staticText>
+								<reportElement x="0" y="0" width="60" height="20" forecolor="#FFFFFF" uuid="8eb80b71-fe72-44e0-a824-918785e6b9a8"/>
+								<text><![CDATA[Total student_name]]></text>
+							</staticText>
+						</cellContents>
+					</crosstabTotalColumnHeader>
+				</columnGroup>
+				<measure name="criteria_title_MEASURE" class="java.lang.String">
+					<measureExpression><![CDATA[$F{criteria_title}.replaceAll("يستطيع/ تستطيع", (IF($F{gender}.compareTo( "male" )==0,"يستطيع","تستطيع").toString()))
+.replaceAll( "يطبق / تطبق", (IF($F{gender}.compareTo( "male" )==0,"يطبق","تطبق").toString()))
+.replaceAll( "يجيد /تجيد", (IF($F{gender}.compareTo( "male" )==0,"يجيد","تجيد").toString()))
+.replaceAll( "يصعب عليه/ تصعب عليها", (IF($F{gender}.compareTo( "male" )==0,"يصعب عليه","تصعب عليها").toString()))
+.replaceAll( "يختلط عليه/ تختلط عليها ", (IF($F{gender}.compareTo( "male" )==0,"يختلط عليه","تختلط عليها").toString()))
+.replaceAll( "يتهجى /تتهجى", (IF($F{gender}.compareTo( "male" )==0,"يتهجى","تتهجى").toString()))
+.replaceAll( "تجيد/ يجيد", (IF($F{gender}.compareTo( "male" )==0,"يجيد","تجيد").toString()))
+.replaceAll( "تجيد /يجيد", (IF($F{gender}.compareTo( "male" )==0,"يجيد","تجيد").toString()))
+.replaceAll( "تطبق/ يطبق", (IF($F{gender}.compareTo( "male" )==0,"يطبق","تطبق").toString()))
+
+.replaceAll( "يصعب عليه/ تصعب عليها", (IF($F{gender}.compareTo( "male" )==0,"يصعب عليه","تصعب عليها").toString()))
+]]></measureExpression>
+				</measure>
+				<measure name="gender" class="java.lang.String">
+					<measureExpression><![CDATA[$F{gender}]]></measureExpression>
+				</measure>
+				<crosstabCell width="500" height="20">
+					<cellContents mode="Opaque" style="Crosstab_CD">
+						<box>
+							<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<frame>
+							<reportElement x="0" y="0" width="500" height="20" uuid="9b87599e-32b6-40ad-a8cb-6e4bb71666ed"/>
+							<textField isStretchWithOverflow="true">
+								<reportElement x="0" y="0" width="500" height="20" uuid="74e276d3-5263-463c-bd59-e63366b64706"/>
+								<box leftPadding="5" rightPadding="5">
+									<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+									<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+									<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+									<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								</box>
+								<textElement verticalAlignment="Middle">
+									<font fontName="Arial"/>
+								</textElement>
+								<textFieldExpression><![CDATA["- "+$V{criteria_title_MEASURE}.replaceAll( "his/her", (IF($V{gender}.compareTo( "male" )==0,"his","her")).toString() )
+.replaceAll( "boy/girl", (IF($V{gender}.compareTo( "male" )==0,"boy","girl")).toString() )
+.replaceAll( "he/she", (IF($V{gender}.compareTo( "male" )==0,"he","she")).toString() )
+.replaceAll( "- ", (IF($V{gender}.compareTo( "male" )==0,"- he ","- she ")).toString() )
+.replaceAll( "- ", (IF($V{gender}.compareTo( "male" )==0,"- he ","- she ")).toString() )
+
+.replaceAll( "لديه/ لديها", (IF($V{gender}.compareTo( "male" )==0,"لديه","لديها").toString()))
+.replaceAll( "تحسن / يُحسن", (IF($V{gender}.compareTo( "male" )==0,"يُحسن","تحسن").toString()))
+.replaceAll( "تستطيع / يستطيع", (IF($V{gender}.compareTo( "male" )==0,"يستطيع","تستطيع").toString()))
+.replaceAll( "بمفرده/بمفردها", (IF($V{gender}.compareTo( "male" )==0,"بمفرده","بمفردها").toString()))
+.replaceAll( "يقرأ/ تقرأ", (IF($V{gender}.compareTo( "male" )==0," يقرأ ","تقرأ").toString()))
+.replaceAll( "يطبق /تطبق", (IF($V{gender}.compareTo( "male" )==0,"يطبق","تطبق").toString()))
+.replaceAll( "يجيد/  تجيد", (IF($V{gender}.compareTo( "male" )==0,"يجيد","تجيد").toString()))
+.replaceAll( "يستطيع/تستطيع", (IF($V{gender}.compareTo( "male" )==0,"يستطيع","تستطيع").toString()))
+.replaceAll( "يجيد/تجيد", (IF($V{gender}.compareTo( "male" )==0,"يجيد","تجيد").toString()))
+
+
+.replaceAll( "تميز/يميز", (IF($V{gender}.compareTo( "male" )==0,"يميز","تميز").toString()))
+.replaceAll( "تختلط عليها /يختلط عليه", (IF($V{gender}.compareTo( "male" )==0,"يختلط عليه","تختلط عليها ").toString()))
+.replaceAll( "تحسن / يُحسن", (IF($V{gender}.compareTo( "male" )==0,"يُحسن","تحسن").toString()))
+.replaceAll( "تصعب عليها / يَصْعُب عليه", (IF($V{gender}.compareTo( "male" )==0,"يَصْعُب عليه","صعب عليها").toString()))
+
+.replaceAll( "يصعب عليه/ تصعب عليها", (IF($V{gender}.compareTo( "male" )==0,"يَصْعُب عليه","صعب عليها").toString()))
+]]></textFieldExpression>
+							</textField>
+						</frame>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="60" height="20" columnTotalGroup="student_name">
+					<cellContents mode="Opaque" style="Crosstab_CT">
+						<textField>
+							<reportElement x="0" y="0" width="60" height="20" forecolor="#FFFFFF" uuid="38a8be04-dd71-4d50-a597-da1013f97ba7"/>
+							<textFieldExpression><![CDATA[$V{criteria_title_MEASURE}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="60" height="20" rowTotalGroup="criteria_title">
+					<cellContents mode="Opaque" style="Crosstab_CT">
+						<textField>
+							<reportElement x="0" y="0" width="60" height="20" forecolor="#FFFFFF" uuid="77792044-47fa-412d-b98f-08733e642272"/>
+							<textFieldExpression><![CDATA[$V{criteria_title_MEASURE}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="60" height="20" rowTotalGroup="criteria_title" columnTotalGroup="student_name">
+					<cellContents mode="Opaque" style="Crosstab_CT">
+						<textField>
+							<reportElement x="0" y="0" width="60" height="20" forecolor="#FFFFFF" uuid="0650202a-8b3b-4c49-bd6d-54cdeb8f3710"/>
+							<textFieldExpression><![CDATA[$V{criteria_title_MEASURE}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+			</crosstab>
+		</band>
+	</summary>
+</jasperReport>

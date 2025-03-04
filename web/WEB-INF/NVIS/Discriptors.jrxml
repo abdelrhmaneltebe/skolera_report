@@ -1,0 +1,506 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.10.0.final using JasperReports Library version 6.10.0-unknown  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Discriptors" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="a04de051-2ec0-4703-afff-1f12ce8b81c1">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="NVIS"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<queryString>
+		<![CDATA[select 1]]>
+	</queryString>
+	<field name="1" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.label" value="1"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="802" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="680" width="70" height="30" forecolor="#0B5394" backcolor="#FFFFFF" uuid="c3f65c9f-bafb-4328-ad3e-16936a3d6026"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ME]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="70" y="710" width="484" height="30" uuid="23780127-871f-4978-8452-8749098efe88"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<text><![CDATA[Approaching Expectations: The student’s progress against the ATL is approaching expectations.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="70" y="680" width="484" height="30" uuid="3b16f2dd-a205-42b1-b641-0bfc3c0b5a84"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<text><![CDATA[Meeting Expectations: The student’s progress against the ATL is meeting expectations. ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="158" y="258" width="397" height="70" uuid="1c3932f9-5c29-4946-9e45-03fb07ebc336">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<text><![CDATA[Produces good-quality work. Communicates basic understanding of most concepts and contexts with few  misunderstandings and minor gaps. Often demonstrates basic critical and creative thinking. Uses knowledge and skills with some flexibility in familiar classroom situations, but requires support in unfamiliar situations. 
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="710" width="70" height="30" forecolor="#0B5394" backcolor="#FFFFFF" uuid="e174fd45-4100-4aa7-aba5-34cf02f10ab3"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[AE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="158" y="398" width="397" height="60" uuid="1ef44edf-5a07-4ea0-ba8f-aa6c18e27ae9">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<text><![CDATA[Produces work of limited quality. Expresses misunderstandings or significant gaps in understanding for many concepts and contexts. Infrequently demonstrates critical or creative thinking. Generally inflexible in the use of knowledge and skills, infrequently applying knowledge and skills. ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="158" y="199" width="397" height="59" uuid="3eff5347-ce33-490a-8787-220b3309d697">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<text><![CDATA[Produces generally high-quality work. Communicates secure understanding of concepts and contexts. Demonstrates critical and creative thinking, sometimes with sophistication. Uses knowledge and skills in familiar classroom and real-world situations and, with support, some unfamiliar real-world situations. 
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="158" y="328" width="397" height="70" uuid="c75f71d8-2207-4488-a423-3f8239b81fc9">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<text><![CDATA[Produces work of an acceptable quality. Communicates basic understanding of many concepts and contexts, with occasionally significant misunderstandings or gaps. Begins to demonstrate some basic critical and creative thinking. Is often inflexible in the use of knowledge and skills, requiring support even in familiar classroom situations. 
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="158" y="70" width="397" height="70" uuid="bf63e984-ef7d-47d6-a4c0-dfbaa72a0c3f">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<text><![CDATA[Produces high-quality, frequently innovative work. Communicates comprehensive, nuanced understanding of concepts and contexts. Consistently demonstrates sophisticated critical and creative thinking. Frequently transfers knowledge and skills with independence and expertise in a variety of complex classroom and real- world situations. 
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="398" width="79" height="60" forecolor="#0B5394" backcolor="#FFFFFF" uuid="577d66f2-a986-4da4-a796-4fdbf3a1613a"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[2]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="328" width="79" height="70" forecolor="#0B5394" backcolor="#FFFFFF" uuid="3e79e2f0-87be-4d5e-b006-8963f1c14503"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[3]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="458" width="79" height="60" forecolor="#0B5394" backcolor="#FFFFFF" uuid="da9a3ccd-b3d1-430e-bac6-6660da7d9808"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[1]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="70" width="79" height="70" forecolor="#0B5394" backcolor="#FFFFFF" uuid="e9cb27ac-5209-4b3b-9148-4f53f72575d4">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[7]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="140" width="79" height="59" forecolor="#0B5394" backcolor="#FFFFFF" uuid="5dc99a4d-fe58-4dec-a321-ba1787d86141"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[6]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="158" y="140" width="397" height="59" uuid="ca27b38f-d905-4650-abdf-4716c1e553a9">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<text><![CDATA[Produces high-quality, occasionally innovative work. Communicates extensive understanding of concepts and contexts. Demonstrates critical and creative thinking frequently with sophistication. Uses knowledge and skills in familiar and unfamiliar classroom and real-world situations, often with independence. ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="650" width="70" height="30" forecolor="#0B5394" backcolor="#FFFFFF" uuid="9530b6b0-4330-4db1-b32c-9136750f7211"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[EE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="70" y="650" width="484" height="30" uuid="4e87cfee-0e99-4aa4-ba89-093d81dd7d33"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<text><![CDATA[Exceeding Expectations: The student’s progress against the ATL is exceeding expectations.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="158" y="458" width="397" height="60" uuid="4ad34e09-ba1e-4e44-a402-5d03b05bc0d3">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<text><![CDATA[Produces work of very limited quality. Conveys many significant misunderstandings or lacks understanding of  most concepts and contexts. Very rarely demonstrates critical or creative thinking. Very inflexible, rarely using knowledge or skills. ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="199" width="79" height="59" forecolor="#0B5394" backcolor="#FFFFFF" uuid="c788409d-16e2-41c2-8827-d579b1e4d39e"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[5]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="258" width="79" height="70" forecolor="#0B5394" backcolor="#FFFFFF" uuid="1a3fcdbc-b8e7-43ea-957a-3e28e0bfc089"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[4]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="79" y="70" width="79" height="70" forecolor="#0B5394" backcolor="#FFFFFF" uuid="f70fb36c-2fa8-46fa-a358-e1f628c5f1c4"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[A+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="79" y="140" width="79" height="59" forecolor="#0B5394" backcolor="#FFFFFF" uuid="969fd2d9-5740-4519-8f4a-0361ab93750d"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[A]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="79" y="458" width="79" height="60" forecolor="#0B5394" backcolor="#FFFFFF" uuid="8d137671-3194-4302-a251-542c2e2d5cf3"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[D]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="79" y="398" width="79" height="60" forecolor="#0B5394" backcolor="#FFFFFF" uuid="d6c246dc-b6c7-4362-b427-13f7f8628dc1"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[C]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="79" y="199" width="79" height="59" forecolor="#0B5394" backcolor="#FFFFFF" uuid="4548e840-43bc-4886-adaa-3724bf9c7755"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[B+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="79" y="328" width="79" height="70" forecolor="#0B5394" backcolor="#FFFFFF" uuid="9bc2f552-cfe9-4858-979a-917698a71f71"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[C+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="79" y="258" width="79" height="70" forecolor="#0B5394" backcolor="#FFFFFF" uuid="bad00aa0-5ef4-46b0-8cd6-dd84c71edca1"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[B]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="518" width="79" height="30" forecolor="#0B5394" backcolor="#FFFFFF" uuid="0ae480fd-61cf-4530-bc57-fff0e66520d9"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[N/A]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="79" y="518" width="79" height="30" forecolor="#0B5394" backcolor="#FFFFFF" uuid="f93761c6-7aad-4ae3-a7bd-b904d99c6763"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[F]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="158" y="518" width="397" height="30" uuid="67c0f239-0dc3-4113-b99e-2a20564d6d10">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<text><![CDATA[Not yet assessed.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="555" height="30" forecolor="#0B5394" uuid="93ec2eb9-9be5-4bbc-a9c9-838208162cb4"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="15" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Grade Descriptors]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="40" width="79" height="30" forecolor="#0B5394" uuid="7dfd47c2-5570-47a2-af0a-7e0a4e981d5f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Final Grade]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="79" y="40" width="79" height="30" forecolor="#0B5394" uuid="740024d8-45a2-4deb-9021-b614c96bbcb2"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Local Grade]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="158" y="40" width="397" height="30" forecolor="#0B5394" uuid="e3226569-7197-4add-a075-654ecc272fa9"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Descriptor]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="568" width="555" height="30" forecolor="#0B5394" uuid="3fb535b0-92e4-4d79-8c89-4a66644f95cb"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="15" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Approaches to Learning]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="740" width="70" height="30" forecolor="#0B5394" backcolor="#FFFFFF" uuid="74dde224-23dc-4cae-8ed1-83b871a441ac"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[BE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="70" y="740" width="484" height="30" uuid="2cbcedda-a7de-4c63-9ae8-112fabf63417"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#0B5394"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<text><![CDATA[Below Expectations: The student’s progress against the ATL is below expectations. ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="620" width="69" height="30" forecolor="#0B5394" uuid="36913d40-c285-4e2b-8e0f-4840e26f3610"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Grade]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="69" y="620" width="485" height="30" forecolor="#0B5394" uuid="70330c96-63a9-463a-9506-b853d6a0dd8f"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Descriptor]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+</jasperReport>

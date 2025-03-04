@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.10.0.final using JasperReports Library version 6.10.0-unknown  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="content" pageWidth="409" pageHeight="842" columnWidth="409" leftMargin="0" rightMargin="0" topMargin="20" bottomMargin="20" uuid="d611062f-915b-41de-9d0b-f89564c6788f">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="SGIS"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<subDataset name="chart1" uuid="d271b77b-c97b-4bd6-9205-0ff180e0e0a6">
+		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="SGIS"/>
+		<parameter name="student_id" class="java.lang.String"/>
+		<queryString language="SQL">
+			<![CDATA[select if((sum(x.course_group_assignment_count)-(s.action_count+e.action_count)) is null ,0,sum(x.course_group_assignment_count)-(s.action_count+e.action_count) ) as action_count,
+"not assign" as action_type ,
+x.student_id  
+from (select a.*, scg.student_id, courses.name as course_name from 
+(select count(assignment_id)course_group_assignment_count , course_group_id 
+from assignments_course_groups where deleted_at is null
+group by course_group_id)a
+inner join student_course_groups scg on scg.course_group_id = a.course_group_id and scg.deleted_at is null 
+inner join course_groups cg on cg.id = a.course_group_id and cg.deleted_at is null
+inner join courses on courses.id = cg.course_id
+where scg.student_id =  $P{student_id} )x
+inner join (select sum(Submitted_assignment_count) as action_count,
+"Submitted assignment" as action_type,
+x.student_id
+from (select count(id) as Submitted_assignment_count ,student_id, course_group_id, student_status 
+from student_submitted_assignments where deleted_at is null and student_status = 0
+and student_id =  $P{student_id} 
+group by  student_id, course_group_id, student_status )x)s on s.student_id = x.student_id
+
+inner join (select
+IF(sum(Excused_assignment_count) is null ,0, sum(Excused_assignment_count)) as action_count,
+"Excused Assignment" as action_type,
+x.student_id 
+from (select count(id) as Excused_assignment_count ,student_id, course_group_id, student_status 
+from student_submitted_assignments where deleted_at is null and student_status = 1 and student_id =  $P{student_id} 
+group by  student_id, course_group_id, student_status)x)e on e.student_id = x.student_id
+
+union all 
+
+select if(sum(Submitted_assignment_count) is null , 0 , sum(Submitted_assignment_count)) as action_count,
+"Submitted assignment" as action_type,
+x.student_id
+from (select count(id) as Submitted_assignment_count ,student_id, course_group_id, student_status 
+from student_submitted_assignments where deleted_at is null and student_status = 0
+and student_id =  $P{student_id} 
+group by  student_id, course_group_id, student_status )x
+
+union all 
+
+select
+if(sum(Excused_assignment_count) is null , 0 ,sum(Excused_assignment_count)) as action_count,
+"Excused Assignment" as action_type,
+x.student_id 
+from (select count(id) as Excused_assignment_count ,student_id, course_group_id, student_status 
+from student_submitted_assignments where deleted_at is null and student_status = 1 and student_id =  $P{student_id} 
+group by  student_id, course_group_id, student_status)x]]>
+		</queryString>
+		<field name="action_count" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.label" value="action_count"/>
+		</field>
+		<field name="action_type" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="action_type"/>
+		</field>
+		<field name="student_id" class="java.lang.Integer">
+			<property name="com.jaspersoft.studio.field.label" value="student_id"/>
+		</field>
+	</subDataset>
+	<parameter name="student_id" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select 
+acg.course_group_id, 
+acg.student_id, 
+IF(sa.Submitted_assignment_count is null ,0, sa.Submitted_assignment_count) as Submitted_assignment_count, 
+IF(Ea.Excused_assignment_count is null ,0, Ea.Excused_assignment_count) as Excused_assignment_count,
+acg.course_group_assignment_count , acg.course_name
+from (select a.*, scg.student_id, courses.name as course_name from 
+(select count(assignment_id)course_group_assignment_count , course_group_id 
+from assignments_course_groups where deleted_at is null
+group by course_group_id)a
+inner join student_course_groups scg on scg.course_group_id = a.course_group_id and scg.deleted_at is null 
+inner join course_groups cg on cg.id = a.course_group_id and cg.deleted_at is null
+inner join courses on courses.id = cg.course_id
+
+) acg
+left join (select count(id) as Submitted_assignment_count ,student_id, course_group_id, student_status 
+from student_submitted_assignments where deleted_at is null and student_status = 0
+group by  student_id, course_group_id, student_status) sa
+on sa.course_group_id = acg.course_group_id and sa.student_id = acg.student_id
+left join (select count(id) as Excused_assignment_count ,student_id, course_group_id, student_status 
+from student_submitted_assignments where deleted_at is null and student_status = 1
+group by  student_id, course_group_id, student_status) Ea
+on Ea.course_group_id = acg.course_group_id and Ea.student_id = acg.student_id
+where acg.student_id =  $P{student_id}]]>
+	</queryString>
+	<field name="course_group_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="course_group_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="a"/>
+	</field>
+	<field name="student_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="student_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="scg"/>
+	</field>
+	<field name="Submitted_assignment_count" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.label" value="Submitted_assignment_count"/>
+	</field>
+	<field name="Excused_assignment_count" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.label" value="Excused_assignment_count"/>
+	</field>
+	<field name="course_group_assignment_count" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.label" value="course_group_assignment_count"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="a"/>
+	</field>
+	<field name="course_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="course_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="courses"/>
+	</field>
+	<group name="ST_Group">
+		<groupExpression><![CDATA[$F{student_id}]]></groupExpression>
+		<groupHeader>
+			<band height="276">
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<frame>
+					<reportElement mode="Opaque" x="0" y="246" width="409" height="30" backcolor="#FFC2D5" uuid="acfb5ecb-ce04-46fb-81f8-20ea1c75d7a3"/>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<staticText>
+						<reportElement mode="Opaque" x="0" y="0" width="180" height="30" backcolor="#FFC2D5" uuid="08fdb55c-1d85-4636-b0c1-381eedd4bc0d"/>
+						<box>
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle"/>
+						<text><![CDATA[Course Name]]></text>
+					</staticText>
+					<staticText>
+						<reportElement mode="Opaque" x="250" y="0" width="70" height="30" backcolor="#FFC2D5" uuid="8f2bec51-4b2c-4d23-8871-f7314d890e4c"/>
+						<box>
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle"/>
+						<text><![CDATA[Submitted Count]]></text>
+					</staticText>
+					<staticText>
+						<reportElement mode="Opaque" x="320" y="0" width="89" height="30" backcolor="#FFC2D5" uuid="73e396e3-baea-4869-8771-e2b91d001065"/>
+						<box>
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle"/>
+						<text><![CDATA[Excused Count]]></text>
+					</staticText>
+					<staticText>
+						<reportElement mode="Opaque" x="180" y="0" width="70" height="30" backcolor="#FFC2D5" uuid="aeb7922c-c47d-4d3c-a303-d5ad913bd552"/>
+						<box>
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle"/>
+						<text><![CDATA[Assignment Count]]></text>
+					</staticText>
+				</frame>
+				<pieChart>
+					<chart evaluationTime="Report">
+						<reportElement x="0" y="0" width="409" height="200" uuid="df320c80-5489-429b-9367-2be396d2533c"/>
+						<chartTitle position="Bottom"/>
+						<chartSubtitle/>
+						<chartLegend/>
+					</chart>
+					<pieDataset>
+						<dataset>
+							<datasetRun subDataset="chart1" uuid="e30a069b-c535-4ad4-bbdb-aecda822ebc6">
+								<datasetParameter name="student_id">
+									<datasetParameterExpression><![CDATA[$F{student_id}]]></datasetParameterExpression>
+								</datasetParameter>
+							</datasetRun>
+						</dataset>
+						<keyExpression><![CDATA[$F{action_type}+" ("+$F{action_count}+")"]]></keyExpression>
+						<valueExpression><![CDATA[$F{action_count}]]></valueExpression>
+					</pieDataset>
+					<piePlot>
+						<plot backcolor="#FFFFFF" backgroundAlpha="0.0" foregroundAlpha="1.0">
+							<seriesColor seriesOrder="0" color="#46B3E6"/>
+							<seriesColor seriesOrder="1" color="#7CBD1E"/>
+							<seriesColor seriesOrder="2" color="#F88F01"/>
+						</plot>
+						<itemLabel color="#000000"/>
+					</piePlot>
+				</pieChart>
+				<ellipse>
+					<reportElement x="164" y="48" width="80" height="80" uuid="048bb360-4647-44d1-a7ec-ac7956093584"/>
+					<graphicElement>
+						<pen lineWidth="0.0"/>
+					</graphicElement>
+				</ellipse>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band/>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="30" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField>
+				<reportElement x="0" y="0" width="409" height="30" uuid="307b5a88-9bc5-47f5-a475-ae88ce7118d1"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="16"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Assignments"]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="30" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<frame>
+				<reportElement mode="Transparent" x="0" y="0" width="409" height="30" backcolor="#FFC2D5" uuid="9ee38a8c-2c21-4c04-9f87-90b7ced87107"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textField>
+					<reportElement mode="Transparent" x="0" y="0" width="180" height="30" backcolor="#FFC2D5" uuid="f63c9c8e-9600-4f05-8490-d6fb83bbe597"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{course_name}.split( "\\(" )[0]]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Transparent" x="250" y="0" width="70" height="30" backcolor="#FFC2D5" uuid="8454377e-dfb3-43a8-aabc-ffb186c0b23a"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$F{Submitted_assignment_count}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Transparent" x="320" y="0" width="89" height="30" backcolor="#FFC2D5" uuid="15737ee9-2c4f-48f9-af05-5b2607a06fd3"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$F{Excused_assignment_count}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Transparent" x="180" y="0" width="70" height="30" backcolor="#FFC2D5" uuid="ce575ffc-2d16-46c4-98cb-04abddc39cfa"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$F{course_group_assignment_count}]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.10.0.final using JasperReports Library version 6.10.0-unknown  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="DA" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="153449a3-01ba-4eb0-94ee-0d88bc6e82bd">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="ESE"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<style name="Crosstab_CH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Crosstab_CG" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Crosstab_CT" mode="Opaque" backcolor="#005FB3">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Crosstab_CD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<parameter name="domin" class="java.lang.String"/>
+	<parameter name="student_id" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select s.*, users.gender from (
+select 
+"Term 2" as GP_Name,
+users.name as student_name,
+students.id,
+levels.level_code,
+spr.progress_report_id, 
+domains.title as domain_title, 
+domains.order as domin_order,
+dc.title as criteria_title, 
+ec.name as criteria_name , 
+ec.code as criteria_code,
+sprc.id as is_graded,
+( select cg.name from student_course_groups scg
+ inner join course_groups cg on cg.deleted_at is null and cg.id = scg.course_group_id
+ where scg.deleted_at is null and student_id = students.id
+ group by student_id) as class_name
+from students 
+inner join student_progress_reports spr on spr.deleted_at is null and spr.student_id = students.id
+inner join domains on domains.deleted_at is null and domains.progress_report_id = spr.progress_report_id
+inner join domain_competencies dc on dc.deleted_at is null and dc.domain_id = domains.id
+right join evaluation_criteria ec on ec.deleted_at is null and ec.progress_report_id = spr.progress_report_id
+left join student_progress_report_competencies sprc on sprc.deleted_at is null 
+and sprc.progress_report_domain_competency_id = dc.id and sprc.progress_report_evaluation_criteria_id = ec.id and sprc.student_progress_report_id = spr.id
+inner join users on users.deleted_at is null and users.actable_id = students.id and users.user_type = "student"
+inner join levels on levels.deleted_at is null and levels.id = students.level_id 
+where students.deleted_at is null and students.id = $P{student_id}    and domains.title =  $P{domin}    and ec.code not in ("YES","NO") and sprc.id is not null
+
+union all 
+
+select "Term 1" as GP_Name,
+student_name,
+domain_id as id,
+level_code,
+progress_report_id,
+domain_title,
+domain_order,
+REPLACE(REPLACE(criteria_title,"his/her","his"),"his","his/her") as criteria_title,
+criteria_name,
+criteria_code,
+is_graded,
+class_name
+from progress_report_semester_one prso where student_id =  $P{student_id}  and domain_title = $P{domin}  and is_graded != 0
+)s
+inner join users on users.actable_id = s.id and user_type = "student"]]>
+	</queryString>
+	<field name="GP_Name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="GP_Name"/>
+	</field>
+	<field name="student_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="student_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="users"/>
+	</field>
+	<field name="id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="students"/>
+	</field>
+	<field name="level_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="level_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="levels"/>
+	</field>
+	<field name="progress_report_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="progress_report_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="student_progress_reports"/>
+	</field>
+	<field name="domain_title" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="domain_title"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="domains"/>
+	</field>
+	<field name="domin_order" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="domin_order"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="domains"/>
+	</field>
+	<field name="criteria_title" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="criteria_title"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="domain_competencies"/>
+	</field>
+	<field name="criteria_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="criteria_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evaluation_criteria"/>
+	</field>
+	<field name="criteria_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="criteria_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evaluation_criteria"/>
+	</field>
+	<field name="is_graded" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="is_graded"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="student_progress_report_competencies"/>
+	</field>
+	<field name="class_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="class_name"/>
+	</field>
+	<field name="gender" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="gender"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="users"/>
+	</field>
+	<group name="Group1" keepTogether="true">
+		<groupExpression><![CDATA[$F{domain_title}]]></groupExpression>
+		<groupHeader>
+			<band/>
+		</groupHeader>
+		<groupFooter>
+			<band height="60">
+				<crosstab horizontalPosition="Left">
+					<reportElement x="0" y="0" width="555" height="60" uuid="e97fae15-d757-4597-a1aa-f862a868e70c">
+						<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+						<property name="com.jaspersoft.studio.crosstab.style.header" value="Crosstab_CH"/>
+						<property name="com.jaspersoft.studio.crosstab.style.group" value="Crosstab_CG"/>
+						<property name="com.jaspersoft.studio.crosstab.style.total" value="Crosstab_CT"/>
+						<property name="com.jaspersoft.studio.crosstab.style.detail" value="Crosstab_CD"/>
+					</reportElement>
+					<crosstabHeaderCell>
+						<cellContents>
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<staticText>
+								<reportElement mode="Opaque" x="0" y="0" width="400" height="30" backcolor="#F0F0F0" uuid="c7903962-c1e3-4a2b-81f2-b91f5d1a69f1"/>
+								<box>
+									<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								</box>
+								<text><![CDATA[]]></text>
+							</staticText>
+						</cellContents>
+					</crosstabHeaderCell>
+					<rowGroup name="criteria_title" width="400">
+						<bucket class="java.lang.String">
+							<bucketExpression><![CDATA[$F{criteria_title}.replaceAll( "\\.", "" )]]></bucketExpression>
+						</bucket>
+						<crosstabRowHeader>
+							<cellContents mode="Opaque" style="Crosstab_CH">
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								<textField>
+									<reportElement mode="Opaque" x="0" y="0" width="400" height="30" uuid="902b9da1-9746-459d-bdda-8832a780f7c3"/>
+									<box leftPadding="5"/>
+									<textElement verticalAlignment="Middle">
+										<font size="14"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$V{criteria_title}.replaceAll( "his/her", (IF($V{gender}.compareTo("male")==0,"his","her" )).toString() )]]></textFieldExpression>
+								</textField>
+							</cellContents>
+						</crosstabRowHeader>
+						<crosstabTotalRowHeader>
+							<cellContents mode="Opaque" style="Crosstab_CT">
+								<staticText>
+									<reportElement x="0" y="0" width="400" height="20" forecolor="#FFFFFF" uuid="94369363-20ae-43fa-b24d-828a35504465"/>
+									<text><![CDATA[Total criteria_title]]></text>
+								</staticText>
+							</cellContents>
+						</crosstabTotalRowHeader>
+					</rowGroup>
+					<columnGroup name="GP_Name" height="30">
+						<bucket class="java.lang.String">
+							<bucketExpression><![CDATA[$F{GP_Name}]]></bucketExpression>
+						</bucket>
+						<crosstabColumnHeader>
+							<cellContents mode="Opaque" style="Crosstab_CH">
+								<textField>
+									<reportElement mode="Opaque" x="0" y="0" width="60" height="30" backcolor="#8BA5FC" uuid="76695734-be4f-461c-b200-ca1797aa45fc"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font size="12" isBold="true"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$V{GP_Name}]]></textFieldExpression>
+								</textField>
+							</cellContents>
+						</crosstabColumnHeader>
+						<crosstabTotalColumnHeader>
+							<cellContents mode="Opaque" style="Crosstab_CT">
+								<staticText>
+									<reportElement x="0" y="0" width="60" height="20" forecolor="#FFFFFF" uuid="8172bced-ad0b-43c0-8f5f-58d45550b1cc"/>
+									<text><![CDATA[Total GP_Name]]></text>
+								</staticText>
+							</cellContents>
+						</crosstabTotalColumnHeader>
+					</columnGroup>
+					<measure name="criteria_code_MEASURE" class="java.lang.String">
+						<measureExpression><![CDATA[$F{criteria_code}]]></measureExpression>
+					</measure>
+					<measure name="domin" class="java.lang.String">
+						<measureExpression><![CDATA[$P{domin}]]></measureExpression>
+					</measure>
+					<measure name="gender" class="java.lang.String">
+						<measureExpression><![CDATA[$F{gender}]]></measureExpression>
+					</measure>
+					<crosstabCell width="60" height="30">
+						<cellContents mode="Opaque" style="Crosstab_CD">
+							<textField isBlankWhenNull="true">
+								<reportElement mode="Opaque" x="0" y="0" width="60" height="30" uuid="caa87563-babb-4bf3-a7a9-2c5f44a1523e"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="14"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{criteria_code_MEASURE}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabCell>
+					<crosstabCell width="60" height="20" columnTotalGroup="GP_Name">
+						<cellContents mode="Opaque" style="Crosstab_CT">
+							<textField>
+								<reportElement x="0" y="0" width="60" height="20" forecolor="#FFFFFF" uuid="85cc3ed6-7862-4f7b-9689-c83562173cf4"/>
+								<textFieldExpression><![CDATA[$V{criteria_code_MEASURE}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabCell>
+					<crosstabCell width="60" height="20" rowTotalGroup="criteria_title">
+						<cellContents mode="Opaque" style="Crosstab_CT">
+							<textField>
+								<reportElement x="0" y="0" width="60" height="20" forecolor="#FFFFFF" uuid="8cc9f52f-2f30-47c5-8d21-31fb697df5a8"/>
+								<textFieldExpression><![CDATA[$V{criteria_code_MEASURE}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabCell>
+					<crosstabCell width="60" height="20" rowTotalGroup="criteria_title" columnTotalGroup="GP_Name">
+						<cellContents mode="Opaque" style="Crosstab_CT">
+							<textField>
+								<reportElement x="0" y="0" width="60" height="20" forecolor="#FFFFFF" uuid="7447e208-b08a-4ca4-afa2-c2fef682b825"/>
+								<textFieldExpression><![CDATA[$V{criteria_code_MEASURE}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabCell>
+				</crosstab>
+				<frame>
+					<reportElement positionType="Float" x="0" y="0" width="555" height="50" uuid="f45203e7-77de-4358-afb4-8a57c3f8f79e"/>
+					<frame>
+						<reportElement x="0" y="0" width="555" height="40" uuid="44ccd084-ff53-4d32-a4c3-acf93ea8a05f"/>
+						<textField>
+							<reportElement mode="Opaque" x="0" y="0" width="400" height="30" backcolor="#F0F0F0" uuid="031d97cf-0369-4276-bd44-b963ac443c45"/>
+							<box leftPadding="5">
+								<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textElement verticalAlignment="Middle">
+								<font size="14" isBold="true"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{domain_title}]]></textFieldExpression>
+						</textField>
+					</frame>
+				</frame>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

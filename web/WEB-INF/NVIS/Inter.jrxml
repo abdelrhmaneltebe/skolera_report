@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.10.0.final using JasperReports Library version 6.10.0-unknown  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Inter" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="fdd2f6b5-8173-434a-b7d7-1a98a0a3dc28">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<parameter name="Student_ID" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[-- Approaches to Learning Sub Report -- 
+select
+levels.id as level_id, levels.name as level_name, levels.level_code as level_code,
+RIGHT(students.batch_name, 1) as course_group_name,
+students.id as student_id, users.name as student_name,
+spr.comment as general_comment,
+courses.id as course_id, courses.name AS course_name, courses.code as course_code,
+domains.id as domain_id, domains.title as domain_title, domains.order as domain_order,
+dc.id as competency, dc.title AS competency_title, dc.order as competency_order,
+IF(ec.name is null, "N/A",ec.name) criteria_name,
+IF(ec.code is null, "N/A",ec.code) criteria_code
+
+from students
+inner join users on users.actable_id = students.id and users.actable_type = "student" and users.deleted_at is null
+inner join levels on levels.id = students.level_id and levels.deleted_at is null
+
+inner join student_progress_reports spr on spr.student_id = students.id and spr.deleted_at is null
+inner join progress_reports pr on pr.id = spr.progress_report_id and pr.deleted_at is null
+
+-- change choosed title as per you sub report needs -- 
+inner join domains on domains.progress_report_id = pr.id and domains.deleted_at is null and domains.title like "Inter%"
+inner join courses on courses.id = domains.course_id and courses.deleted_at is null 
+inner join domain_competencies dc on dc.domain_id = domains.id and dc.deleted_at is null
+
+-- if you want all competencies even the comp that not given critria make the next 2 joins left --
+inner join student_progress_report_competencies sprc on sprc.student_progress_report_id = spr.id and sprc.progress_report_domain_competency_id = dc.id and sprc.deleted_at is null
+inner join evaluation_criteria ec on ec.id = sprc.progress_report_evaluation_criteria_id and ec.deleted_at is null
+
+
+where students.deleted_at is null
+and students.id =  $P{Student_ID} 
+
+order by levels.name, batch_name, users.name, domains.id]]>
+	</queryString>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="35" splitType="Stretch"/>
+	</pageHeader>
+	<detail>
+		<band height="125" splitType="Stretch">
+			<textField>
+				<reportElement x="230" y="53" width="100" height="30" uuid="dc188fd3-cf8f-4581-b681-2bf639da7e29"/>
+				<textFieldExpression><![CDATA[$P{Student_ID}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+</jasperReport>

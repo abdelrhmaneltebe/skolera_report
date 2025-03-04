@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.10.0.final using JasperReports Library version 6.10.0-unknown  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="content" pageWidth="409" pageHeight="842" columnWidth="409" leftMargin="0" rightMargin="0" topMargin="20" bottomMargin="20" uuid="d611062f-915b-41de-9d0b-f89564c6788f">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="SGIS"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<subDataset name="chart1" uuid="268eaee7-1a34-4149-88c2-30bd1fbaa275">
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="SGIS"/>
+		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		<parameter name="student_id" class="java.lang.Integer"/>
+		<queryString>
+			<![CDATA[select if(sum(x.action_count) is null , 0 , sum(x.action_count)) as action_count,
+"views_number" as action_type, 
+x.student_id 
+from(select sum(views_number) as action_count, 
+"views_number" as action_type,
+users.actable_id as student_id
+from (select if(views_number >0,1,0) as views_number, if(downloads_number >0 ,1,0) as downloads_number, course_group_id, user_id 
+from course_content_participants where deleted_at is null)s
+inner join users on users.id = user_id and users.deleted_at is null
+where users.actable_id = $P{student_id} 
+group by course_group_id, user_id)x
+union all 
+
+
+select if(sum(y.action_count) is null , 0, sum(y.action_count) ) as action_count ,"downloads_number" as action_type, y.student_id from( 
+select sum(downloads_number) as action_count,
+"downloads_number" as action_type,
+users.actable_id as student_id
+from (select if(views_number >0,1,0) as views_number, if(downloads_number >0 ,1,0) as downloads_number, course_group_id, user_id 
+from course_content_participants where deleted_at is null)s
+inner join users on users.id = user_id and users.deleted_at is null and actable_id = $P{student_id} 
+group by course_group_id, user_id)y
+union all 
+
+
+select 
+if(sum(x.content_count) is null , 0 , sum(x.content_count))-(if(s.action_count is null , 0 , s.action_count )+if(e.action_count is null , 0 ,e.action_count)) as action_count,
+"NO Action" as action_type,
+x.student_id
+from (SELECT COUNT(course_content_id) as content_count, group_contents.course_group_id,scg.student_id
+FROM
+group_contents 
+inner join student_course_groups scg on group_contents.course_group_id = scg.course_group_id and scg.deleted_at is null and scg.student_id = $P{student_id} 
+WHERE group_contents.deleted_at IS NULL
+group by group_contents.course_group_id)x
+inner join (select sum(x.action_count) as action_count,
+x.action_type, 
+x.student_id 
+from(select if (sum(views_number) is null , 0 , sum(views_number)) as action_count, 
+"views_number" as action_type,
+users.actable_id as student_id
+from (select if(views_number >0,1,0) as views_number, if(downloads_number >0 ,1,0) as downloads_number, course_group_id, user_id 
+from course_content_participants where deleted_at is null)s
+inner join users on users.id = user_id and users.deleted_at is null
+where users.actable_id = $P{student_id} 
+group by course_group_id, user_id)x)s on x.student_id = s.student_id
+inner join (select sum(y.action_count) as action_count ,y.action_type, y.student_id from( 
+select if(sum(downloads_number) is null , 0 , sum(downloads_number)) as action_count,
+"downloads_number" as action_type,
+users.actable_id as student_id
+from (select if(views_number >0,1,0) as views_number, if(downloads_number >0 ,1,0) as downloads_number, course_group_id, user_id 
+from course_content_participants where deleted_at is null)s
+inner join users on users.id = user_id and users.deleted_at is null and actable_id = $P{student_id} 
+group by course_group_id, user_id)y)e on x.student_id = e.student_id]]>
+		</queryString>
+		<field name="action_count" class="java.lang.Integer">
+			<property name="com.jaspersoft.studio.field.label" value="action_count"/>
+		</field>
+		<field name="action_type" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="action_type"/>
+		</field>
+		<field name="student_id" class="java.lang.Integer">
+			<property name="com.jaspersoft.studio.field.label" value="student_id"/>
+		</field>
+	</subDataset>
+	<parameter name="student_id" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select course_groups.id, course_groups.name, 
+courses.name as course_name, courses.id as course_id, 
+level_code, 
+scg.student_id, a.content_count, users.id as user_id, users.name as student_name,
+f.views_number,f.downloads_number
+from course_groups 
+inner join courses on course_groups.course_id = courses.id and courses.deleted_at is null
+inner join levels on courses.level_id = levels.id and levels.deleted_at is null
+inner join student_course_groups scg on scg.course_group_id = course_groups.id and scg.deleted_at is null
+left join (
+SELECT COUNT(course_content_id) as content_count,course_group_id
+FROM
+    group_contents WHERE deleted_at IS NULL
+    group by course_group_id
+)a on a.course_group_id = course_groups.id
+inner join users on users.actable_id = scg.student_id and users.user_type = "student" and users.deleted_at is null
+left join (select sum(views_number) as views_number, sum(downloads_number) as downloads_number,course_group_id, user_id 
+from (select if(views_number >0,1,0) as views_number, if(downloads_number >0 ,1,0) as downloads_number, course_group_id, user_id 
+from course_content_participants where deleted_at is null)s
+group by course_group_id, user_id)f on f.course_group_id = course_groups.id and f.user_id = users.id
+where course_groups.deleted_at is null and scg.student_id =  $P{student_id}]]>
+	</queryString>
+	<field name="id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="course_groups"/>
+	</field>
+	<field name="name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="course_groups"/>
+	</field>
+	<field name="course_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="course_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="courses"/>
+	</field>
+	<field name="course_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="course_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="courses"/>
+	</field>
+	<field name="level_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="level_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="levels"/>
+	</field>
+	<field name="student_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="student_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="student_course_groups"/>
+	</field>
+	<field name="content_count" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.label" value="content_count"/>
+	</field>
+	<field name="user_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="user_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="users"/>
+	</field>
+	<field name="student_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="student_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="users"/>
+	</field>
+	<field name="views_number" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="views_number"/>
+	</field>
+	<field name="downloads_number" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="downloads_number"/>
+	</field>
+	<group name="ST_Group">
+		<groupExpression><![CDATA[$F{student_id}]]></groupExpression>
+		<groupHeader>
+			<band height="276">
+				<frame>
+					<reportElement mode="Opaque" x="0" y="246" width="409" height="30" backcolor="#FFE261" uuid="acfb5ecb-ce04-46fb-81f8-20ea1c75d7a3"/>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<staticText>
+						<reportElement mode="Opaque" x="0" y="0" width="180" height="30" backcolor="#FFE261" uuid="08fdb55c-1d85-4636-b0c1-381eedd4bc0d"/>
+						<box>
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle"/>
+						<text><![CDATA[Course Name]]></text>
+					</staticText>
+					<staticText>
+						<reportElement mode="Opaque" x="250" y="0" width="70" height="30" backcolor="#FFE261" uuid="8f2bec51-4b2c-4d23-8871-f7314d890e4c"/>
+						<box>
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle"/>
+						<text><![CDATA[Views Number]]></text>
+					</staticText>
+					<staticText>
+						<reportElement mode="Opaque" x="320" y="0" width="89" height="30" backcolor="#FFE261" uuid="73e396e3-baea-4869-8771-e2b91d001065"/>
+						<box>
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle"/>
+						<text><![CDATA[Downloads Number]]></text>
+					</staticText>
+					<staticText>
+						<reportElement mode="Opaque" x="180" y="0" width="70" height="30" backcolor="#FFE261" uuid="aeb7922c-c47d-4d3c-a303-d5ad913bd552"/>
+						<box>
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle"/>
+						<text><![CDATA[Content Count]]></text>
+					</staticText>
+				</frame>
+				<frame>
+					<reportElement x="0" y="0" width="409" height="200" uuid="bf4f2746-8c31-4a89-9152-74733a860bb0"/>
+					<pieChart>
+						<chart evaluationTime="Report">
+							<reportElement x="0" y="0" width="409" height="200" uuid="f8d2ddf2-ae87-41c3-921f-43df5f01e3f4"/>
+							<chartTitle position="Bottom"/>
+							<chartSubtitle/>
+							<chartLegend/>
+						</chart>
+						<pieDataset>
+							<dataset>
+								<datasetRun subDataset="chart1" uuid="85431e31-5358-484b-9e98-ccbed2c4cacd">
+									<datasetParameter name="student_id">
+										<datasetParameterExpression><![CDATA[$F{student_id}]]></datasetParameterExpression>
+									</datasetParameter>
+								</datasetRun>
+							</dataset>
+							<keyExpression><![CDATA[$F{action_type}+" ("+$F{action_count}+")"]]></keyExpression>
+							<valueExpression><![CDATA[IF($F{action_count} == null , 0 ,$F{action_count})]]></valueExpression>
+						</pieDataset>
+						<piePlot>
+							<plot backcolor="#FFFFFF" backgroundAlpha="0.0" foregroundAlpha="1.0">
+								<seriesColor seriesOrder="0" color="#46B3E6"/>
+								<seriesColor seriesOrder="1" color="#7CBD1E"/>
+								<seriesColor seriesOrder="2" color="#F88F01"/>
+							</plot>
+							<itemLabel color="#000000"/>
+						</piePlot>
+					</pieChart>
+					<ellipse>
+						<reportElement x="164" y="48" width="80" height="80" uuid="e41db93a-5c29-4a9e-8f6e-1cf0d6db9408"/>
+						<graphicElement>
+							<pen lineWidth="0.0"/>
+						</graphicElement>
+					</ellipse>
+				</frame>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band/>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="30" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField>
+				<reportElement x="0" y="0" width="409" height="30" uuid="11e6a638-c929-4a69-940b-5f61c103634f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="16"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Content"]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="30" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<frame>
+				<reportElement mode="Transparent" x="0" y="0" width="409" height="30" backcolor="#FFE261" uuid="9ee38a8c-2c21-4c04-9f87-90b7ced87107"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textField>
+					<reportElement mode="Transparent" x="0" y="0" width="180" height="30" backcolor="#FFE261" uuid="f63c9c8e-9600-4f05-8490-d6fb83bbe597"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{course_name}.split( "\\(" )[0]]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Transparent" x="250" y="0" width="70" height="30" backcolor="#FFE261" uuid="8454377e-dfb3-43a8-aabc-ffb186c0b23a"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[IF($F{views_number} == null , 0 , $F{views_number})]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Transparent" x="320" y="0" width="89" height="30" backcolor="#FFE261" uuid="15737ee9-2c4f-48f9-af05-5b2607a06fd3"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[IF($F{downloads_number} == null , 0 , $F{downloads_number})]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Transparent" x="180" y="0" width="70" height="30" backcolor="#FFE261" uuid="ce575ffc-2d16-46c4-98cb-04abddc39cfa"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[IF($F{content_count} == null , 0 , $F{content_count})]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

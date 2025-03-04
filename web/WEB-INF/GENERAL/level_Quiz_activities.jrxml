@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.10.0.final using JasperReports Library version 6.10.0-unknown  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="level_assignments_activities" pageWidth="1000" pageHeight="1100" orientation="Landscape" columnWidth="960" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="1aede5fe-f144-4090-acfc-9d669b526250">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="SGIS"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="ABSOLUTE_PATH" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select count(quizzes.id) item_count, "quizzes" as item_type, levels.name, monthname(quizzes.updated_at) as month_name, month(quizzes.updated_at) as month_num from quizzes 
+ inner join courses on courses.deleted_at is null and courses.id = quizzes.course_id 
+ inner join levels on levels.deleted_at is null and courses.level_id = levels.id
+ where quizzes.deleted_at is null
+ group by levels.name, month(quizzes.updated_at)]]>
+	</queryString>
+	<field name="item_count" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.label" value="item_count"/>
+	</field>
+	<field name="item_type" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="item_type"/>
+	</field>
+	<field name="name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="levels"/>
+	</field>
+	<field name="month_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="month_name"/>
+	</field>
+	<field name="month_num" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="month_num"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="161" splitType="Stretch">
+			<image>
+				<reportElement x="0" y="0" width="960" height="161" uuid="ff34df4c-23e8-4846-a942-56b18038f2a2"/>
+				<imageExpression><![CDATA[$P{ABSOLUTE_PATH}+"//SKOLERA_HEADER.png"]]></imageExpression>
+			</image>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="30" splitType="Stretch">
+			<staticText>
+				<reportElement x="882" y="0" width="72" height="30" forecolor="#60DC88" uuid="8e41ca74-b5c9-49a4-b076-2ea018d86bd7"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ Skolera]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="810" y="0" width="72" height="30" uuid="05e72977-d684-44d7-8c94-d17864e8d2c8"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Powered by]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="622" splitType="Stretch">
+			<lineChart>
+				<chart evaluationTime="Report">
+					<reportElement positionType="Float" x="0" y="325" width="960" height="297" uuid="778e570b-e090-4d58-a1d6-f82171465a6c"/>
+					<chartTitle/>
+					<chartSubtitle/>
+					<chartLegend/>
+				</chart>
+				<categoryDataset>
+					<categorySeries>
+						<seriesExpression><![CDATA[$F{name}]]></seriesExpression>
+						<categoryExpression><![CDATA[$F{month_name}]]></categoryExpression>
+						<valueExpression><![CDATA[$F{item_count}]]></valueExpression>
+					</categorySeries>
+				</categoryDataset>
+				<linePlot>
+					<plot/>
+					<categoryAxisFormat>
+						<axisFormat labelColor="#000000" tickLabelColor="#000000" axisLineColor="#000000"/>
+					</categoryAxisFormat>
+					<valueAxisFormat>
+						<axisFormat labelColor="#000000" tickLabelColor="#000000" axisLineColor="#000000"/>
+					</valueAxisFormat>
+				</linePlot>
+			</lineChart>
+			<subreport>
+				<reportElement x="0" y="0" width="960" height="300" uuid="88875342-478d-4845-9f08-8b739acd5657"/>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{ABSOLUTE_PATH}+"/level_quiz_activities/quiz_count.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</summary>
+</jasperReport>

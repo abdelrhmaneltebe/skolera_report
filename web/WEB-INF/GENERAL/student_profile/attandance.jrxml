@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.10.0.final using JasperReports Library version 6.10.0-unknown  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="attandance" pageWidth="1040" pageHeight="842" columnWidth="1000" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="733b1d95-a90b-40cb-a25e-e18d7f69cce5">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="SGIS"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<style name="Crosstab_CH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Crosstab_CG" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Crosstab_CT" mode="Opaque" backcolor="#005FB3">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Crosstab_CD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Style1">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{att}.compareTo("P")==0]]></conditionExpression>
+			<style mode="Opaque" backcolor="#4BC54F"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{att}.compareTo("A")==0]]></conditionExpression>
+			<style mode="Opaque" backcolor="#EF4244"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{att}.compareTo("L")==0]]></conditionExpression>
+			<style mode="Opaque" backcolor="#FFCB00"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{att}.compareTo("E")==0]]></conditionExpression>
+			<style mode="Opaque" backcolor="#3175EA"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="STUDENT_ID" class="java.lang.String">
+		<defaultValueExpression><![CDATA["-1"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select 
+student_id,
+count(status) as att_count,
+att,
+group_concat(date) as dates
+from (select id , date, status, student_id, 
+if(status = 0 , "P",
+	if(status = 1 , "A",
+		if(status = 2 , "L","E"))) as att
+from attendances where timetable_slot_id is null and deleted_at is null and student_id =  $P{STUDENT_ID} order by date )s
+group by status
+]]>
+	</queryString>
+	<field name="student_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="student_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="attendances"/>
+	</field>
+	<field name="att_count" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.label" value="att_count"/>
+	</field>
+	<field name="att" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="att"/>
+	</field>
+	<field name="dates" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="dates"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="90" splitType="Stretch">
+			<crosstab horizontalPosition="Center">
+				<reportElement x="0" y="0" width="1000" height="90" uuid="84bfac2f-e65d-4457-b7c2-be7b1d71aae5">
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+					<property name="com.jaspersoft.studio.crosstab.style.header" value="Crosstab_CH"/>
+					<property name="com.jaspersoft.studio.crosstab.style.group" value="Crosstab_CG"/>
+					<property name="com.jaspersoft.studio.crosstab.style.total" value="Crosstab_CT"/>
+					<property name="com.jaspersoft.studio.crosstab.style.detail" value="Crosstab_CD"/>
+				</reportElement>
+				<crosstabHeaderCell>
+					<cellContents>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</cellContents>
+				</crosstabHeaderCell>
+				<rowGroup name="student_id" width="0" totalPosition="End">
+					<bucket class="java.lang.Integer">
+						<bucketExpression><![CDATA[$F{student_id}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents mode="Opaque" style="Crosstab_CH">
+							<textField>
+								<reportElement mode="Opaque" x="0" y="0" width="0" height="116" uuid="81dfb4fd-d4a7-4aca-a734-5828b75337fa"/>
+								<textFieldExpression><![CDATA[$V{student_id}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents mode="Opaque" style="Crosstab_CT">
+							<staticText>
+								<reportElement mode="Opaque" x="0" y="0" width="0" height="0" forecolor="#FFFFFF" uuid="5c30ddb8-6315-4921-8416-b5cbe05262b7"/>
+								<text><![CDATA[Total student_id]]></text>
+							</staticText>
+						</cellContents>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<columnGroup name="att" height="50" totalPosition="End">
+					<bucket order="None" class="java.lang.String">
+						<bucketExpression><![CDATA[$F{att}]]></bucketExpression>
+					</bucket>
+					<crosstabColumnHeader>
+						<cellContents backcolor="#FFFFFF" mode="Opaque" style="Crosstab_CH">
+							<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<box>
+								<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<frame>
+								<reportElement x="0" y="0" width="160" height="50" uuid="38b92e15-a05c-48ea-bdc2-f0dd6dbd92e1"/>
+								<ellipse>
+									<reportElement style="Style1" x="60" y="5" width="40" height="40" uuid="c85df6d9-3ef8-489f-9377-b726a94dc50a">
+										<property name="com.jaspersoft.studio.unit.width" value="px"/>
+									</reportElement>
+								</ellipse>
+								<textField>
+									<reportElement mode="Transparent" x="30" y="5" width="100" height="40" forecolor="#FFFFFF" uuid="e689512c-f6d7-4198-a67f-6b511409fd06"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font size="12" isBold="true"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$V{att}]]></textFieldExpression>
+								</textField>
+							</frame>
+						</cellContents>
+					</crosstabColumnHeader>
+					<crosstabTotalColumnHeader>
+						<cellContents mode="Opaque" style="Crosstab_CT">
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<staticText>
+								<reportElement mode="Opaque" x="0" y="0" width="0" height="50" forecolor="#FFFFFF" uuid="c8e6f3fc-8c63-4d81-b205-92442fa997f2"/>
+								<text><![CDATA[Total att]]></text>
+							</staticText>
+						</cellContents>
+					</crosstabTotalColumnHeader>
+				</columnGroup>
+				<measure name="att_count_MEASURE" class="java.lang.Long">
+					<measureExpression><![CDATA[$F{att_count}]]></measureExpression>
+				</measure>
+				<measure name="dates" class="java.lang.String">
+					<measureExpression><![CDATA[$F{dates}]]></measureExpression>
+				</measure>
+				<crosstabCell width="160" height="116">
+					<cellContents mode="Opaque" style="Crosstab_CD">
+						<box>
+							<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<frame>
+							<reportElement x="0" y="0" width="160" height="116" uuid="26430a60-a162-429b-9dcd-6387b7d58029"/>
+							<textField>
+								<reportElement mode="Opaque" x="0" y="0" width="160" height="30" uuid="336e2c35-3e49-4031-8a38-b32dd7d037c8"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="14"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{att_count_MEASURE}]]></textFieldExpression>
+							</textField>
+							<textField>
+								<reportElement mode="Opaque" x="0" y="30" width="160" height="86" uuid="e351f846-f5fd-4628-bc3d-34621c08c894">
+									<printWhenExpression><![CDATA[$V{att}.compareTo("P")!=0]]></printWhenExpression>
+								</reportElement>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="14"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{dates}.replaceAll( ",", "\n" )]]></textFieldExpression>
+							</textField>
+						</frame>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="0" height="116" columnTotalGroup="att">
+					<cellContents mode="Opaque" style="Crosstab_CT">
+						<textField>
+							<reportElement mode="Opaque" x="0" y="0" width="0" height="116" forecolor="#FFFFFF" uuid="4ebc36cd-b3a9-4f85-a492-130c989629dc"/>
+							<textFieldExpression><![CDATA[$V{att_count_MEASURE}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="160" height="0" rowTotalGroup="student_id">
+					<cellContents mode="Opaque" style="Crosstab_CT">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<textField>
+							<reportElement mode="Opaque" x="0" y="0" width="160" height="0" forecolor="#FFFFFF" uuid="961819d1-e360-48f6-830a-85dacf570748"/>
+							<textFieldExpression><![CDATA[$V{att_count_MEASURE}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="0" height="0" rowTotalGroup="student_id" columnTotalGroup="att">
+					<cellContents mode="Opaque" style="Crosstab_CT">
+						<textField>
+							<reportElement mode="Opaque" x="0" y="0" width="0" height="0" forecolor="#FFFFFF" uuid="72bfdfdc-7d97-4a9b-9b3a-770e4e57ae90"/>
+							<textFieldExpression><![CDATA[$V{att_count_MEASURE}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+			</crosstab>
+		</band>
+	</summary>
+</jasperReport>

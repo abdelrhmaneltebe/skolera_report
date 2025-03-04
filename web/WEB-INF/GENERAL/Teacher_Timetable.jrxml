@@ -1,0 +1,803 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.10.0.final using JasperReports Library version 6.10.0-unknown  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="teacher_timetable" pageWidth="1050" pageHeight="950" columnWidth="1010" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="dca131e6-45ee-4437-a104-d693ec028b98">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="ESE"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<style name="day_color">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{course_name_MEASURE} == null]]></conditionExpression>
+			<style backcolor="#A6A6A6"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{rank}==1]]></conditionExpression>
+			<style backcolor="#E498C5"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{rank}==2]]></conditionExpression>
+			<style backcolor="#A99346"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{rank}==3]]></conditionExpression>
+			<style backcolor="#92F35A"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{rank}==4]]></conditionExpression>
+			<style backcolor="#85F3FF"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{rank}==5]]></conditionExpression>
+			<style backcolor="#0F73C2"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{rank}==6]]></conditionExpression>
+			<style backcolor="#FAA1FF"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{rank}==7]]></conditionExpression>
+			<style backcolor="#418D92"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{rank}==8]]></conditionExpression>
+			<style backcolor="#D78350"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{rank}==9]]></conditionExpression>
+			<style backcolor="#94AED6"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{rank}==10]]></conditionExpression>
+			<style backcolor="#A36780"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{rank}==11]]></conditionExpression>
+			<style backcolor="#629954"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{rank}==12]]></conditionExpression>
+			<style backcolor="#FF4F63"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{rank}==13]]></conditionExpression>
+			<style backcolor="#33B8B3"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{rank}==14]]></conditionExpression>
+			<style backcolor="#AD73F5"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{rank}==15]]></conditionExpression>
+			<style backcolor="#AF5808"/>
+		</conditionalStyle>
+	</style>
+	<style name="Crosstab_CH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Crosstab_CG" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Crosstab_CT" mode="Opaque" backcolor="#005FB3">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Crosstab_CD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Crosstab 1_CH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Crosstab 1_CG" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Crosstab 1_CT" mode="Opaque" backcolor="#005FB3">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Crosstab 1_CD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="CopyOf_day_color1">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{course_name_MEASURE} == null]]></conditionExpression>
+			<style forecolor="#000000" backcolor="#E8E8E8">
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+			</style>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{course_name_MEASURE} != null]]></conditionExpression>
+			<style forecolor="#000000" backcolor="#E8E8E8">
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+			</style>
+		</conditionalStyle>
+	</style>
+	<subDataset name="teacher" uuid="7e6fbece-2ee1-4fb1-b319-c7a1e1205029">
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="SGIS"/>
+		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		<parameter name="teacher_name" class="java.lang.String"/>
+		<queryString>
+			<![CDATA[select s.*, tst.slot_no as slot_nom, tst.start_time from (select courses.name as course__full_name, cg.name as class_name, users.name as teacher_name, courses.code,
+ SUBSTRING_INDEX(courses.name, '(', 1) AS course_name,
+    CASE
+        WHEN day = 0 THEN 'Sunday'
+        WHEN day = 1 THEN 'Monday'
+        WHEN day = 2 THEN 'Tuesday'
+        WHEN day = 3 THEN 'Wednesday'
+        WHEN day = 4 THEN 'Thursday'
+        WHEN day = 5 THEN 'Friday'
+        WHEN day = 6 THEN 'Saturday'
+        ELSE NULL
+    END AS WeekName,
+    ts.day,
+    ts.slot_no,
+    ts.level_id,
+    ts.from,
+    ts.to,
+    c.rank
+    from course_groups_teachers cgt 
+ inner join timetable_slots ts on ts.deleted_at is null and ts.course_group_id = cgt.course_group_id
+ inner join users on users.deleted_at is null and users.actable_id = cgt.teacher_id and users.user_type = "teacher"
+ inner join course_groups cg on cg.deleted_at is null and cg.id = cgt.course_group_id
+ inner join courses on courses.deleted_at is null and courses.id = cg.course_id
+ INNER JOIN
+ (SELECT 
+        courses.*, @rownum:=IF(@rownum = 15, 0, @rownum) + 1 AS rank
+    FROM
+        (select courses.name as course__full_name, cg.name as class_name, users.name as teacher_name, 
+ SUBSTRING_INDEX(courses.name, '(', 1) AS course_name,
+    CASE
+        WHEN day = 0 THEN 'Sunday'
+        WHEN day = 1 THEN 'Monday'
+        WHEN day = 2 THEN 'Tuesday'
+        WHEN day = 3 THEN 'Wednesday'
+        WHEN day = 4 THEN 'Thursday'
+        WHEN day = 5 THEN 'Friday'
+        WHEN day = 6 THEN 'Saturday'
+        ELSE NULL
+    END AS WeekName,
+    ts.slot_no,
+    ts.level_id,
+    ts.from,
+    ts.to
+    from course_groups_teachers cgt 
+ inner join timetable_slots ts on ts.deleted_at is null and ts.course_group_id = cgt.course_group_id
+ inner join users on users.deleted_at is null and users.actable_id = cgt.teacher_id and users.user_type = "teacher"
+ inner join course_groups cg on cg.deleted_at is null and cg.id = cgt.course_group_id
+ inner join courses on courses.deleted_at is null and courses.id = cg.course_id
+ where cgt.deleted_at is null and users.name =  $P{teacher_name} 
+ group by users.name,course__full_name) courses, (SELECT @rownum:=0) r order by course__full_name)c on c.teacher_name = users.name and c.course__full_name = courses.name 
+ where cgt.deleted_at is null
+ and users.name =  $P{teacher_name} )s
+ right join timetable_slot_times tst on tst.slot_no = s.slot_no]]>
+		</queryString>
+		<field name="course__full_name" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="course__full_name"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="courses"/>
+		</field>
+		<field name="class_name" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="class_name"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="course_groups"/>
+		</field>
+		<field name="teacher_name" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="teacher_name"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="users"/>
+		</field>
+		<field name="code" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="code"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="courses"/>
+		</field>
+		<field name="course_name" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="course_name"/>
+		</field>
+		<field name="WeekName" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="WeekName"/>
+		</field>
+		<field name="day" class="java.lang.Integer">
+			<property name="com.jaspersoft.studio.field.label" value="day"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="timetable_slots"/>
+		</field>
+		<field name="slot_no" class="java.lang.Integer">
+			<property name="com.jaspersoft.studio.field.label" value="slot_no"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="timetable_slots"/>
+		</field>
+		<field name="level_id" class="java.lang.Integer">
+			<property name="com.jaspersoft.studio.field.label" value="level_id"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="timetable_slots"/>
+		</field>
+		<field name="from" class="java.sql.Timestamp">
+			<property name="com.jaspersoft.studio.field.label" value="from"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="timetable_slots"/>
+		</field>
+		<field name="to" class="java.sql.Timestamp">
+			<property name="com.jaspersoft.studio.field.label" value="to"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="timetable_slots"/>
+		</field>
+		<field name="rank" class="java.lang.Double">
+			<property name="com.jaspersoft.studio.field.label" value="rank"/>
+		</field>
+		<field name="slot_nom" class="java.lang.Integer">
+			<property name="com.jaspersoft.studio.field.label" value="slot_nom"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="timetable_slot_times"/>
+		</field>
+		<field name="start_time" class="java.sql.Timestamp">
+			<property name="com.jaspersoft.studio.field.label" value="start_time"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="timetable_slot_times"/>
+		</field>
+		<sortField name="day"/>
+	</subDataset>
+	<subDataset name="colored_courses" uuid="71b1f3a4-837d-486b-b55d-24e791e419c9">
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="FMS"/>
+		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		<parameter name="teacher_name" class="java.lang.String"/>
+		<queryString>
+			<![CDATA[select s.*, tst.slot_no as slot_nom, tst.start_time from (select courses.name as course__full_name, cg.name as class_name, users.name as teacher_name, 
+ SUBSTRING_INDEX(courses.name, '(', 1) AS course_name,
+    CASE
+        WHEN day = 0 THEN 'Sunday'
+        WHEN day = 1 THEN 'Monday'
+        WHEN day = 2 THEN 'Tuesday'
+        WHEN day = 3 THEN 'Wednesday'
+        WHEN day = 4 THEN 'Thursday'
+        WHEN day = 5 THEN 'Friday'
+        WHEN day = 6 THEN 'Saturday'
+        ELSE NULL
+    END AS WeekName,
+    ts.day,
+    ts.slot_no,
+    ts.level_id,
+    ts.from,
+    ts.to,
+    c.rank
+    from course_groups_teachers cgt 
+ inner join timetable_slots ts on ts.deleted_at is null and ts.course_group_id = cgt.course_group_id
+ inner join users on users.deleted_at is null and users.actable_id = cgt.teacher_id and users.user_type = "teacher"
+ inner join course_groups cg on cg.deleted_at is null and cg.id = cgt.course_group_id
+ inner join courses on courses.deleted_at is null and courses.id = cg.course_id
+ INNER JOIN
+ (SELECT 
+        courses.*, @rownum:=IF(@rownum = 15, 0, @rownum) + 1 AS rank
+    FROM
+        (select courses.name as course__full_name, cg.name as class_name, users.name as teacher_name, 
+ SUBSTRING_INDEX(courses.name, '(', 1) AS course_name,
+    CASE
+        WHEN day = 0 THEN 'Sunday'
+        WHEN day = 1 THEN 'Monday'
+        WHEN day = 2 THEN 'Tuesday'
+        WHEN day = 3 THEN 'Wednesday'
+        WHEN day = 4 THEN 'Thursday'
+        WHEN day = 5 THEN 'Friday'
+        WHEN day = 6 THEN 'Saturday'
+        ELSE NULL
+    END AS WeekName,
+    ts.slot_no,
+    ts.level_id,
+    ts.from,
+    ts.to
+    from course_groups_teachers cgt 
+ inner join timetable_slots ts on ts.deleted_at is null and ts.course_group_id = cgt.course_group_id
+ inner join users on users.deleted_at is null and users.actable_id = cgt.teacher_id and users.user_type = "teacher"
+ inner join course_groups cg on cg.deleted_at is null and cg.id = cgt.course_group_id
+ inner join courses on courses.deleted_at is null and courses.id = cg.course_id
+ where cgt.deleted_at is null and users.name =  $P{teacher_name} 
+ group by users.name,course__full_name) courses, (SELECT @rownum:=0) r order by course__full_name)c on c.teacher_name = users.name and c.course__full_name = courses.name and c.class_name = cg.name
+ where cgt.deleted_at is null
+ and users.name =  $P{teacher_name} )s
+ right join timetable_slot_times tst on tst.slot_no = s.slot_no
+ where course__full_name is not null]]>
+		</queryString>
+		<field name="course__full_name" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="course__full_name"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="courses"/>
+		</field>
+		<field name="class_name" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="class_name"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="course_groups"/>
+		</field>
+		<field name="teacher_name" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="teacher_name"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="users"/>
+		</field>
+		<field name="course_name" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="course_name"/>
+		</field>
+		<field name="WeekName" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="WeekName"/>
+		</field>
+		<field name="day" class="java.lang.Integer">
+			<property name="com.jaspersoft.studio.field.label" value="day"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="timetable_slots"/>
+		</field>
+		<field name="slot_no" class="java.lang.Integer">
+			<property name="com.jaspersoft.studio.field.label" value="slot_no"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="timetable_slots"/>
+		</field>
+		<field name="level_id" class="java.lang.Integer">
+			<property name="com.jaspersoft.studio.field.label" value="level_id"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="timetable_slots"/>
+		</field>
+		<field name="from" class="java.sql.Timestamp">
+			<property name="com.jaspersoft.studio.field.label" value="from"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="timetable_slots"/>
+		</field>
+		<field name="to" class="java.sql.Timestamp">
+			<property name="com.jaspersoft.studio.field.label" value="to"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="timetable_slots"/>
+		</field>
+		<field name="rank" class="java.lang.Double">
+			<property name="com.jaspersoft.studio.field.label" value="rank"/>
+		</field>
+		<field name="slot_nom" class="java.lang.Integer">
+			<property name="com.jaspersoft.studio.field.label" value="slot_nom"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="timetable_slot_times"/>
+		</field>
+		<field name="start_time" class="java.sql.Timestamp">
+			<property name="com.jaspersoft.studio.field.label" value="start_time"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="timetable_slot_times"/>
+		</field>
+	</subDataset>
+	<parameter name="ABSOLUTE_PATH" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="USER_ID" class="java.lang.String">
+		<defaultValueExpression><![CDATA["-1"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select
+	(select school_description from schools limit 1) as school_name, 
+	 courses.name as course__full_name, cg.name as class_name, users.name as teacher_name
+    from course_groups_teachers cgt 
+ inner join timetable_slots ts on ts.deleted_at is null and ts.course_group_id = cgt.course_group_id
+ inner join users on users.deleted_at is null and users.actable_id = cgt.teacher_id and users.user_type = "teacher"
+ and (users.id in ($P!{USER_ID}) OR $P{USER_ID}  = "-1")
+ inner join course_groups cg on cg.deleted_at is null and cg.id = cgt.course_group_id
+ inner join courses on courses.deleted_at is null and courses.id = cg.course_id
+ INNER JOIN
+    (SELECT 
+        id, name, @rownum:=IF(@rownum = 15, 0, @rownum) + 1 AS rank
+    FROM
+        courses, (SELECT @rownum:=0) r where courses.deleted_at is null order by name) c ON c.id = courses.id
+ where cgt.deleted_at is null]]>
+	</queryString>
+	<field name="school_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="school_name"/>
+	</field>
+	<field name="course__full_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="course__full_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="courses"/>
+	</field>
+	<field name="class_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="class_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="course_groups"/>
+	</field>
+	<field name="teacher_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="teacher_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="users"/>
+	</field>
+	<sortField name="teacher_name"/>
+	<group name="teacher" isStartNewPage="true" isReprintHeaderOnEachPage="true">
+		<groupExpression><![CDATA[$F{teacher_name}]]></groupExpression>
+		<groupHeader>
+			<band height="216">
+				<image>
+					<reportElement x="0" y="0" width="1010" height="97" uuid="05b3e5cb-38e1-4c81-86b1-75c72ccbb74f"/>
+					<imageExpression><![CDATA[$P{ABSOLUTE_PATH}+"/SKOLERA_HEADER.png"]]></imageExpression>
+				</image>
+				<rectangle>
+					<reportElement x="0" y="78" width="1010" height="7" backcolor="#60DC88" uuid="f02fa8d3-bcf7-449c-a683-fbe0d2478867">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<graphicElement>
+						<pen lineWidth="0.0"/>
+					</graphicElement>
+				</rectangle>
+				<textField>
+					<reportElement x="0" y="90" width="1010" height="30" uuid="1b940e4f-8721-4cd2-8371-b044b80a60f9"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="16" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{school_name}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="0" y="140" width="1010" height="30" uuid="547aaf2e-ed6e-4be8-960c-eab803c2ca6f"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="14" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{teacher_name}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="0" y="170" width="1010" height="30" uuid="b3893ea4-0fe2-4da5-9332-ca227aebbbcb"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="14" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Time Table"]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="120">
+				<crosstab horizontalPosition="Center">
+					<reportElement x="0" y="0" width="1010" height="90" uuid="8d74d751-e2d6-49cb-bb46-2bdd12cae4b1">
+						<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+						<property name="com.jaspersoft.studio.crosstab.style.header" value="Crosstab_CH"/>
+						<property name="com.jaspersoft.studio.crosstab.style.group" value="Crosstab_CG"/>
+						<property name="com.jaspersoft.studio.crosstab.style.total" value="Crosstab_CT"/>
+						<property name="com.jaspersoft.studio.crosstab.style.detail" value="Crosstab_CD"/>
+					</reportElement>
+					<crosstabDataset>
+						<dataset>
+							<datasetRun subDataset="teacher" uuid="f5dda2c6-abe8-4660-bb5b-dcb01eea17ff">
+								<datasetParameter name="teacher_name">
+									<datasetParameterExpression><![CDATA[$F{teacher_name}]]></datasetParameterExpression>
+								</datasetParameter>
+							</datasetRun>
+						</dataset>
+					</crosstabDataset>
+					<crosstabHeaderCell>
+						<cellContents>
+							<frame>
+								<reportElement x="0" y="0" width="90" height="50" uuid="2b46cba9-e441-4efd-969d-a74957903044"/>
+								<rectangle radius="10">
+									<reportElement x="0" y="0" width="80" height="37" backcolor="#E8E8E8" uuid="d8804d3a-52ce-4b22-96f7-fd1a65e64449"/>
+								</rectangle>
+								<textField>
+									<reportElement mode="Transparent" x="0" y="0" width="80" height="37" uuid="c2324c93-0f9f-4f38-97e4-acfbd3deec6a"/>
+									<box>
+										<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+										<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+										<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+										<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+									</box>
+									<textElement textAlignment="Center" verticalAlignment="Middle"/>
+									<textFieldExpression><![CDATA["Slot NUM"]]></textFieldExpression>
+								</textField>
+							</frame>
+						</cellContents>
+					</crosstabHeaderCell>
+					<rowGroup name="slot_no" width="90">
+						<bucket class="java.lang.Integer">
+							<bucketExpression><![CDATA[$F{slot_nom}]]></bucketExpression>
+						</bucket>
+						<crosstabRowHeader>
+							<cellContents backcolor="#FFFFFF" mode="Opaque" style="Crosstab_CH">
+								<box>
+									<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+									<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+									<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+									<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								</box>
+								<frame>
+									<reportElement x="0" y="0" width="90" height="40" uuid="38c31d30-1fa8-4e3e-80aa-c1e705362cda"/>
+									<rectangle radius="10">
+										<reportElement x="0" y="0" width="80" height="30" backcolor="#E8E8E8" uuid="1d8868cf-bef8-42b1-a224-29ce40e241c8"/>
+									</rectangle>
+									<textField>
+										<reportElement mode="Transparent" x="0" y="0" width="80" height="30" uuid="564b3d0d-12e3-4d32-9528-03793e96c250"/>
+										<box>
+											<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+											<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+											<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+											<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+										</box>
+										<textElement textAlignment="Center" verticalAlignment="Middle"/>
+										<textFieldExpression><![CDATA[$V{slot_no}+"\n"+DATEFORMAT( $V{from},"hh:mm")]]></textFieldExpression>
+									</textField>
+								</frame>
+							</cellContents>
+						</crosstabRowHeader>
+						<crosstabTotalRowHeader>
+							<cellContents mode="Opaque" style="Crosstab_CT">
+								<staticText>
+									<reportElement x="0" y="0" width="60" height="20" forecolor="#FFFFFF" uuid="179eecc3-0e11-4c1c-906a-8f37a8844f7e"/>
+									<text><![CDATA[Total slot_no]]></text>
+								</staticText>
+							</cellContents>
+						</crosstabTotalRowHeader>
+					</rowGroup>
+					<columnGroup name="WeekName" height="50">
+						<bucket class="java.lang.Integer">
+							<bucketExpression><![CDATA[IF($F{day} == null,999,$F{day})]]></bucketExpression>
+						</bucket>
+						<crosstabColumnHeader>
+							<cellContents mode="Opaque" style="Crosstab_CH">
+								<box>
+									<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+									<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+									<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+									<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								</box>
+								<frame>
+									<reportElement mode="Opaque" x="0" y="0" width="150" height="50" uuid="325f1625-fe81-4d64-8dec-0c6ae120ce61"/>
+									<rectangle radius="10">
+										<reportElement style="CopyOf_day_color1" x="0" y="0" width="140" height="37" uuid="5d91913b-d9cf-49c3-b13a-a9cc1747628d">
+											<property name="com.jaspersoft.studio.unit.width" value="px"/>
+											<property name="com.jaspersoft.studio.unit.height" value="px"/>
+										</reportElement>
+									</rectangle>
+									<textField>
+										<reportElement style="CopyOf_day_color1" mode="Transparent" x="0" y="0" width="140" height="37" uuid="984082d6-c4f5-448e-94d4-cfcdd3fe309c"/>
+										<box>
+											<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+											<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+											<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+											<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+										</box>
+										<textElement textAlignment="Center" verticalAlignment="Middle"/>
+										<textFieldExpression><![CDATA[IF($V{WeekName} == 0,"Sunday",
+	IF($V{WeekName} == 1,"Monday",
+		IF($V{WeekName} == 2,"Tuesday",
+			IF($V{WeekName} == 3,"Wednesday",
+				IF($V{WeekName} == 4,"Thursday",
+					IF($V{WeekName} == 5,"Friday",
+						IF($V{WeekName} == 6,"Saturday",
+							IF($V{WeekName} == null,"Friday","Friday")
+						)
+					)
+				)
+			)
+		)
+	))]]></textFieldExpression>
+									</textField>
+								</frame>
+							</cellContents>
+						</crosstabColumnHeader>
+						<crosstabTotalColumnHeader>
+							<cellContents mode="Opaque" style="Crosstab_CT">
+								<staticText>
+									<reportElement x="0" y="0" width="60" height="20" forecolor="#FFFFFF" uuid="fb50fd21-ab71-4015-a1b6-5f5c08f40688"/>
+									<text><![CDATA[Total WeekName]]></text>
+								</staticText>
+							</cellContents>
+						</crosstabTotalColumnHeader>
+					</columnGroup>
+					<measure name="course_name_MEASURE" class="java.lang.String">
+						<measureExpression><![CDATA[$F{course_name}]]></measureExpression>
+					</measure>
+					<measure name="rank" class="java.lang.Double">
+						<measureExpression><![CDATA[$F{rank}]]></measureExpression>
+					</measure>
+					<measure name="from" class="java.sql.Timestamp">
+						<measureExpression><![CDATA[$F{start_time}]]></measureExpression>
+					</measure>
+					<measure name="course__full_name" class="java.lang.String">
+						<measureExpression><![CDATA[$F{course__full_name}]]></measureExpression>
+					</measure>
+					<measure name="code" class="java.lang.String">
+						<measureExpression><![CDATA[IF($F{code} == null, " ",$F{code})]]></measureExpression>
+					</measure>
+					<measure name="class_name" class="java.lang.String">
+						<measureExpression><![CDATA[IF($F{code} == null, "",$F{code})+" "+IF($F{class_name} ==null,""," - "+$F{class_name} )]]></measureExpression>
+					</measure>
+					<crosstabCell width="150" height="40">
+						<cellContents mode="Opaque" style="Crosstab_CD">
+							<box>
+								<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<frame>
+								<reportElement mode="Opaque" x="0" y="0" width="150" height="40" uuid="8ff256d5-444e-4ce6-a250-b123d7c9567f"/>
+								<rectangle radius="10">
+									<reportElement style="day_color" x="0" y="0" width="140" height="30" uuid="64d960aa-5791-40cc-b82c-8f36eb7ca233">
+										<property name="com.jaspersoft.studio.unit.width" value="px"/>
+										<property name="com.jaspersoft.studio.unit.height" value="px"/>
+									</reportElement>
+								</rectangle>
+								<textField isBlankWhenNull="true">
+									<reportElement mode="Transparent" x="0" y="0" width="140" height="30" uuid="cd37a6ee-e09c-437b-a881-7dfdb66e2748"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Arial"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$V{class_name}]]></textFieldExpression>
+								</textField>
+							</frame>
+						</cellContents>
+					</crosstabCell>
+				</crosstab>
+				<crosstab>
+					<reportElement positionType="Float" x="0" y="90" width="1010" height="30" uuid="d1150c19-632b-426d-9bff-73c0f3844969">
+						<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+						<property name="com.jaspersoft.studio.crosstab.style.header" value="Crosstab 1_CH"/>
+						<property name="com.jaspersoft.studio.crosstab.style.group" value="Crosstab 1_CG"/>
+						<property name="com.jaspersoft.studio.crosstab.style.total" value="Crosstab 1_CT"/>
+						<property name="com.jaspersoft.studio.crosstab.style.detail" value="Crosstab 1_CD"/>
+					</reportElement>
+					<crosstabDataset>
+						<dataset>
+							<datasetRun subDataset="colored_courses" uuid="5e657b76-d635-4a8a-8c33-c4142c42c4bf">
+								<datasetParameter name="teacher_name">
+									<datasetParameterExpression><![CDATA[$F{teacher_name}]]></datasetParameterExpression>
+								</datasetParameter>
+							</datasetRun>
+						</dataset>
+					</crosstabDataset>
+					<crosstabHeaderCell>
+						<cellContents>
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						</cellContents>
+					</crosstabHeaderCell>
+					<rowGroup name="teacher_name" width="0">
+						<bucket class="java.lang.String">
+							<bucketExpression><![CDATA[$F{teacher_name}]]></bucketExpression>
+						</bucket>
+						<crosstabRowHeader>
+							<cellContents mode="Opaque" style="Crosstab 1_CH">
+								<textField>
+									<reportElement x="0" y="0" width="0" height="30" uuid="b53457dd-8879-47dc-9a3a-4a6d227349bd"/>
+									<textFieldExpression><![CDATA[$V{teacher_name}]]></textFieldExpression>
+								</textField>
+							</cellContents>
+						</crosstabRowHeader>
+						<crosstabTotalRowHeader>
+							<cellContents mode="Opaque" style="Crosstab 1_CT">
+								<staticText>
+									<reportElement x="0" y="0" width="60" height="20" forecolor="#FFFFFF" uuid="5e8d6472-06b3-43a2-b812-51f3b0544c0f"/>
+									<text><![CDATA[Total teacher_name]]></text>
+								</staticText>
+							</cellContents>
+						</crosstabTotalRowHeader>
+					</rowGroup>
+					<columnGroup name="course_name" height="0">
+						<bucket class="java.lang.String">
+							<bucketExpression><![CDATA[$F{course__full_name}]]></bucketExpression>
+						</bucket>
+						<crosstabColumnHeader>
+							<cellContents mode="Opaque" style="Crosstab 1_CH">
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								<textField>
+									<reportElement x="0" y="0" width="180" height="0" uuid="d256aa02-2ffc-473a-9c94-0aff8f11e21c"/>
+									<textFieldExpression><![CDATA[$V{course_name}]]></textFieldExpression>
+								</textField>
+							</cellContents>
+						</crosstabColumnHeader>
+						<crosstabTotalColumnHeader>
+							<cellContents mode="Opaque" style="Crosstab 1_CT">
+								<staticText>
+									<reportElement x="0" y="0" width="60" height="20" forecolor="#FFFFFF" uuid="3b15a040-2a98-45b9-8c08-9bba8542ca66"/>
+									<text><![CDATA[Total course_name]]></text>
+								</staticText>
+							</cellContents>
+						</crosstabTotalColumnHeader>
+					</columnGroup>
+					<measure name="course_name_MEASURE" class="java.lang.String">
+						<measureExpression><![CDATA[IF($F{course_name} == null, "N/A",$F{course_name})]]></measureExpression>
+					</measure>
+					<measure name="course__full_name" class="java.lang.String">
+						<measureExpression><![CDATA[$F{course__full_name}]]></measureExpression>
+					</measure>
+					<measure name="rank" class="java.lang.Double">
+						<measureExpression><![CDATA[$F{rank}]]></measureExpression>
+					</measure>
+					<crosstabCell width="180" height="30">
+						<cellContents mode="Opaque" style="Crosstab 1_CD">
+							<box>
+								<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<frame>
+								<reportElement mode="Transparent" x="0" y="0" width="180" height="30" uuid="273825f2-6b11-46eb-891f-8a04ebf35828"/>
+								<box>
+									<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+									<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+									<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								</box>
+								<rectangle radius="10">
+									<reportElement style="day_color" x="131" y="0" width="40" height="30" uuid="4108a8b8-5370-4ce9-90ef-afb5225c8e3e"/>
+								</rectangle>
+								<textField>
+									<reportElement mode="Transparent" x="131" y="0" width="40" height="30" uuid="60ba1f4f-399e-4f52-aa92-4d6eaf17d5b8"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle"/>
+									<textFieldExpression><![CDATA[""]]></textFieldExpression>
+								</textField>
+								<textField>
+									<reportElement mode="Transparent" x="0" y="0" width="110" height="30" uuid="038d8fec-08f0-477a-ae7f-65097729ce4b"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Arial"/>
+									</textElement>
+									<textFieldExpression><![CDATA[IF($V{course_name_MEASURE} == null , "N/A",$V{course__full_name})]]></textFieldExpression>
+								</textField>
+							</frame>
+						</cellContents>
+					</crosstabCell>
+				</crosstab>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="28" splitType="Stretch">
+			<staticText>
+				<reportElement x="90" y="0" width="102" height="28" forecolor="#60DC88" uuid="adcd9734-6629-4aff-beca-465519185911"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="13" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ Skolera]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="90" height="28" uuid="a9367926-d343-4eb7-9e8d-f1c6e3d7a40f"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="13"/>
+				</textElement>
+				<text><![CDATA[Powered by]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

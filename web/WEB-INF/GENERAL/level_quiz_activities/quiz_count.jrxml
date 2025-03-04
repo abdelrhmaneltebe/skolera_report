@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.10.0.final using JasperReports Library version 6.10.0-unknown  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="content_count" columnCount="4" printOrder="Horizontal" pageWidth="960" pageHeight="555" orientation="Landscape" columnWidth="232" columnSpacing="10" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="a6f1b326-9405-40ae-963f-5a9318472072">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="BAS"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<queryString>
+		<![CDATA[ select count(quizzes.id) item_count, "quizzes" as item_type, levels.name, monthname(quizzes.updated_at) as month_name, month(quizzes.updated_at) as month_num, (select code from schools limit 1) as school_code   
+ from quizzes 
+ inner join courses on courses.deleted_at is null and courses.id = quizzes.course_id 
+ inner join levels on levels.deleted_at is null and courses.level_id = levels.id
+ where quizzes.deleted_at is null
+ group by levels.name]]>
+	</queryString>
+	<field name="item_count" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.label" value="item_count"/>
+	</field>
+	<field name="item_type" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="item_type"/>
+	</field>
+	<field name="name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="levels"/>
+	</field>
+	<field name="month_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="month_name"/>
+	</field>
+	<field name="month_num" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="month_num"/>
+	</field>
+	<field name="school_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="school_code"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="112" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<frame>
+				<reportElement x="10" y="10" width="211" height="90" uuid="3e4b0887-c201-43ee-8c8c-a9b7abc3496b"/>
+				<textField>
+					<reportElement mode="Transparent" x="0" y="0" width="211" height="50" uuid="e35b35db-945d-492d-8bbb-6567f42ca5c4">
+						<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="2a9521df-a873-4571-ba1e-1cc704db0647"/>
+					</reportElement>
+					<box>
+						<pen lineWidth="1.5"/>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="31" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{item_count}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Transparent" x="0" y="50" width="211" height="40" forecolor="#5493FF" uuid="b1df7a3b-eb9d-4e81-89df-28c811cf73a5">
+						<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="2a9521df-a873-4571-ba1e-1cc704db0647"/>
+					</reportElement>
+					<box>
+						<pen lineWidth="1.5"/>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="18" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
+				</textField>
+				<rectangle radius="15">
+					<reportElement mode="Transparent" x="0" y="0" width="211" height="90" uuid="87ac765e-0ac7-4443-bebc-6f89acc19c5c"/>
+					<graphicElement>
+						<pen lineStyle="Solid"/>
+					</graphicElement>
+				</rectangle>
+			</frame>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>
